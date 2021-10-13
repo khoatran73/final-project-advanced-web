@@ -1,4 +1,4 @@
-# final-project-advanced-web
+# Clone project
 
 1. git clone https://github.com/khoatran73/final-project-advanced-web.git
 2. cd final-project-advanced-web
