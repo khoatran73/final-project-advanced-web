@@ -1,8 +1,7 @@
-const notificationRouter = require('./notification')
+const homeRouter = require('./homeRouter')
 
 function route(app) {
-
-    app.use('/notification', notificationRouter)
+    app.use('/', homeRouter)
 }
 
 module.exports = route
