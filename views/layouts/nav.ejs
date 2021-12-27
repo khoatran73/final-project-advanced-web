@@ -1,0 +1,87 @@
+<nav class="navbar navbar-expand-sm navbar-light fixed-top shadow-sm bg-white navbar-index">
+    <label for="nav-tablet-input" class="nav__bars-btn">
+        <i class="fas fa-bars"></i>
+    </label>
+    <li class="nav-item nav-item-search">
+        <a href="/"><img  class="mr-2" src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bG9nb3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" width="28" height="28"></a> 
+
+        <form id="searchForm" action="/search" method="get">
+            <input value="<%if(locals.search){%><%= search %><%}%>" type="search" class="form-control search" name="search" id="search" placeholder="Tìm kiếm...">  
+        </form>
+
+        <a class="nav-link nav-item-md"  href="#">
+            <img  class="mr-2" src="https://media.istockphoto.com/photos/pleasant-young-indian-woman-freelancer-consult-client-via-video-call-picture-id1300972573?b=1&k=20&m=1300972573&s=170667a&w=0&h=xuAsEkMkoBbc5Nh-nButyq3DU297V_tnak-60VarrR0=" width="28" height="28"><b>Khanh Huỳnh</b>
+        </a>
+    </li>
+    
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        </ul>
+        <ul class="navbar-nav  mt-lg-0">
+            <li class="nav-item nav-item-mduser">
+                <a class="nav-link"  href="#">
+                    <img  class="mr-2" src="https://images.unsplash.com/photo-1563694983011-6f4d90358083?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fGxvZ298ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60" width="28" height="28"><b>Khanh Huỳnh</b>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link sign-out" href="/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<input type="checkbox" name="" class="nav__input" id="nav-tablet-input" hidden>
+<label for="nav-tablet-input" class="nav__bars-btn">
+    <i class="fas fa-bars"></i>
+</label>
+<label for="nav-tablet-input" class="nav__overlay"></label>
+
+<nav class="nav__tablet nav__tablet-input">
+    <label for="nav-tablet-input" class="nav__tablet-close">
+        <i class="fas fa-times"></i>    
+    </label>
+    <ul class="navbar-nav nav__tablet-list">
+        <li>
+            <a href="/" class="nav__tablet-link"><i class="fa fa-home"></i> Trang chủ</a>
+        </li>
+<li>
+    <a href="#" class="nav__tablet-link"><i class="fa fa-key"></i> Đổi mật khẩu</a>
+</li>
+        <li>
+            <a href="#" class="nav__tablet-link"><i class="fa fa-bell"></i> Thông báo mới</a>
+        </li>
+        <input type="checkbox" name="" class="nav__input-sidetop" id="nav-sidebar-inputtop" hidden>
+        <label for="nav-sidebar-inputtop" href="#" class="nav__tablet-link"><i class="fa fa-th-list"></i> Phân loại thông báo <i class="fa fa-caret-down"></i></label>
+        <li class="nav-sidebar-litop">
+            <a href="#" class="nav__tablet-link">&emsp;&emsp;<i class="fa fa-users"></i> Phòng ban</a>
+            <a href="#" class="nav__tablet-link">&emsp;&emsp;<i class="fa fa-th-list"></i> Tất cả thông báo</a>
+        </li>
+        <input type="checkbox" name="" class="nav__input-sidebot" id="nav-sidebar-inputbot" hidden>
+        <li>
+            <a class="nav__tablet-link"  href="#">
+                <img  class="mr-2" src="https://media.istockphoto.com/photos/pleasant-young-indian-woman-freelancer-consult-client-via-video-call-picture-id1300972573?b=1&k=20&m=1300972573&s=170667a&w=0&h=xuAsEkMkoBbc5Nh-nButyq3DU297V_tnak-60VarrR0=" width="28" height="28"><b>Khanh Huỳnh</b>
+            </a>
+        </li>
+        <li>
+            <a class="nav__tablet-link sign-out" href="/logout"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a>
+        </li>
+    </ul>
+</nav>
+<nav class="nk-sidebar">           
+    <div id="sidebar-wrapper">
+        <div class="sidebar-heading">DANH MỤC </div>
+        <div class="list-group list-group-flush">
+            <a href="/" class="list-group-item list-group-item-action"><i class="fa fa-home"></i> Trang chủ</a>
+            <span href="#" class="list-group-item"><i class="fa fa-th-list"></i> Phân loại thông báo <i class="fa fa-caret-down"></i></span>
+            <a href="/faculity" class="list-group-item list-group-item-action">&emsp;&emsp;<i class="fa fa-users"></i> Phòng ban</a>
+            <a href="/notification/1" class="list-group-item list-group-item-action">&emsp;&emsp;<i class="fa fa-th-list"></i> Tất cả thông báo</a>
+        </div>
+    </div>
+</nav>
+<nav class="nk-sidebarright">           
+    <div id="sidebar-wrapper">
+        <div class="sidebar-heading">THÔNG BÁO MỚI</div>
+        <a href="/notification/1" class="read-more"><u>Xem tất cả</u></a><br>
+        <div class="list-group notice notice--overflow">      
+    </div>
+</nav>
