@@ -3,6 +3,6 @@ const router = express.Router()
 const loginRouter = require('../controllers/LoginController')
 const checkLogin = require('../middleware/check-login')
 
-router.use('/', loginRouter.get)
+router.get('/', loginRouter.get)
 
 module.exports = router

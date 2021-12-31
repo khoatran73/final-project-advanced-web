@@ -3,12 +3,17 @@ const Schema = mongoose.Schema
 const crypto = require('crypto')
 
 const User = new Schema({
+    uid: String, // sign in with google
+    cloudinary_id: String,
     name: String,
     email: String,
-    image: String,
+    avatar: String,
+    role: Number, // 1: admin, 2: Phòng/Khoa, 3: sinh vieen
+    class: String,
+    faculty: String,
     hash: String,
     salt: String
-})
+}, { timestamps: true })
 
 User.methods.setPassword = function (password) {
     this.salt = crypto.randomBytes(16).toString('hex')
