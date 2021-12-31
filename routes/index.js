@@ -1,9 +1,9 @@
 const homeRouter = require('./homeRouter')
-const loginRouter = require('./loginRouter')
+const accountRouter = require('./accountRouter')
 const adminRouter = require('./adminRouter')
 
 function route(app) {
-    app.use('/login', loginRouter)
+    app.use('/account', accountRouter)
     app.use('/admin', adminRouter)
     app.use('/', homeRouter)
 }

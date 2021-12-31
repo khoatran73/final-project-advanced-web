@@ -6,11 +6,24 @@ class AdminController {
         return res.render("admin")
     }
 
+    async getUser(req, res) {
+        const _id = req.params._id
+
+        await User.findOne({ _id: _id })
+            .then(user => {
+                if (user)
+                    return res.json({ code: 0, message: "success", user: user })
+                else
+                    return res.json({ code: 1, message: "invalid id" })
+            })
+            .catch(() => res.json({ code: 1, message: "invalid format id" }))
+    }
+
     async addNewUser(req, res) {
         const { email, name, password, faculty } = req.body
 
-        if (!email || !name || !password || !faculty) {
-            return res.json({ code: 1, message: "Please enter Enough information" })
+        if (!email || !name || !password || !faculty || !req.file) {
+            return res.json({ code: 1, message: "Please enter enough information" })
         } else {
             try {
                 await User.find({ email: email })
@@ -26,6 +39,7 @@ class AdminController {
                                 email: email,
                                 avatar: uploader.url,
                                 cloudinary_id: uploader.cloudinary_id,
+                                role: 2,
                                 faculty: faculty
                             })
 
@@ -42,30 +56,27 @@ class AdminController {
         }
     }
 
-    async getUser(req, res) {
-        const _id = req.params._id
-
-        await User.findOne({ _id: _id })
-            .then(user => res.json({ code: 0, message: "success", user: user }))
-            .catch(() => res.json({ code: 1, message: "invalid id" }))
-    }
-
     async editUser(req, res) {
         const _id = req.params._id
         const { name, faculty } = req.body
 
         if (!name || !faculty) {
-            return res.json({ code: 1, message: "Please enter Enough information" })
+            return res.json({ code: 1, message: "Please enter enough information" })
         } else {
             await User.findOne({ _id: _id })
-                .then(async () => {
-                    await User.updateOne({ _id: _id }, {
-                        name: name,
-                        faculty: faculty
-                    })
-                        .then(() => res.json({ code: 0, message: "Update user successfully" }))
+                .then(async user => {
+                    if (user) {
+                        await User.updateOne({ _id: _id }, {
+                            name: name,
+                            faculty: faculty
+                        })
+                            .then(() => res.json({ code: 0, message: "Update user successfully" }))
+                    } else {
+                        return res.json({ code: 1, message: "invalid id" })
+                    }
+
                 })
-                .catch(() => res.json({ code: 1, message: "invalid id" }))
+                .catch(() => res.json({ code: 1, message: "invalid format id" }))
         }
     }
 
@@ -80,22 +91,44 @@ class AdminController {
             } else {
                 await User.findOne({ _id: _id })
                     .then(async user => {
-                        await cloudinary.destroys(user.cloudinary_id)
+                        if (user) {
+                            await cloudinary.destroys(user.cloudinary_id)
 
-                        const uploader = await cloudinary.uploads(req.file.path, "advanced-web/avatar")
+                            const uploader = await cloudinary.uploads(req.file.path, "advanced-web/avatar")
 
-                        await User.updateOne({ _id: _id }, {
-                            avatar: uploader.url,
-                            cloudinary_id: uploader.cloudinary_id,
-                        })
-                            .then(() => res.json({ code: 0, message: "edit user successfully" }))
-
+                            await User.updateOne({ _id: _id }, {
+                                avatar: uploader.url,
+                                cloudinary_id: uploader.cloudinary_id,
+                            })
+                                .then(() => res.json({ code: 0, message: "edit user avatar successfully" }))
+                        } else {
+                            return res.json({ code: 1, message: "invalid id" })
+                        }
                     })
-                    .catch(() => res.json({ code: 1, message: "invalid id" }))
+                    .catch(() => res.json({ code: 1, message: "invalid format id" }))
             }
         } else {
             return res.json({ code: 1, message: "file not found" })
         }
+    }
+
+    async deleteUser(req, res) {
+        const _id = req.params._id
+
+        await User.findOne({ _id: _id })
+            .then(async user => {
+                if (user) {
+                    await cloudinary.destroys(user.cloudinary_id)
+
+                    await User.deleteOne({ _id: _id })
+                        .then(() => res.json({ code: 0, message: "delete user successfully" }))
+                        .catch(error => res.json({ code: 1, message: error.message }))
+                } else {
+                    return res.json({ code: 1, message: "invalid id" })
+                }
+
+            })
+            .catch(() => res.json({ code: 1, message: "invalid format id" }))
     }
 }
 
