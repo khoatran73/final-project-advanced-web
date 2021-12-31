@@ -20,3 +20,13 @@ module.exports.uploads = (file, folder) => {
     })
 }
 
+module.exports.destroys = public_id => {
+    return new Promise(resolve => {
+        cloudinary.uploader.destroy(public_id, (result) => {
+            resolve({
+                message: "destroy success"
+            })
+        })
+    })
+}
+
