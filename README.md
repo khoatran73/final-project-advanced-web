@@ -7,12 +7,12 @@
 
 
 # API
-1. ADMIN add new user
-    method: POST
-    url: /admin/add-user 
-    data: {name, email, password, file}
-    content-type: "multipart/form-data"
-    response: 
-        - success: { code: 0, message: "Add a new user successfully!" }
-        - email_exists: { code: 1, message: "Email already exists!" }
-        - cloudinary error: { code: 2, message: "some error" }
+1. ADMIN add new user <br>
+    method: POST <br>
+    url: /admin/add-user <br> 
+    data: {name, email, password, file} <br>
+    content-type: "multipart/form-data" <br>
+    response:  <br>
+        - success: { code: 0, message: "Add a new user successfully!" } <br>
+        - email_exists: { code: 1, message: "Email already exists!" } <br>
+        - cloudinary error: { code: 2, message: "some error" } <br>
