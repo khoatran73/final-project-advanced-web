@@ -4,6 +4,19 @@ const cloudinary = require("../cloud-images/cloudinary")
 const imageHelper = require("../helper/image-helper")
 
 class CommentController {
+    async getComment(req, res) {
+        const postId = req.params.post_id
+        await Comment.find({ post_id: postId })
+            .then(comments => {
+                if (comments.length > 0) {
+                    return res.json({ code: 0, message: "success", comments: comments })
+                } else {
+                    return res.json({ code: 1, message: "no comment yet" })
+                }
+            })
+            .catch(err => res.json({ code: 1, message: "invalid format id" }))
+    }
+
     async addComment(req, res) {
         const postId = req.params.post_id
 
