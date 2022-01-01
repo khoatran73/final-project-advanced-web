@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const cloudinary = require("../cloud-images/cloudinary")
+const imageHelper = require('../helper/image-helper')
 
 class AdminController {
     userManager(req, res) {
@@ -31,22 +32,26 @@ class AdminController {
                         if (user.length) {
                             return res.json({ code: 1, message: "Email already exists!" })
                         } else {
-                            const uploader = await cloudinary.uploads(req.file.path, "advanced-web/avatar")
-                            // console.log(uploader)
+                            const iH = JSON.parse(imageHelper(req.file))
+                            if (iH.code !== 0) {
+                                return res.json({ code: 1, message: iH.message })
+                            } else {
+                                const uploader = await cloudinary.uploads(req.file.path, "advanced-web/avatar")
 
-                            const user = new User({
-                                name: name,
-                                email: email,
-                                avatar: uploader.url,
-                                cloudinary_id: uploader.cloudinary_id,
-                                role: 2,
-                                faculty: faculty
-                            })
+                                const user = new User({
+                                    name: name,
+                                    email: email,
+                                    avatar: uploader.url,
+                                    cloudinary_id: uploader.cloudinary_id,
+                                    role: 2,
+                                    faculty: faculty
+                                })
 
-                            user.setPassword(password)
-                            user.save()
+                                user.setPassword(password)
+                                user.save()
 
-                            return res.json({ code: 0, message: "Add a new user successfully!" })
+                                return res.json({ code: 0, message: "Add a new user successfully!" })
+                            }
                         }
                     })
             }
@@ -84,10 +89,9 @@ class AdminController {
         const _id = req.params._id
 
         if (req.file) {
-            if (!req.file.mimetype.match(/image.*/)) {
-                return res.json({ code: 1, message: "Chỉ hổ trợ định dạng hình ảnh" })
-            } else if (req.file.size > (1024 * 1024 * 5)) {
-                return res.json({ code: 1, message: "Size ảnh không được quá 5MB" })
+            const iH = JSON.parse(imageHelper(req.file))
+            if (iH.code !== 0) {
+                return res.json({ code: iH.code, message: iH.message })
             } else {
                 await User.findOne({ _id: _id })
                     .then(async user => {
