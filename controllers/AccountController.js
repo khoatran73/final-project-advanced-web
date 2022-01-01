@@ -29,7 +29,7 @@ class LoginController {
     logout(req, res) {
         delete req.session.email
         delete req.session.role
-
+        delete req.session.passport.user
         return res.json({ code: 0, message: "Logout successfully" })
     }
 }

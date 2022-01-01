@@ -1,6 +1,6 @@
 module.exports = {
     isSignIn: function (req, res, next) {
-        if (req.session.email)
+        if (req.session.email|| req.session.passport.user)
             next()
         else
             res.redirect('/account/login')
