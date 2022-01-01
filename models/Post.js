@@ -8,6 +8,7 @@ const Post = new Schema({
     image: String,
     description: String,
     video: String,
+    like: { type: Number, default: 0 }
 }, { timestamps: true })
 
 module.exports = mongoose.model('Post', Post)

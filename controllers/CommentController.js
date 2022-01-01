@@ -48,7 +48,7 @@ class CommentController {
 
                         comment.save()
 
-                        return res.json({ code: 1, message: "add comment successfully" })
+                        return res.json({ code: 0, message: "add comment successfully" })
                     } else {
                         res.json({ code: 1, message: "invalid post" })
                     }

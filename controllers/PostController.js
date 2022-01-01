@@ -65,6 +65,11 @@ class PostController {
                     } else {
                         let result
 
+                        if (req.body.video) {
+                            const yP = youtubeParser(req.body.video)
+                            if (!yP) return res.json({ code: 1, message: "Not a link youtube" })
+                        }
+
                         if (req.file) {
                             const iH = JSON.parse(imageHelper(req.file))
                             if (iH.code === 0) {
@@ -73,12 +78,7 @@ class PostController {
                             } else {
                                 return res.json({ code: 1, message: iH.message })
                             }
-                        }
-
-                        if (req.body.video) {
-                            const yP = youtubeParser(req.body.video)
-                            if (!yP) return res.json({ code: 1, message: "Not a link youtube" })
-                        }
+                        }                        
 
                         await Post.updateOne({ _id: _id }, {
                             description: description,
