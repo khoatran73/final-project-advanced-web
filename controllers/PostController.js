@@ -1,10 +1,33 @@
 const Post = require('../models/Post')
+const User = require('../models/User')
 const Comment = require('../models/Comment')
 const cloudinary = require('../cloud-images/cloudinary')
 const imageHelper = require('../helper/image-helper')
 const youtubeParser = require('../helper/youtube-parser')
 
 class PostController {
+    async getAllPost(req, res) {
+        let limit=req.query.limit;
+        let start=req.query.start;
+        await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({_id:-1}) 
+            .then(posts => {
+                if (posts.length) {
+                    
+                    return res.json({ code: 0, message: "success", posts: posts })
+                } else {
+                    return res.json({ code: 1, message: "no post yet" })
+                }
+            })
+            .catch(err => res.json({ code: 2, message: err.message }))
+    }
+    async getUserofPost(req,res){
+        let email = req.query.email;
+        User.findOne({ email: email}).
+        then(user => {
+            return res.json({ code: 0, message: "success", user: user })
+        })
+        .catch(err => res.json({ code: 1, message: err}))
+    }
     async getPost(req, res) {
         await Post.find({ user_email: req.session.email })
             .then(posts => {
@@ -36,18 +59,17 @@ class PostController {
                 const yP = youtubeParser(req.body.video)
                 if (!yP) return res.json({ code: 1, message: "Not a link youtube" })
             }
-
             const post = new Post({
-                user_email: req.session.email,
+                user_email: req.session.email || req.session.passport.user.email,
                 description: description,
                 image: result?.url || null,
                 cloudinary_id: result?.cloudinary_id || null,
-                video: req.body.video || null,
+                video: youtubeParser(req.body.video) || null,
             })
 
             post.save()
 
-            return res.json({ code: 0, message: "add post successfully" })
+            return res.json({ code: 0, message: "add post successfully" ,user:req.session.passport.user,post:post})
         }
     }
 
