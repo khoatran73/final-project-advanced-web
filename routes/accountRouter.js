@@ -9,7 +9,7 @@ const cookieSession = require('cookie-session')
 const passport = require('passport')
 require('../middleware/passport')(passport)
 
-router.get('/login', accountController.login)
+router.get('/login',accountController.login)
 router.post("/login", accountController.auth)
 router.get("/logout", accountController.logout)
 router.get('/auth/google', passport.authenticate('google', { scope : [ 'email', 'profile' ] }))

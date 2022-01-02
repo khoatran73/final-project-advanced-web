@@ -9,6 +9,9 @@ body {
 	text-align: left;
 	background-color: #F3F3F9; }
 
+#authur-post{
+    margin: 10px;
+}
 .social-part .fa{
     padding-right:20px;
 }
@@ -24,15 +27,18 @@ a:hover {
     color: #545b61;
     text-decoration: none;
 }
+#btn-logout:hover{
+    cursor: pointer;
+}
 
 .fa {
     color: rgb(60, 166, 241);
 }
 
-.alert-socket {
+/* .alert-socket {
     width: 70%;
     margin: auto;
-}
+} */
 .display-none {
     display: none;
 }
@@ -256,14 +262,13 @@ a:hover {
     box-shadow: 5px 10px 41px -28px #a99de7;
 }
 
-.card--background {
-    background-image:url(https://res.cloudinary.com/dm1smalbq/image/upload/v1620325534/ImageAdvancedWeb/background_az3zgu.jpg);
+/* .card--background {
     background-repeat: no-repeat;
     background-size: 100% 90%;
     margin-bottom: 0;
     border-bottom-left-radius: initial;
     border-bottom-right-radius: initial;
-}
+} */
 
 .card__body--avt {
     height: 280px;
@@ -365,7 +370,8 @@ a:hover {
 }
 
 .card__username {
-    font-weight: 550;
+    font-weight: 500;
+    font-size:18px
 }
 
 .mr-2 {
@@ -782,9 +788,5 @@ p.content{
     .notification, .content-body--notice, .card--login {
         width: 100%;
         box-sizing: unset;
-    }
-
-    body {
-        padding: 0px 15px;
     }
 }

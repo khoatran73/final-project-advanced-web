@@ -38,7 +38,7 @@
                             <div class="card__body card__body--up">
                                 <a href="#">
                                     <img class="mr-2"
-                                        src="https://images.unsplash.com/photo-1545231027-637d2f6210f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bG9nb3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+                                        src="<%=user.avatar%>"
                                         width="40" height="40">
                                 </a>
                                 <input type="text" class="form-control thinking" placeholder="Bạn đang nghĩ gì?"
@@ -52,42 +52,43 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">
+                                        <h3 class="modal-title" id="exampleModalLabel">
+                                            Tạo bài viết
+                                        </h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form id="form-post" enctype="multipart/form-data" method="post">
+                                        <div id="authur-post">
                                             <a href="#">
                                                 <img class="mr-2"
                                                     src="<%=user.avatar%>"
                                                     width="40" height="40">
                                                 <span class="card__username"><%=user.name%></span>
                                             </a>
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form id="form-post">
+                                        </div>
                                         <div class="modal-body">
                                             <span id="errorStatus" class="error-input"></span>
-                                            <span>Bạn đang nghĩ gì?</span>
-                                            <textarea class="form-control" id="post-content" rows="5"
-                                                name="content"></textarea>
+                                            <textarea placeholder="<%=user.name%> ơi ! Bạn đang nghĩ gì thế ?"class="form-control" id="post-content" rows="5"
+                                                name="description"></textarea>
                                             <br><span>Thêm ảnh hoặc video:</span>
                                             <br>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label" for="radio1">
                                                     <input type="radio" class="form-check-input" id="imageRadio"
-                                                        name="optradio" value="option1" checked>Ảnh
+                                                        name="optionAddpost" value="option1" checked>Ảnh
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label" for="radio2">
                                                     <input type="radio" class="form-check-input" id="videoRadio"
-                                                        name="optradio" value="option2">Video
+                                                        name="optionAddpost" value="option2">Video
                                                 </label>
                                             </div><br>
                                             <div id="radioCheck">
-                                                <span>Chọn ảnh:</span>
-                                                <div class="custom-file mb-3">
-                                                    <input type="file" class="custom-file-input" id="customFile"
+                                                <div id="post-img" class="custom-file mb-3">
+                                                    <input type="file" class="custom-file-input" id="post-image"
                                                         name="image">
                                                     <label class="custom-file-label" for="customFile">Chọn ảnh</label>
                                                     <span id="errorImg" class="error-input"></span>
@@ -109,36 +110,7 @@
                     <div id="load_data_message"></div>
                 </div>
             </div>
-            <div class="card" id="post-content">
-                <div class="card__body">
-                    <a href="#">
-                        <img class="mr-2"
-                            src="<%=user.avatar%>"
-                            width="40" height="40">
-                        <span class="card__username"><%=user.name%></span>
-                    </a> °
-                    <span class="card__time-up">10:00 AM</span>
-                    <br>
-                    <div>
-                        <p class="card__content-up">Ái chà chà</p>
-                        <img class="image-up"
-                            src="https://images.unsplash.com/photo-1567446537708-ac4aa75c9c28?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bG9nb3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                            width="100%"><br><br>
-
-                        <p class="card__comments">1 Bình luận</p>
-                    </div>
-                    <hr>
-                    <div class="card__bottom-up">
-                        <a href="#favorite" class="favorite614c62209d078343e87f8f38"><span
-                                class="fa-heart614c62209d078343e87f8f38"><i
-                                    class="far fa-heart fa-heart614c62209d078343e87f8f38"></i></span> Thích</a>&emsp;
-                        <a href="#comment" class="614c62209d078343e87f8f38"><i class="fa fa-comments"></i> Bình
-                            luận</a>&emsp;
-
-                    </div>
-                </div>
-            </div>
     </div>
+    <script src="/javascripts/main.js"></script>
 </body>
-
 </html>

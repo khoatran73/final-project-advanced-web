@@ -5,6 +5,8 @@ const { isSignIn } = require('../middleware/authenticate')
 const upload = require('../cloud-images/multer')
 
 router.get('/get-post', isSignIn, postController.getPost)
+router.get('/get-user-post', isSignIn, postController.getUserofPost)
+router.get('/get-all-post', isSignIn, postController.getAllPost)
 router.post('/add-post', isSignIn, upload.single("image"), postController.addPost)
 router.put("/edit-post/:_id", isSignIn, upload.single("image"), postController.editPost)
 router.delete("/delete-post-image/:_id", isSignIn, postController.deletePostImage)
