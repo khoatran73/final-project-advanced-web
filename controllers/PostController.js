@@ -7,12 +7,12 @@ const youtubeParser = require('../helper/youtube-parser')
 
 class PostController {
     async getAllPost(req, res) {
-        let limit=req.query.limit;
-        let start=req.query.start;
-        await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({_id:-1}) 
+        let limit = req.query.limit;
+        let start = req.query.start;
+        await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
             .then(posts => {
                 if (posts.length) {
-                    
+
                     return res.json({ code: 0, message: "success", posts: posts })
                 } else {
                     return res.json({ code: 1, message: "no post yet" })
@@ -20,16 +20,20 @@ class PostController {
             })
             .catch(err => res.json({ code: 2, message: err.message }))
     }
-    async getUserofPost(req,res){
+
+    async getUserOfPost(req, res) {
         let email = req.query.email;
-        User.findOne({ email: email}).
-        then(user => {
-            return res.json({ code: 0, message: "success", user: user })
-        })
-        .catch(err => res.json({ code: 1, message: err}))
+        User.findOne({ email: email }).
+            then(user => {
+                return res.json({ code: 0, message: "success", user: user })
+            })
+            .catch(err => res.json({ code: 1, message: err }))
     }
+
     async getPost(req, res) {
-        await Post.find({ user_email: req.session.email })
+        const email = req.query.email;
+
+        await Post.find({ user_email: email })
             .then(posts => {
                 if (posts.length) {
                     return res.json({ code: 0, message: "success", posts: posts })
@@ -69,7 +73,7 @@ class PostController {
 
             post.save()
 
-            return res.json({ code: 0, message: "add post successfully" ,user:req.session.passport.user,post:post})
+            return res.json({ code: 0, message: "add post successfully", user: req.session.passport.user, post: post })
         }
     }
 
@@ -100,7 +104,7 @@ class PostController {
                             } else {
                                 return res.json({ code: 1, message: iH.message })
                             }
-                        }                        
+                        }
 
                         await Post.updateOne({ _id: _id }, {
                             description: description,
@@ -203,6 +207,39 @@ class PostController {
                 }
             })
             .catch(() => res.json({ code: 1, message: "invalid format id" }))
+    }
+
+    async updateLike(req, res) {
+        const _id = req.params._id
+
+        await Post.findOne({ _id: _id })
+            .then(async post => {
+                if (post) {
+                    let isLiked = false
+                    let message = "unlike success"
+
+                    for (let i = 0; i < post.users_like.length; i++) {
+                        if (post.users_like[i] === req.session.email) {
+                            post.users_like.splice(i, 1)
+                            isLiked = true
+                            break
+                        }
+                    }
+
+                    if (!isLiked) { //chua like
+                        post.users_like.push(req.session.email)
+                        message = "like success"
+                    }
+
+                    await Post.updateOne({ _id: _id }, { users_like: post.users_like })
+
+                    return res.json({ code: 0, message: message, isLiked: !isLiked })
+
+                } else {
+                    return res.json({ code: 1, message: "invalid post id" })
+                }
+            })
+            .catch(err => res.json({ code: 1, message: "invalid format id" }))
     }
 }
 

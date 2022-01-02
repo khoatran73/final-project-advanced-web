@@ -1,20 +1,20 @@
-$(document).ready(function() {
+$(document).ready(function () {
     //add post --------------------------------------------------------
-    loadIndex10Post(0,10)
-    $('input[type="radio"]').change(function() {
+    loadIndex10Post(0, 10)
+    $('input[type="radio"]').change(function () {
         if ($('#videoRadio').is(":checked")) {
             $('#post-video').attr('type', 'text');
-            $('#post-img').attr('style',"display:none")
-        }else{
+            $('#post-img').attr('style', "display:none")
+        } else {
             $('#post-video').attr('type', 'hidden');
-            $('#post-img').attr('style',"display:block")
+            $('#post-img').attr('style', "display:block")
         }
     })
-    $('#form-post').submit((e)=>{
+    $('#form-post').submit((e) => {
         e.preventDefault();
         const data = new FormData($('#form-post')[0])
         $('#post-video').val('');
-        
+
         $.ajax({
             type: "POST",
             url: "/post/add-post",
@@ -22,48 +22,48 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             cache: false,
-            success: function(data) {
-                if(data.code==0){
+            success: function (data) {
+                if (data.code == 0) {
                     $('#new-post').html("");
-                    loadIndex10Post(0,10);
-                    $('#exampleModal').modal('hide');
+                    loadIndex10Post(0, 10);
+                    $('#add-post-modal').modal('hide');
                 }
             }
         })
-        
+
     })
-    function checkMedia(data){
-        media=``;
-        let check= data.post!=null?data.post: data;
-        if(check.video!=null){
+    function checkMedia(data) {
+        media = ``;
+        let check = data.post != null ? data.post : data;
+        if (check.video != null) {
             media += `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${check.video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-        }else{
-            media+= `<img class="image-up" src="${check.image}" width="100%" ><br><br>`
+        } else {
+            media += `<img class="image-up" src="${check.image}" width="100%" ><br><br>`
         }
         return media;
     }
     //-------------------------------------------------------------------------------------------
-    function loadIndex10Post(start,limitpost){
+    function loadIndex10Post(start, limitpost) {
         $.ajax({
             type: 'GET',
             url: '/post/get-all-post',
             data: { limit: limitpost, start: start },
             cache: false,
-            success: function(posts) {
+            success: function (posts) {
                 showPost(posts)
             }
         });
     }
     function showPost(posts) {
-        posts.posts.forEach(function(data){
+        posts.posts.forEach(function (data) {
             let html = ``;
             $.ajax({
                 type: 'GET',
                 url: '/post/get-user-post',
-                data: {email: data.user_email},
+                data: { email: data.user_email },
                 cache: false,
-                success: function(data1) {
-                    if(data1.code==0){
+                success: function (data1) {
+                    if (data1.code == 0) {
                         html += `<div class="card" id="post-${data1.user._id}">
                             <div class="card__body">
                             
@@ -98,14 +98,14 @@ $(document).ready(function() {
         })
     }
     //logout 
-    $('#btn-logout').click(function(){
+    $('#btn-logout').click(function () {
         $.ajax({
             type: 'GET',
             url: '/account/logout',
             cache: false,
-            success: function(data) {
-                if(data.code ==0){
-                    window.location.href="http://localhost:3000/account/login"
+            success: function (data) {
+                if (data.code == 0) {
+                    window.location.href = "http://localhost:3000/account/login"
                 }
             }
         });

@@ -11,6 +11,7 @@ const User = new Schema({
     role: Number, // 1: admin, 2: Phòng/Khoa, 3: sinh vieen
     class: String,
     faculty: String,
+    post_like: { type: Array, default: [] },
     hash: String,
     salt: String
 }, { timestamps: true })

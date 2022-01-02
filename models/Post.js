@@ -8,6 +8,7 @@ const Post = new Schema({
     image: String,
     description: String,
     video: String,
+    users_like: { type: Array, default: [] },
     like: { type: Number, default: 0 }
 }, { timestamps: true })
 
