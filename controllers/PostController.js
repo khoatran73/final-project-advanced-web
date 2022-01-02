@@ -231,6 +231,24 @@ class PostController {
                         message = "like success"
                     }
 
+                    await User.findOne({ email: req.session.email })
+                        .then(async user => {
+                            if (user) {
+                                for (let i = 0; i < user.posts_like.length; i++) {
+                                    if (user.posts_like[i] === _id) {
+                                        user.posts_like.splice(i, 1)
+                                        break
+                                    }
+                                }
+
+                                if (!isLiked) { //chua like
+                                    user.posts_like.push(_id)
+                                }
+
+                                await User.updateOne({ email: req.session.email }, { posts_like: user.posts_like })
+                            }
+                        })
+
                     await Post.updateOne({ _id: _id }, { users_like: post.users_like })
 
                     return res.json({ code: 0, message: message, isLiked: !isLiked })
@@ -239,7 +257,7 @@ class PostController {
                     return res.json({ code: 1, message: "invalid post id" })
                 }
             })
-            .catch(err => res.json({ code: 1, message: "invalid format id" }))
+            .catch(() => res.json({ code: 1, message: "invalid format id" }))
     }
 }
 
