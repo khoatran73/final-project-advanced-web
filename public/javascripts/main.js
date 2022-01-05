@@ -87,9 +87,9 @@ $(document).ready(function () {
         let check = data.post != null ? data.post : data;
         if (check.video != null) {
             media += `<iframe src="https://www.youtube.com/embed/${check.video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-        } else {
+        } else if (check.image!=null) {
             media += `<img class="image-up" src="${check.image}" width="100%" ><br><br>`
-        }
+        }else{media=``}
         return media;
     }
     //Load post-------------------------------------------------------------------------------------------
@@ -250,31 +250,31 @@ $(document).ready(function () {
 
         function showComment(comments) {
             console.log(comments)
-            // comments.forEach(function (data) {
-            //     $.ajax({
-            //         type: 'GET',
-            //         url: `/comment/get-comment/${data.user_email}`,
-            //         cache: false,
-            //         success: function (res) {
-            //             let html = `
-            //             <div class="comment">
-            //                 <img src="${res.user.avatar}" alt="" class="image-34">
-            //                 <div class="content">
-            //                     <div class="name">
-            //                         <span>${res.name}</span>
-            //                         <span>${new Date(data.createdAt).toLocaleString('en-JM')}</span>
-            //                     </div>
-            //                     <div class="description">
-            //                         <div>
-            //                             ${data.content}
-            //                         </div>
-            //                     </div>
-            //                 </div>
-            //             </div>`
-            //             $("#cmt" + data._id).append(html);
-            //         }
-            //     });
-            // })
+            comments.forEach(function (data) {
+                $.ajax({
+                    type: 'GET',
+                    url: `/comment/get-comment/${data.user_email}`,
+                    cache: false,
+                    success: function (res) {
+                        let html = `
+                        <div class="comment">
+                            <img src="${res.user.avatar}" alt="" class="image-34">
+                            <div class="content">
+                                <div class="name">
+                                    <span>${res.name}</span>
+                                    <span>${new Date(data.createdAt).toLocaleString('en-JM')}</span>
+                                </div>
+                                <div class="description">
+                                    <div>
+                                        ${data.content}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+                        $("#cmt" + data._id).append(html);
+                    }
+                });
+            })
         }
 
         return count;
@@ -292,8 +292,9 @@ $(document).ready(function () {
     function addComment(postID) {
         $("#comment-form" + postID).submit(e => {
             e.preventDefault();
-            $("#content").val('');
+            
             const data = new FormData($('#comment-form' + postID)[0])
+            $("#content").val('');
             $.ajax({
                 type: 'POST',
                 url: `/comment/add-comment/${postID}`,
@@ -302,7 +303,7 @@ $(document).ready(function () {
                 contentType: false,
                 cache: false,
                 success: function (res) {
-                    // console.log(res);
+                    console.log(res);
                 }
             });
         })
