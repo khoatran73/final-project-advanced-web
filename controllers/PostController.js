@@ -12,7 +12,6 @@ class PostController {
         await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
             .then(posts => {
                 if (posts.length) {
-
                     return res.json({ code: 0, message: "success", posts: posts })
                 } else {
                     return res.json({ code: 1, message: "no post yet" })
