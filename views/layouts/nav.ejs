@@ -1,87 +1,115 @@
-<nav class="navbar navbar-expand-sm navbar-light fixed-top shadow-sm bg-white navbar-index">
-    <label for="nav-tablet-input" class="nav__bars-btn">
-        <i class="fas fa-bars"></i>
-    </label>
-    <li class="nav-item nav-item-search">
-        <a href="/"><img  class="mr-2" src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bG9nb3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" width="28" height="28"></a> 
+<header class="header">
+    <div class="nav">
+        <div class="nav-left">
+            <div class="nav-ipad">
+                <i class="fas fa-bars" id="navbar-icon"></i>
+                <div class="nav-ipad-container">
+                    <div class="nav-ipad-user">
+                        <img src="<%=user.avatar%>" alt="">
+                    </div>
+                    <div class="nav-ipad-item">
+                        <i class="fas fa-home"></i>
+                        Trang Chủ
+                    </div>
+                    <div class="nav-ipad-item">
+                        <i class="fas fa-user-alt"></i>
+                        Trang Cá Nhân
+                    </div>
+                    <div class="nav-ipad-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Đăng Xuất
 
-        <form id="searchForm" action="/search" method="get">
-            <input value="<%if(locals.search){%><%= search %><%}%>" type="search" class="form-control search" name="search" id="search" placeholder="Tìm kiếm...">  
-        </form>
-
-        <a class="nav-link nav-item-md"  href="#">
-            <img  class="mr-2" src="https://media.istockphoto.com/photos/pleasant-young-indian-woman-freelancer-consult-client-via-video-call-picture-id1300972573?b=1&k=20&m=1300972573&s=170667a&w=0&h=xuAsEkMkoBbc5Nh-nButyq3DU297V_tnak-60VarrR0=" width="28" height="28"><b>Khanh Huỳnh</b>
-        </a>
-    </li>
-    
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        </ul>
-        <ul class="navbar-nav  mt-lg-0">
-            <li class="nav-item nav-item-mduser">
-                <a class="nav-link"  href="#">
-                    <img  class="mr-2" src="<%=user.avatar%>" width="28" height="28"><b><%=user.name%></b>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a id="btn-logout" class="nav-link sign-out" ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<input type="checkbox" name="" class="nav__input" id="nav-tablet-input" hidden>
-<label for="nav-tablet-input" class="nav__bars-btn">
-    <i class="fas fa-bars"></i>
-</label>
-<label for="nav-tablet-input" class="nav__overlay"></label>
-
-<nav class="nav__tablet nav__tablet-input">
-    <label for="nav-tablet-input" class="nav__tablet-close">
-        <i class="fas fa-times"></i>    
-    </label>
-    <ul class="navbar-nav nav__tablet-list">
-        <li>
-            <a href="/" class="nav__tablet-link"><i class="fa fa-home"></i> Trang chủ</a>
-        </li>
-<li>
-    <a href="#" class="nav__tablet-link"><i class="fa fa-key"></i> Đổi mật khẩu</a>
-</li>
-        <li>
-            <a href="#" class="nav__tablet-link"><i class="fa fa-bell"></i> Thông báo mới</a>
-        </li>
-        <input type="checkbox" name="" class="nav__input-sidetop" id="nav-sidebar-inputtop" hidden>
-        <label for="nav-sidebar-inputtop" href="#" class="nav__tablet-link"><i class="fa fa-th-list"></i> Phân loại thông báo <i class="fa fa-caret-down"></i></label>
-        <li class="nav-sidebar-litop">
-            <a href="#" class="nav__tablet-link">&emsp;&emsp;<i class="fa fa-users"></i> Phòng ban</a>
-            <a href="#" class="nav__tablet-link">&emsp;&emsp;<i class="fa fa-th-list"></i> Tất cả thông báo</a>
-        </li>
-        <input type="checkbox" name="" class="nav__input-sidebot" id="nav-sidebar-inputbot" hidden>
-        <li>
-            <a class="nav__tablet-link"  href="#">
-                <img  class="mr-2" src="https://media.istockphoto.com/photos/pleasant-young-indian-woman-freelancer-consult-client-via-video-call-picture-id1300972573?b=1&k=20&m=1300972573&s=170667a&w=0&h=xuAsEkMkoBbc5Nh-nButyq3DU297V_tnak-60VarrR0=" width="28" height="28"><b>Khanh Huỳnh</b>
+                    </div>
+                </div>
+                <div class="nav-ipad-overlay"></div>
+            </div>
+            <a href="" class="logo">
+                <img src="./image/logo.png" alt="">
             </a>
-        </li>
-        <li>
-            <a class="nav__tablet-link sign-out" href="/logout"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a>
-        </li>
-    </ul>
-</nav>
-<nav class="nk-sidebar">           
-    <div id="sidebar-wrapper">
-        <div class="sidebar-heading">DANH MỤC </div>
-        <div class="list-group list-group-flush">
-            <a href="/" class="list-group-item list-group-item-action"><i class="fa fa-home"></i> Trang chủ</a>
-            <span href="#" class="list-group-item"><i class="fa fa-th-list"></i> Phân loại thông báo <i class="fa fa-caret-down"></i></span>
-            <a href="/faculity" class="list-group-item list-group-item-action">&emsp;&emsp;<i class="fa fa-users"></i> Phòng ban</a>
-            <a href="/notification/1" class="list-group-item list-group-item-action">&emsp;&emsp;<i class="fa fa-th-list"></i> Tất cả thông báo</a>
+        </div>
+        <div class="nav-center">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Tìm người dùng..." id="search-input">
+            <div class="search-list">
+                <a class="user-search" href="">
+                    <img src="./image/bang.jpg" alt="" class="image-34">
+                    <span><%=user.name %></span>
+                </a>
+                <a class="user-search" href="">
+                    <img src="./image/bang.jpg" alt="" class="image-34">
+                    <span>Anh Khoa</span>
+                </a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-group">
+                <a href=""><img src="<%=user.avatar%>" alt=""></a>
+                <div class="dropdown">
+                    <i class="fas fa-sort-down"></i>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <i class="fas fa-user-alt"></i>
+                            Trang cá nhân
+                        </li>
+                        <li id="logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Đăng xuất
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-</nav>
-<nav class="nk-sidebarright">           
-    <div id="sidebar-wrapper">
-        <div class="sidebar-heading">THÔNG BÁO MỚI</div>
-        <a href="/notification/1" class="read-more"><u>Xem tất cả</u></a><br>
-        <div class="list-group notice notice--overflow">      
+</header>
+<section class="main">
+    <div class="main-left">
+        <h3>Danh Mục</h3>
+        <div class="main-left-item active">
+            <i class="fas fa-home"></i>
+            Trang Chủ
+        </div>
+        <div class="main-left-item">
+            <i class="fas fa-user-alt"></i>
+            Trang Cá Nhân
+        </div>
+        <div class="main-left-item">
+            <i class="fas fa-bell"></i>
+            Thông Báo
+        </div>
     </div>
-</nav>
+    <div class="main-right">
+        <div class="main-right-header">
+            <span>Thông Báo Mới</span>
+            <span><a href="">Xem Tất Cả</a></span>
+        </div>
+        <div class="main-right-list">
+            <div class="notification">
+                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
+                <div class="notification-title">Học Online năm 2022</div>
+            </div>
+            <div class="notification">
+                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
+                <div class="notification-title">Học Online năm 2022</div>
+            </div>
+            <div class="notification">
+                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
+                <div class="notification-title">Học Online năm 2022</div>
+            </div>
+            <div class="notification">
+                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
+                <div class="notification-title">Học Online năm 2022</div>
+            </div>
+            <div class="notification">
+                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
+                <div class="notification-title">Học Online năm 2022</div>
+            </div>
+            <div class="notification">
+                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
+                <div class="notification-title">Học Online năm 2022</div>
+            </div>
+            <div class="notification">
+                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
+                <div class="notification-title">Học Online năm 2022</div>
+            </div>
+        </div>
+    </div>

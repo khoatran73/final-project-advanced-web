@@ -29,87 +29,94 @@
 <body>
     <div id="main-wrapper">
         <%- include('./layouts/nav.ejs') %>
-
-            <div class="content-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div id="socketio"></div>
-                        <div class="card">
-                            <div class="card__body card__body--up">
-                                <a href="#">
-                                    <img class="mr-2"
-                                        src="<%=user.avatar%>"
-                                        width="40" height="40">
-                                </a>
-                                <input type="text" class="form-control thinking" placeholder="Bạn đang nghĩ gì?"
-                                    data-toggle="modal" data-target="#add-post-modal" readonly>
-                            </div>
-                        </div>
-                        <div id="new-post"></div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="add-post-modal" tabindex="-1" role="dialog"
-                            aria-labelledby="add-post-modalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title" id="add-post-modalLabel">
-                                            Tạo bài viết
-                                        </h3>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form id="form-post" enctype="multipart/form-data" method="post">
-                                        <div id="authur-post">
-                                            <a href="#">
-                                                <img class="mr-2"
-                                                    src="<%=user.avatar%>"
-                                                    width="40" height="40">
-                                                <span class="card__username"><%=user.name%></span>
-                                            </a>
-                                        </div>
-                                        <div class="modal-body">
-                                            <span id="errorStatus" class="error-input"></span>
-                                            <textarea placeholder="<%=user.name%> ơi ! Bạn đang nghĩ gì thế ?"class="form-control" id="post-content" rows="5"
-                                                name="description"></textarea>
-                                            <br><span>Thêm ảnh hoặc video:</span>
-                                            <br>
-                                            <div class="form-check-inline">
-                                                <label class="form-check-label" for="radio1">
-                                                    <input type="radio" class="form-check-input" id="imageRadio"
-                                                        name="optionAddpost" value="option1" checked>Ảnh
-                                                </label>
-                                            </div>
-                                            <div class="form-check-inline">
-                                                <label class="form-check-label" for="radio2">
-                                                    <input type="radio" class="form-check-input" id="videoRadio"
-                                                        name="optionAddpost" value="option2">Video
-                                                </label>
-                                            </div><br>
-                                            <div id="radioCheck">
-                                                <div id="post-img" class="custom-file mb-3">
-                                                    <input type="file" class="custom-file-input" id="post-image"
-                                                        name="image">
-                                                    <label class="custom-file-label" for="customFile">Chọn ảnh</label>
-                                                    <span id="errorImg" class="error-input"></span>
-                                                </div>
-                                                <input type="hidden" class="form-control" id="post-video" name="video"
-                                                    placeholder="Nhập link youtube">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Hủy</button>
-                                            <button type="submit" class="btn btn-primary">Đăng</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+            <div class="main-center">
+                <div class="add-post">
+                    <div class="main-center-item">
+                        <img src="<%=user.avatar%>" alt="" class="image-40">
+                        <input type="text" placeholder="Bạn đang nghĩ gì vậy <%=user.name%> ?" id="add-post-input">
                     </div>
-                    <div id="load_data"></div>
-                    <div id="load_data_message"></div>
+                </div>
+                <div id="post-list" class="post-list">
+                    
                 </div>
             </div>
+        </section>
+        <div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img src="<%=user.avatar%>" alt="" class="image-40">
+                        <b>Khoa</b>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" enctype="multipart/form-data" id="add-form">
+                            <div class="form-group">
+                                <textarea class="form-control" id="description" rows="4" name="description" id="description"
+                                    placeholder="Bạn đang nghĩ gì vậy"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="image-checked" class="media-label">Đăng ảnh hoặc video </label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="media-checked"
+                                        value="media-image" id="image-checked">
+                                    <label class="form-check-label" for="image-checked">
+                                        Ảnh
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="media-checked"
+                                        value="media-video" id="video-checked">
+                                    <label class="form-check-label" for="video-checked">
+                                        Video
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group media-image">
+                                <label for="image">Up ảnh</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="image" name="image">
+                                    <label class="custom-file-label" for="image">Chọn ảnh...</label>
+                                </div>
+                            </div>
+                            <div class="form-group media-video">
+                                <label for="video">Video youtube</label>
+                                <input type="text" class="form-control" id="video" name="video"
+                                    placeholder="Link video youtube">
+                            </div>
+                            <div class="alert alert-danger" id="error-add-post" role="alert">
+                                Error Message
+                            </div>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-success">Lưu</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="like-list-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Những người thích</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="like-list">
+                            <a href="">
+                                <img src="" class="image-34" alt="">
+                                <span>Anh Khoa</span>
+                            </a href="">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/javascripts/main.js"></script>
 </body>

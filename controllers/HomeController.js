@@ -1,10 +1,10 @@
 const User = require('../models/User')
 class HomeController {
     home(req, res) {
-        const id= req.session.passport.user._id;
-        const user= User.findById({_id:id});
+        const email= req.session.passport.user.email || req.session.email;
+        const user= User.findOne({email:email});
         if(user){
-            User.findById({_id:id})
+            User.findOne({email:email})
             .then(data=>{
                 res.render('index',{user:data});
             })
