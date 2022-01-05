@@ -12,7 +12,7 @@ class PostController {
         await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
             .then(posts => {
                 if (posts.length) {
-                    return res.json({ code: 0, message: "success", posts: posts })
+                    return res.json({ code: 0, message: "success", posts: posts})
                 } else {
                     return res.json({ code: 1, message: "no post yet" })
                 }
@@ -27,6 +27,14 @@ class PostController {
                 return res.json({ code: 0, message: "success", user: user })
             })
             .catch(err => res.json({ code: 1, message: err }))
+    }
+    async getlikeOfPost(req, res) {
+        let id = req.params.id;
+        Post.findOne({ _id: id }).
+            then(post => {
+                return res.json({ code: 0, message: "success", like: post.like })
+            })
+            .catch(err => res.json({ code: 1, message: "invalid" }))
     }
 
     async getPost(req, res) {
@@ -215,22 +223,25 @@ class PostController {
             .then(async post => {
                 if (post) {
                     let isLiked = false
-                    let message = "unlike success"
 
+                    let message = "unlike success"
+                    let email = req.session.email||req.session.passport.user.email
                     for (let i = 0; i < post.users_like.length; i++) {
-                        if (post.users_like[i] === req.session.email) {
+                        if (post.users_like[i] === email) {
                             post.users_like.splice(i, 1)
                             isLiked = true
+                            await Post.updateOne({ _id: _id }, { like: post.users_like.length })
                             break
                         }
                     }
 
                     if (!isLiked) { //chua like
-                        post.users_like.push(req.session.email)
+                        post.users_like.push(email)
+                        await Post.updateOne({ _id: _id }, { like: post.users_like.length })
                         message = "like success"
                     }
 
-                    await User.findOne({ email: req.session.email })
+                    await User.findOne({ email: email })
                         .then(async user => {
                             if (user) {
                                 for (let i = 0; i < user.posts_like.length; i++) {
@@ -242,9 +253,10 @@ class PostController {
 
                                 if (!isLiked) { //chua like
                                     user.posts_like.push(_id)
+                                
                                 }
 
-                                await User.updateOne({ email: req.session.email }, { posts_like: user.posts_like })
+                                await User.updateOne({ email: email }, { posts_like: user.posts_like })
                             }
                         })
 
@@ -257,6 +269,22 @@ class PostController {
                 }
             })
             .catch(() => res.json({ code: 1, message: "invalid format id" }))
+    }
+    async checkLiked(req, res) {
+        const _id = req.params._id
+        const email = req.session.email|| req.session.passport.user.email
+        await User.findOne({ email: email})
+        .then(async user => {
+            if (user) {
+                for (let i = 0; i < user.posts_like.length; i++) {
+                    if (user.posts_like[i] === _id) {
+                        user.posts_like.splice(i, 1)
+                        return res.json({ code: 0,like:true})
+                    }
+                }
+                return res.json({ code: 0,like:false})
+            }
+        }).catch(err => {return res.json({ code: 1,message: err.message})})
     }
 }
 

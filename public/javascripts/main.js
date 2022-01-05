@@ -60,7 +60,6 @@ $(document).ready(function () {
         e.preventDefault();
         const data = new FormData($('#add-form')[0])
         $('#video').val('');
-        // $('#description').val('');
         $.ajax({
             type: "POST",
             url: "/post/add-post",
@@ -102,6 +101,16 @@ $(document).ready(function () {
             cache: false,
             success: function (res) {
                 showPost(res.posts)
+            }
+        });
+    }
+    function getCountLike(postID){
+        $.ajax({
+            type: 'GET',
+            url: `/post/get-countlike-post/${postID}`,
+            cache: false,
+            success: function (res) {
+               $("#count-like"+ postID).html(res.like)
             }
         });
     }
@@ -148,14 +157,15 @@ $(document).ready(function () {
                             <div class="info">
                                 <div class="like" id="like${post._id}">
                                     <i class="fas fa-thumbs-up"></i>
-                                    ${post.like}
+                                    <span id="count-like${post._id}"></span>
+                                    
                                 </div>
-                                <div class="comment">${loadComment(post._id)} bình luận</div>
+                                <div id="count-cmt${post._id}" class="comment"> </div>
                             </div>
                         </div>
                         <div class="post-bottom">
-                            <div class="like-btn react-btn">
-                                <i class="like-btn${post._id} far fa-thumbs-up active"></i> Like
+                            <div id="like-icon${post._id}" class="like-btn react-btn">
+
                             </div>
                             <div class="comment-btn ${post._id} react-btn">
                                 <i class="far fa-comment-alt"></i>Comment
@@ -165,15 +175,15 @@ $(document).ready(function () {
                             <div class="comment-box">
                                 <img src="${res.user.avatar}" alt="" class="image-34">
                                 <form id="comment-form${post._id}" action="" enctype="multipart/form-data" class="comment-form">
-                                    <input name="content" type="text" placeholder="Aa...">
+                                    <input id="content${post._id}" name="content" type="text" placeholder="Aa...">
                                     <label for="comment-image" title="Đính kèm ảnh"><i class="fas fa-camera"></i></label>
                                     <input name="comment-image" type="file" id="comment-image" accept="image/png, image/jpeg">
                                 </form>
                             </div>
-                            <div class="comment-list">
-                                
+                            <div id="comment${post._id}" class="comment-list">
+                               
                             </div>
-                            <div class="more-comment">
+                            <div id="more-comment${post._id}" class="more-comment">
                                 Xem them comment
                             </div>
                         </div>
@@ -204,17 +214,48 @@ $(document).ready(function () {
                     }
 
                     handleDropdown(post._id)
-                    displayCommentBox()
-                    // showComment(post._id)
+                    displayCommentBox(post._id)
                     showLikeList(post._id)
                     addComment(post._id)
                     handleLikeReact(post._id)
+                    moreComments(post._id)
+                    countComments(post._id)
+                    checkLike(post._id)
+                    getCountLike(post._id)
+                   
+                    
+                    
                 }
             });
         })
     }
 
     handleDropdown("dropdown")
+    // read more comments
+    function moreComments(postID){
+        $("#more-comment"+postID).click(()=>{
+            let start=0;
+            let limit =0;
+            loadComment(start, limit,postID)
+        })
+    }
+    function checkLike(postID){
+        $.ajax({
+            type: 'GET',
+            url: `/post/check-like/${postID}`,
+            success: function (res) {
+               if(res.code==0){
+                   if(res.like){
+                        $("#like-icon"+postID).append(`<i class="like-btn${postID} far fa-thumbs-up active"></i> Like`)
+                   }else{
+                        $("#like-icon"+postID).append(`<i class="like-btn${postID} far fa-thumbs-up "></i> Like`)
+                   }
+                }
+            }
+        })
+
+    }
+    
     function handleDropdown(className) {
         $("." + className).click(function (e) {
             e.stopPropagation()
@@ -235,58 +276,88 @@ $(document).ready(function () {
     }
 
     //Load comment--------------------------
-    function loadComment(postId) {
+    function loadComment(start, limitCmt,postId) {
         let count = 0;
         $.ajax({
             type: 'GET',
             url: `/comment/get-comment/${postId}`,
+            data:{start:start,limitCmt:limitCmt},
             success: function (res) {
                 count = res.comments?.length
                 if (res.code === 0) {
+                    $("#comment" +postId).html('');
                     showComment(res.comments)
                 }
             }
         });
-
-        function showComment(comments) {
-            console.log(comments)
-            comments.forEach(function (data) {
-                $.ajax({
-                    type: 'GET',
-                    url: `/comment/get-comment/${data.user_email}`,
-                    cache: false,
-                    success: function (res) {
+        return count;
+    }
+    //count comment
+    function countComments(postId) {
+        let count = 0;
+        $.ajax({
+            type: 'GET',
+            url: `/comment/get-count-comment/${postId}`,
+            cache: false,
+            success: function (res) {
+                if(res.code==0){
+                    count=res.count;
+                    $("#count-cmt"+postId).html(`${count} bình luận`)
+                }else{
+                    $("#count-cmt"+postId).html(`0 bình luận`)
+                }
+            }
+        });
+        return count;
+        
+    }
+    //show comments
+    function showComment(comments) {
+        comments.forEach(function (data) {
+            $.ajax({
+                type: 'GET',
+                url: `/comment/get-user-comment/${data.user_email}`,
+                cache: false,
+                success: function (res) {
+                    if(res.code === 0){
                         let html = `
                         <div class="comment">
                             <img src="${res.user.avatar}" alt="" class="image-34">
                             <div class="content">
                                 <div class="name">
-                                    <span>${res.name}</span>
+                                    <span>${res.user.name}</span>
                                     <span>${new Date(data.createdAt).toLocaleString('en-JM')}</span>
                                 </div>
                                 <div class="description">
                                     <div>
                                         ${data.content}
                                     </div>
+                                    ${checkImageCmt(data)}
                                 </div>
                             </div>
                         </div>`
-                        $("#cmt" + data._id).append(html);
+                        $("#comment" + data.post_id).append(html);
                     }
-                });
-            })
-        }
-
-        return count;
+                }
+            });
+        })
     }
-    
-    // display comment
-    function displayCommentBox() {
+    function checkImageCmt(data) {
+        let img=``;
+        if(data.image!=null){
+            img+=`<img src="${data.image}" alt="">`
+        }
+        return img;
+    }
+    //show comment box
+    function displayCommentBox(postID) {
         $(".comment-btn").click(function (e) {
             const post = e.target.parentNode.parentNode
             post.children[3].style.display = "block"
+            loadComment(0,1,postID)
         })
     }
+    
 
     //----Add new comment
     function addComment(postID) {
@@ -303,19 +374,43 @@ $(document).ready(function () {
                 contentType: false,
                 cache: false,
                 success: function (res) {
-                    console.log(res);
+                    $("#count-cmt"+postID).html(``)
+                    $("#content"+postID).val('')
+                    loadComment(0,1,postID)
+                    countComments(postID)
                 }
             });
         })
     }
 
     ///Like react
-    function handleLikeReact(className) {
-        $(window).click(function () {
-            if ($(".like-btn" + className).hasClass("active"))
-                $(".like-btn" + className).removeClass("active")
+    function handleLikeReact(postID) {
+        $("#like-icon"+postID).click(function () {
+            if ($(".like-btn" + postID).hasClass("active")){
+                $(".like-btn" + postID).removeClass("active")
+                $.ajax({
+                    type: 'PUT',
+                    url: `/post/update-like/${postID}`,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (res) {
+                        getCountLike(postID)
+                    }
+                });
+            }
             else {
-                $(".like-btn" + className).addClass("active")
+                $(".like-btn" + postID).addClass("active")
+                $.ajax({
+                    type: 'PUT',
+                    url: `/post/update-like/${postID}`,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (res) {
+                        getCountLike(postID)
+                    }
+                });
             }
         })
     }
