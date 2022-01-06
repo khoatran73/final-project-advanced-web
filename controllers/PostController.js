@@ -7,9 +7,25 @@ const youtubeParser = require('../helper/youtube-parser')
 
 class PostController {
     async getAllPost(req, res) {
+        let _id = req.query._id;
         let limit = req.query.limit;
         let start = req.query.start;
-        await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
+        if(_id!=null){
+            await User.findById({ _id:_id})
+            .then(user=>{
+                Post.find({ user_email:user.email}).sort({ _id: -1 })
+                .then(posts => {
+                    if (posts.length) {
+                        return res.json({ code: 0, message: "success", posts: posts })
+                    } else {
+                        return res.json({ code: 1, message: "no post yet" })
+                    }
+                })
+                .catch(err => res.json({ code: 2, message: err.message }))
+            })
+            
+        }else{
+            await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
             .then(posts => {
                 if (posts.length) {
                     return res.json({ code: 0, message: "success", posts: posts })
@@ -18,6 +34,8 @@ class PostController {
                 }
             })
             .catch(err => res.json({ code: 2, message: err.message }))
+        }
+        
     }
 
     async getUserOfPost(req, res) {
@@ -103,7 +121,16 @@ class PostController {
 
                         if (req.body.video) {
                             const yP = youtubeParser(req.body.video)
+                            await cloudinary.destroys(post.cloudinary_id)
                             if (!yP) return res.json({ code: 1, message: "Not a link youtube" })
+                            await Post.updateOne({ _id: _id }, {
+                                description: description,
+                                image: null,
+                                cloudinary_id: result?.cloudinary_id || post.cloudinary_id,
+                                video:youtubeParser(req.body.video) ||  post.video
+                            })
+                                .then(() => res.json({ code: 0, message: "update post successfully" }))
+                                .catch(err => res.json({ code: 2, message: err.message }))
                         }
 
                         if (req.file) {
@@ -111,19 +138,20 @@ class PostController {
                             if (iH.code === 0) {
                                 await cloudinary.destroys(post.cloudinary_id)
                                 result = await cloudinary.uploads(req.file.path, "advanced-web/post")
+                                await Post.updateOne({ _id: _id }, {
+                                    description: description,
+                                    image: result?.url || post.image,
+                                    cloudinary_id: result?.cloudinary_id || post.cloudinary_id,
+                                    video:null
+                                })
+                                    .then(() => res.json({ code: 0, message: "update post successfully" }))
+                                    .catch(err => res.json({ code: 2, message: err.message }))
                             } else {
                                 return res.json({ code: 1, message: iH.message })
                             }
                         }
 
-                        await Post.updateOne({ _id: _id }, {
-                            description: description,
-                            image: result?.url || post.image,
-                            cloudinary_id: result?.cloudinary_id || post.cloudinary_id,
-                            video: req.body.video || post.video
-                        })
-                            .then(() => res.json({ code: 0, message: "update post successfully" }))
-                            .catch(err => res.json({ code: 2, message: err.message }))
+                        
                     }
                 } else {
                     return res.json({ code: 1, message: "invalid id" })
@@ -161,11 +189,11 @@ class PostController {
 
     async deletePostVideo(req, res) {
         const _id = req.params._id
-
         Post.findOne({ _id: _id })
-            .then(async post => {
+            .then( post => {
                 if (post) {
                     const email = req.session.passport?.user?.email || req.session.user?.email
+                    console.log(email)
                     if (post.user_email !== email) {
                         return res.json({ code: 1, message: "not your post" })
                     } else {
@@ -177,7 +205,7 @@ class PostController {
                             return res.json({ code: 1, message: "Có video đâu mà xóa ?" })
                         }
                     }
-                } else {
+                }else {
                     return res.json({ code: 1, message: "invalid id" })
                 }
             })
@@ -212,6 +240,12 @@ class PostController {
                                         .then(() => res.json({ code: 0, message: "delete post successfully" }))
                                         .catch(err => res.json({ code: 2, message: err.message }))
 
+                                }else{
+                                    if (post.cloudinary_id)
+                                        await cloudinary.destroys(post.cloudinary_id)
+                                    await Post.deleteOne({ _id: _id })
+                                        .then(() => res.json({ code: 0, message: "delete post successfully" }))
+                                        .catch(err => res.json({ code: 2, message: err.message }))
                                 }
                             })
                     }

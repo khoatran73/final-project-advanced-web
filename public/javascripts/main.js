@@ -144,6 +144,7 @@ $(document).ready(function () {
             data: { limit: limitpost, start: start },
             cache: false,
             success: function (res) {
+
                 showPost(res.posts)
             }
         });
@@ -160,121 +161,168 @@ $(document).ready(function () {
     }
 
     function showPost(posts) {
-        posts.forEach(function (post) {
-            let html = ``;
-            $.ajax({
-                type: 'GET',
-                url: '/post/get-user-post/?email=' + post.user_email,
-                cache: false,
-                success: function (res) {
-                    if (res.code === 0) {
-                        html += `<div class="main-center-item post" id="${post._id}">
-                        <div class="post-top">
-                            <a href="/profile/${res.user._id}">
-                                <img src="${res.user.avatar}" alt="" class="image-40">
-                            </a>
-                            <div class="name-group">
+        if(posts){
+            posts.forEach(function (post) {
+                let html = ``;
+                $.ajax({
+                    type: 'GET',
+                    url: '/post/get-user-post/?email=' + post.user_email,
+                    cache: false,
+                    success: function (res) {
+                        if (res.code === 0) {
+                            html += `<div class="main-center-item post" id="${post._id}">
+                            <div class="post-top">
                                 <a href="/profile/${res.user._id}">
-                                    <div class="name">${res.user.name}</div>
+                                    <img src="${res.user.avatar}" alt="" class="image-40">
                                 </a>
-                                <div class="time">${new Date(post.createdAt).toLocaleString('en-JM')}</div>
-                            </div>
-                            <div class="action  ${post._id}">
-                                <i class="fas fa-ellipsis-h"></i>
-                                <div class="action-dropdown">
-                                    <div class="action-dropdown-item">
-                                        <i class="fas fa-edit"></i>
-                                        Chỉnh sửa bài viết
-                                    </div>
-                                    <div class="action-dropdown-item">
-                                        <i class="fas fa-trash-alt"></i>
-                                        Xóa bài viết
+                                <div class="name-group">
+                                    <a href="/profile/${res.user._id}">
+                                        <div class="name">${res.user.name}</div>
+                                    </a>
+                                    <div class="time">${new Date(post.createdAt).toLocaleString('en-JM')}</div>
+                                </div>
+                                <div class="action  ${post._id}">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                    <div class="action-dropdown">
+                                        <div id="updatePost${post._id}" class="action-dropdown-item">
+                                            <i class="fas fa-edit"></i>
+                                            Chỉnh sửa bài viết
+                                        </div>
+                                        <div id="deletePost${post._id}" class="action-dropdown-item">
+                                            <i class="fas fa-trash-alt"></i>
+                                            Xóa bài viết
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                        </div>
-                        <div class="post-main">
-                            <div class="content">
-                                <div>
-                                    ${post.description}
-                                </div>
-                                ${checkMedia(post)}
                                 
                             </div>
-                            <div class="info">
-                                <div class="like" id="like${post._id}">
-                                    <i class="fas fa-thumbs-up"></i>
-                                    <span id="count-like${post._id}"></span>
+                            <div class="post-main">
+                                <div class="content">
+                                    <div>
+                                        ${post.description}
+                                    </div>
+                                    ${checkMedia(post)}
                                     
                                 </div>
-                                <div id="count-cmt${post._id}" class="comment"> </div>
-                            </div>
-                        </div>
-                        <div class="post-bottom">
-                            <div id="like-icon${post._id}" class="like-btn react-btn">
-
-                            </div>
-                            <div class="comment-btn ${post._id} react-btn">
-                                <i class="far fa-comment-alt"></i>Comment
-                            </div>
-                        </div>
-                        <div class="comment-area" id="${post._id}" >
-                            <div class="comment-box">
-                                <img src="${res.user.avatar}" alt="" class="image-34">
-                                <form id="comment-form${post._id}" action="" enctype="multipart/form-data" class="comment-form">
-                                    <input id="content${post._id}" name="content" type="text" placeholder="Aa...">
-                                    <label for="comment-image" title="Đính kèm ảnh"><i class="fas fa-camera"></i></label>
-                                    <input name="comment-image" type="file" id="comment-image" accept="image/png, image/jpeg">
-                                </form>
-                            </div>
-                            <div id="comment${post._id}" class="comment-list">
-                               
-                            </div>
-                            <div id="more-comment${post._id}" class="more-comment">
-                                Xem them comment
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="like-list-modal${post._id}" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Những người thích</h5>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="like-list">
-                                        <a href="">
-                                            <img src="" class="image-34" alt="">
-                                            <span>Anh Khoa</span>
-                                        </a href="">
+                                <div class="info">
+                                    <div class="like" id="like${post._id}">
                                         <i class="fas fa-thumbs-up"></i>
+                                        <span id="count-like${post._id}"></span>
+                                        
+                                    </div>
+                                    <div id="count-cmt${post._id}" class="comment"> </div>
+                                </div>
+                            </div>
+                            <div class="post-bottom">
+                                <div id="like-icon${post._id}" class="like-btn react-btn">
+                                    
+                                </div>
+                                <div class="comment-btn ${post._id} react-btn">
+                                    <i class="far fa-comment-alt"></i>Comment
+                                </div>
+                            </div>
+                            <div class="comment-area" id="${post._id}" >
+                                <div class="comment-box">
+                                    <img src="${res.user.avatar}" alt="" class="image-34">
+                                    <form id="comment-form${post._id}" action="" enctype="multipart/form-data" class="comment-form">
+                                        <input id="content${post._id}" name="content" type="text" placeholder="Aa...">
+                                        <label for="comment-image" title="Đính kèm ảnh"><i class="fas fa-camera"></i></label>
+                                        <input name="comment-image" type="file" id="comment-image" accept="image/png, image/jpeg">
+                                    </form>
+                                </div>
+                                <div id="comment${post._id}" class="comment-list">
+                                   
+                                </div>
+                                <div id="more-comment${post._id}" class="more-comment">
+                                    Xem them comment
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="like-list-modal${post._id}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Những người thích</h5>
+                                    </div>
+                                    <div id="modal-body${post._id}" class="modal-body">
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
                             </div>
                         </div>
-                    </div>
-                    `;
-                        $('#post-list').append(html);
+                        `;
+                            $('#post-list').append(html);
+                            handlePost(post,res.user)
+                        }
+    
+                        handleDropdown(post._id)
+                        displayCommentBox(post._id)
+                        showLikeList(post._id)
+                        addComment(post._id)
+                        handleLikeReact(post._id)
+                        moreComments(post._id)
+                        countComments(post._id)
+                        checkLike(post._id)
+                        getCountLike(post._id)
+                        showUserLike(post)
+                        
                     }
+                });
+            })
+        }
+    }
+    //show users like posts 
+    function showUserLike(post) {
+        post.users_like.forEach(email => {
+            $.ajax({
+                type: 'GET',
+                url: '/post/get-user-post/?email=' + email,
+                cache: false,
+                success: function (res) {
+                    if(res.code==0){
+                        let html = `
+                        <div  class="like-list">
+                            <a href="/profile/${res.user._id}">
+                                <img src="${res.user.avatar}" class="image-34" alt="">
+                                <span>${res.user.name}</span>
+                            </a>
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        `
+                        $("#modal-body"+post._id).append(html)
 
-                    handleDropdown(post._id)
-                    displayCommentBox(post._id)
-                    showLikeList(post._id)
-                    addComment(post._id)
-                    handleLikeReact(post._id)
-                    moreComments(post._id)
-                    countComments(post._id)
-                    checkLike(post._id)
-                    getCountLike(post._id)
+                    }
                 }
-            });
+            })
         })
     }
+    function showUserLikeProfile(post) {
+        post.users_like.forEach(email => {
+            $.ajax({
+                type: 'GET',
+                url: '/post/get-user-post/?email=' + email,
+                cache: false,
+                success: function (res) {
+                    if(res.code==0){
+                        let html = `
+                        <div  class="like-list">
+                            <a href="/profile/${res.user._id}">
+                                <img src="${res.user.avatar}" class="image-34" alt="">
+                                <span>${res.user.name}</span>
+                            </a>
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        `
+                        $("#modal-body-profile"+post._id).append(html)
 
+                    }
+                }
+            })
+        })
+    }
     handleDropdown("dropdown")
     // read more comments
     function moreComments(postID) {
@@ -300,9 +348,146 @@ $(document).ready(function () {
         })
 
     }
+    function checkLikeprofile(postID) {
+        $.ajax({
+            type: 'GET',
+            url: `/post/check-like/${postID}`,
+            success: function (res) {
+                if (res.code == 0) {
+                    if (res.like) {
+                        $("#like-icon-profile" + postID).append(`<i class="like-btn${postID} far fa-thumbs-up active"></i> Like`)
+                    } else {
+                        $("#like-icon-profile" + postID).append(`<i class="like-btn${postID} far fa-thumbs-up "></i> Like`)
+                    }
+                }
+            }
+        })
 
-    function handleDropdown(className) {
-        $("." + className).click(function (e) {
+    }
+    function handlePost(post,user){
+        $("#deletePost"+post._id).click(function () {
+            $.ajax({
+                type: 'DELETE',
+                url: `/post/delete-post/${post._id}`,
+                success: function (res) {
+                    if(res.code==0){
+                        alert('Delete post successfully')
+                        $('#post-list').html("");
+                        loadIndex10Post(0, 10);
+                    }
+                }
+            })
+        })
+        $("#updatePost"+post._id).click(function(){
+            let html=`
+                <div class="modal fade" id="update-modal${post._id}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <img src="${user.avatar}" alt="" class="image-40">
+                                <b>${user.name}</b>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" enctype="multipart/form-data" id="update-form">
+                                    <div class="form-group">
+                                        <textarea  class="form-control" id="description" rows="4" name="description"
+                                            id="description" placeholder="Bạn đang nghĩ gì vậy">${post.description}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image-checked" class="media-label">Đăng ảnh hoặc video </label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="media-update-checked"
+                                                value="media-update-image" id="image-update-checked">
+                                            <label class="form-check-label" for="image-update-checked">
+                                                Ảnh
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input"  type="radio" name="media-update-checked"
+                                                value="media-update-video" id="video-update-checked">
+                                            <label class="form-check-label" for="video-update-checked">
+                                                Video
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group media-update-image">
+                                        <label for="image-update">Up ảnh</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="image-update" name="image">
+                                            <label class="custom-file-label" for="image-update">Chọn ảnh...</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group media-update-video">
+                                        <label for="video-update">Video youtube</label>
+                                        <input type="text" class="form-control" id="video-update" name="video"
+                                            placeholder="Link video youtube">
+                                    </div>
+                                    <div class="alert alert-danger error-text" role="alert">
+                                        Error Message
+                                    </div>
+                                    <div class="form-group">
+                                    ${checkMedia(post)}
+                                    </div>
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Đóng</button>
+                                        <button type="submit" class="btn btn-success">Lưu</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+            if(window.location.pathname.includes("profile")){
+                $("#wrapper-profile").append(html)
+            }else{
+                $("#main-wrapper").append(html)
+            }
+            $("#update-modal"+ post._id).modal("show");
+            $("input[name=media-update-checked]").change(() => displayupdateMedia())
+
+            function displayupdateMedia() {
+                const mediaChecked = $("input[name=media-update-checked]:checked").val()
+                const mediaUnChecked = $("input[name=media-update-checked]:not(:checked)").val()
+                $(`.${mediaChecked}`).css("display", "block")
+                $(`.${mediaUnChecked}`).css("display", "none")
+            }
+            $("#update-form").submit(e=>{
+                e.preventDefault()
+                const data = new FormData($('#update-form')[0])
+                $('#video-update').val('');
+                $.ajax({
+                    type: "PUT",
+                    url: `/post/edit-post/${post._id}`,
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (res) {
+                        if (res.code == 0) {
+                            if(window.location.pathname.includes("profile")){
+                                $('#user-post-list').html('');
+                                loadProfilePost(window.location.pathname.split('/')[2])
+                                $('#update-modal'+post._id).modal('hide');
+                            }else{
+                                $('#post-list').html("");
+                                loadIndex10Post(0, 10);
+                                $('#update-modal'+post._id).modal('hide');
+                            }
+                        } else {
+                            $(".error-text").css("visibility", "visible")
+                            $(".error-text").html(res.message)
+                        }
+                    }
+                })
+            })
+
+        })
+    }
+
+    function handleDropdown(postID) {
+        $("." + postID).click(function (e) {
             e.stopPropagation()
             let parent = e.target
             if (e.target.children.length === 0) {
@@ -315,8 +500,8 @@ $(document).ready(function () {
         })
 
         $(window).click(function () {
-            if ($("." + className).hasClass("active"))
-                $("." + className).removeClass("active")
+            if ($("." + postID).hasClass("active"))
+                $("." + postID).removeClass("active")
         })
     }
 
@@ -366,7 +551,7 @@ $(document).ready(function () {
                 success: function (res) {
                     if (res.code === 0) {
                         let html = `
-                        <div class="comment">
+                        <div id="comment${data._id}" class="comment">
                             <a href="/profile/${res.user._id}">
                                 <img src="${res.user.avatar}" alt="" class="image-34">
                             </a>
@@ -382,13 +567,31 @@ $(document).ready(function () {
                                     ${checkImageCmt(data)}
                                 </div>
                             </div>
+                            <div class="comment-dropdown">
+                                <i class="fas fa-chevron-up"></i>
+                                <div class="comment-dropdown-menu">
+                                    <div class="faculty-notify comment-dropdown-item">
+                                        <i class="fas fa-users"></i>
+                                        Theo Phòng Ban
+                                    </div>
+                                    <div class="all-notify comment-dropdown-item">
+                                        <i class="fas fa-bell"></i>
+                                        Tất Cả Thông Báo
+                                    </div>
+                                </div>
+                            </div>
                         </div>`
                         $("#comment" + data.post_id).append(html);
+                        
+                        
+                        
+                        
                     }
                 }
             });
         })
     }
+    
     function checkImageCmt(data) {
         let img = ``;
         if (data.image != null) {
@@ -460,7 +663,165 @@ $(document).ready(function () {
                 });
             }
         })
+        $("#like-icon-profile" + postID).click(function () {
+            if ($(".like-btn" + postID).hasClass("active")) {
+                $(".like-btn" + postID).removeClass("active")
+                $.ajax({
+                    type: 'PUT',
+                    url: `/post/update-like/${postID}`,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (res) {
+                        getCountLike(postID)
+                    }
+                });
+            }
+            else {
+                $(".like-btn" + postID).addClass("active")
+                $.ajax({
+                    type: 'PUT',
+                    url: `/post/update-like/${postID}`,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (res) {
+                        getCountLike(postID)
+                    }
+                });
+            }
+        })
     }
+
+    //load post profile
+    if (location.pathname.includes("profile"))
+        loadProfilePost(window.location.pathname.split('/')[2])
+    function loadProfilePost(id) {
+        $.ajax({
+            type: 'GET',
+            url: '/post/get-all-post',
+            cache: false,
+            data: {_id:id},
+            success: function (res) {
+                showprofilePost(res.posts)
+            }
+        });
+    }
+    function showprofilePost(posts) {
+        if(posts){
+            posts.forEach(function (post) {
+                let html = ``;
+                $.ajax({
+                    type: 'GET',
+                    url: '/post/get-user-post/?email=' + post.user_email,
+                    cache: false,
+                    success: function (res) {
+                        if (res.code === 0) {
+                            html += `<div class="main-center-item post" id="${post._id}">
+                            <div class="post-top">
+                                <a href="/profile/${res.user._id}">
+                                    <img src="${res.user.avatar}" alt="" class="image-40">
+                                </a>
+                                <div class="name-group">
+                                    <a href="/profile/${res.user._id}">
+                                        <div class="name">${res.user.name}</div>
+                                    </a>
+                                    <div class="time">${new Date(post.createdAt).toLocaleString('en-JM')}</div>
+                                </div>
+                                <div class="action  ${post._id}">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                    <div class="action-dropdown">
+                                        <div id="updatePost${post._id}" class="action-dropdown-item">
+                                            <i class="fas fa-edit"></i>
+                                            Chỉnh sửa bài viết
+                                        </div>
+                                        <div id="deletePost${post._id}" class="action-dropdown-item">
+                                            <i class="fas fa-trash-alt"></i>
+                                            Xóa bài viết
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="post-main">
+                                <div class="content">
+                                    <div>
+                                        ${post.description}
+                                    </div>
+                                    ${checkMedia(post)}
+                                    
+                                </div>
+                                <div class="info">
+                                    <div class="like" id="like${post._id}">
+                                        <i class="fas fa-thumbs-up"></i>
+                                        <span id="count-like${post._id}"></span>
+                                        
+                                    </div>
+                                    <div id="count-cmt${post._id}" class="comment"> </div>
+                                </div>
+                            </div>
+                            <div class="post-bottom">
+                                <div id="like-icon-profile${post._id}" class="like-btn react-btn">
+                            
+                                </div>
+                                <div class="comment-btn ${post._id} react-btn">
+                                    <i class="far fa-comment-alt"></i>Comment
+                                </div>
+                            </div>
+                            <div class="comment-area" id="${post._id}" >
+                                <div class="comment-box">
+                                    <img src="${res.user.avatar}" alt="" class="image-34">
+                                    <form id="comment-form${post._id}" action="" enctype="multipart/form-data" class="comment-form">
+                                        <input id="content${post._id}" name="content" type="text" placeholder="Aa...">
+                                        <label for="comment-image" title="Đính kèm ảnh"><i class="fas fa-camera"></i></label>
+                                        <input name="comment-image" type="file" id="comment-image" accept="image/png, image/jpeg">
+                                    </form>
+                                </div>
+                                <div id="comment${post._id}" class="comment-list">
+                                   
+                                </div>
+                                <div id="more-comment${post._id}" class="more-comment">
+                                    Xem them comment
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="like-list-modal${post._id}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Những người thích</h5>
+                                    </div>
+                                    <div id="modal-body-profile${post._id}" class="modal-body">
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                            $('#user-post-list').append(html);
+                            handlePost(post,res.user)
+                        }
+    
+                        handleDropdown(post._id)
+                        displayCommentBox(post._id)
+                        showLikeList(post._id)
+                        addComment(post._id)
+                        handleLikeReact(post._id)
+                        moreComments(post._id)
+                        countComments(post._id)
+                        checkLikeprofile(post._id)
+                        getCountLike(post._id)
+                        showUserLikeProfile(post)
+                        
+                    }
+                });
+            })
+        }
+    }
+
 
     //logout 
     $('.logout').click(function () {
@@ -538,6 +899,7 @@ $(document).ready(function () {
         }
     })
 }
+
 
 // notification bar click
 {
