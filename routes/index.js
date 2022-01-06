@@ -4,6 +4,7 @@ const adminRouter = require('./adminRouter')
 const postRouter = require('./postRouter')
 const commentRouter = require('./commentRouter')
 const notificationRouter = require('./notificationRouter')
+const profileRouter = require('./profileRouter')
 
 function route(app) {
     app.use('/account', accountRouter)
@@ -11,6 +12,7 @@ function route(app) {
     app.use('/post',postRouter)
     app.use('/comment', commentRouter)
     app.use('/notification', notificationRouter)
+    app.use('/profile', profileRouter)
     app.use('/', homeRouter)
 }
 

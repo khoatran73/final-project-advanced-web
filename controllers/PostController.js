@@ -12,7 +12,7 @@ class PostController {
         await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
             .then(posts => {
                 if (posts.length) {
-                    return res.json({ code: 0, message: "success", posts: posts})
+                    return res.json({ code: 0, message: "success", posts: posts })
                 } else {
                     return res.json({ code: 1, message: "no post yet" })
                 }
@@ -70,8 +70,10 @@ class PostController {
                 const yP = youtubeParser(req.body.video)
                 if (!yP) return res.json({ code: 1, message: "Not a link youtube" })
             }
+            
+            const email = req.session.passport?.user?.email || req.session.user?.email
             const post = new Post({
-                user_email: req.session.email || req.session.passport.user.email,
+                user_email: email,
                 description: description,
                 image: result?.url || null,
                 cloudinary_id: result?.cloudinary_id || null,
@@ -80,7 +82,7 @@ class PostController {
 
             post.save()
 
-            return res.json({ code: 0, message: "add post successfully", user: req.session.passport.user, post: post })
+            return res.json({ code: 0, message: "add post successfully", post: post })
         }
     }
 
@@ -93,7 +95,8 @@ class PostController {
         await Post.findOne({ _id: _id })
             .then(async post => {
                 if (post) {
-                    if (post.user_email !== req.session.email) {
+                    const email = req.session.passport?.user?.email || req.session.user?.email
+                    if (post.user_email !== email) {
                         return res.json({ code: 1, message: "Not your post" })
                     } else {
                         let result
@@ -135,7 +138,8 @@ class PostController {
         Post.findOne({ _id: _id })
             .then(async post => {
                 if (post) {
-                    if (post.user_email !== req.session.email) {
+                    const email = req.session.passport?.user?.email || req.session.user?.email
+                    if (post.user_email !== email) {
                         return res.json({ code: 1, message: "not your post" })
                     } else {
                         if (post.cloudinary_id) {
@@ -161,7 +165,8 @@ class PostController {
         Post.findOne({ _id: _id })
             .then(async post => {
                 if (post) {
-                    if (post.user_email !== req.session.email) {
+                    const email = req.session.passport?.user?.email || req.session.user?.email
+                    if (post.user_email !== email) {
                         return res.json({ code: 1, message: "not your post" })
                     } else {
                         if (post.video) {
@@ -185,7 +190,8 @@ class PostController {
         Post.findOne({ _id: _id })
             .then(async post => {
                 if (post) {
-                    if (post.user_email !== req.session.email) {
+                    const email = req.session.passport?.user?.email || req.session.user?.email
+                    if (post.user_email !== email) {
                         return res.json({ code: 1, message: "not your post" })
                     } else {
                         await Comment.find({ post_id: post._id })
@@ -225,7 +231,7 @@ class PostController {
                     let isLiked = false
 
                     let message = "unlike success"
-                    let email = req.session.email||req.session.passport.user.email
+                    const email = req.session.passport?.user?.email || req.session.user?.email
                     for (let i = 0; i < post.users_like.length; i++) {
                         if (post.users_like[i] === email) {
                             post.users_like.splice(i, 1)
@@ -253,7 +259,7 @@ class PostController {
 
                                 if (!isLiked) { //chua like
                                     user.posts_like.push(_id)
-                                
+
                                 }
 
                                 await User.updateOne({ email: email }, { posts_like: user.posts_like })
@@ -272,19 +278,19 @@ class PostController {
     }
     async checkLiked(req, res) {
         const _id = req.params._id
-        const email = req.session.email|| req.session.passport.user.email
-        await User.findOne({ email: email})
-        .then(async user => {
-            if (user) {
-                for (let i = 0; i < user.posts_like.length; i++) {
-                    if (user.posts_like[i] === _id) {
-                        user.posts_like.splice(i, 1)
-                        return res.json({ code: 0,like:true})
+        const email = req.session.passport?.user?.email || req.session.user?.email
+        await User.findOne({ email: email })
+            .then(async user => {
+                if (user) {
+                    for (let i = 0; i < user.posts_like.length; i++) {
+                        if (user.posts_like[i] === _id) {
+                            user.posts_like.splice(i, 1)
+                            return res.json({ code: 0, like: true })
+                        }
                     }
+                    return res.json({ code: 0, like: false })
                 }
-                return res.json({ code: 0,like:false})
-            }
-        }).catch(err => {return res.json({ code: 1,message: err.message})})
+            }).catch(err => { return res.json({ code: 1, message: err.message }) })
     }
 }
 

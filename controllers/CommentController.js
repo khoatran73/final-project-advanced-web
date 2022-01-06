@@ -65,7 +65,7 @@ class CommentController {
                             image: result?.url || null,
                             content: req.body.content,
                             post_id: post._id,
-                            user_email: req.session.email|| req.session.passport.user.email
+                            user_email: req.session.user?.email || req.session.passport?.user?.email
                         })
 
                         comment.save()
@@ -85,7 +85,7 @@ class CommentController {
         await Comment.findOne({ _id: commentId })
             .then(async comment => {
                 if (comment) {
-                    if (comment.user_email !== req.session.email) {
+                    if (comment.user_email !== (req.session.user?.email || req.session.passport?.user?.email)) {
                         return res.json({ code: 1, message: "not your comment" })
                     } else {
                         if (comment.cloudinary_id) {
@@ -118,7 +118,7 @@ class CommentController {
             await Comment.findOne({ _id: commentId })
                 .then(async comment => {
                     if (comment) {
-                        if (comment.user_email !== req.session.email) {
+                        if (comment.user_email !== (req.session.user?.email || req.session.passport?.user?.email)) {
                             return res.json({ code: 1, message: "not your comment" })
                         } else {
                             let result

@@ -3,6 +3,9 @@ const router = express.Router()
 const notificationController = require('../controllers/NotificationController')
 const { isFaculty, isSignIn} = require('../middleware/authenticate')
 
+router.get("/all", isSignIn, notificationController.getAll)
+router.get("/faculty", isSignIn, notificationController.getFaculty)
+
 router.get('/get-all-notifications', isSignIn, notificationController.getAllNotifications)
 router.get('/get-notification/:_id', isSignIn, notificationController.getNotificationById)
 router.get('/get-faculty-notification/:faculty', isSignIn, notificationController.getAllFacultyNotification)

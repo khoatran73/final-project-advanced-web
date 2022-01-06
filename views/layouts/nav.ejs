@@ -23,8 +23,8 @@
                 </div>
                 <div class="nav-ipad-overlay"></div>
             </div>
-            <a href="" class="logo">
-                <img src="./image/logo.png" alt="">
+            <a href="/" class="logo">
+                <img src="https://res.cloudinary.com/dqrkqvtjg/image/upload/v1641437309/advanced-web/shortcut_ewsijw.png" alt="">
             </a>
         </div>
         <div class="nav-center">
@@ -33,7 +33,9 @@
             <div class="search-list">
                 <a class="user-search" href="">
                     <img src="./image/bang.jpg" alt="" class="image-34">
-                    <span><%=user.name %></span>
+                    <span>
+                        <%=user.name %>
+                    </span>
                 </a>
                 <a class="user-search" href="">
                     <img src="./image/bang.jpg" alt="" class="image-34">
@@ -43,17 +45,29 @@
         </div>
         <div class="nav-right">
             <div class="user-group">
-                <a href=""><img src="<%=user.avatar%>" alt=""></a>
+                <a href="/profile/<%=user._id%>"><img src="<%=user.avatar%>" alt=""></a>
                 <div class="dropdown">
                     <i class="fas fa-sort-down"></i>
                     <ul class="dropdown-menu">
                         <li>
-                            <i class="fas fa-user"></i>
-                            Trang cá nhân
+                            <a href="/profile/<%= user._id %>">
+                                <i class="fas fa-user"></i>
+                                Trang cá nhân
+                            </a>
                         </li>
+                        <% if (user.role == 1 || user.role == 2) { %>
+                            <li>
+                                <a href="/account/reset-password/<%= user._id %>">
+                                    <i class="fas fa-key"></i>
+                                    Đổi mật khẩu
+                                </a>
+                            </li>
+                        <% } %>
                         <li class="logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Đăng xuất
+                            <a href="/account/logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Đăng xuất
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -61,55 +75,3 @@
         </div>
     </div>
 </header>
-<section class="main">
-    <div class="main-left">
-        <h3>Danh Mục</h3>
-        <div class="main-left-item active">
-            <i class="fas fa-home"></i>
-            Trang Chủ
-        </div>
-        <div class="main-left-item">
-            <i class="fas fa-user"></i>
-            Trang Cá Nhân
-        </div>
-        <div class="main-left-item">
-            <i class="fas fa-bell"></i>
-            Thông Báo
-        </div>
-    </div>
-    <div class="main-right">
-        <div class="main-right-header">
-            <span>Thông Báo Mới</span>
-            <span><a href="">Xem Tất Cả</a></span>
-        </div>
-        <div class="main-right-list">
-            <div class="notification">
-                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
-                <div class="notification-title">Học Online năm 2022</div>
-            </div>
-            <div class="notification">
-                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
-                <div class="notification-title">Học Online năm 2022</div>
-            </div>
-            <div class="notification">
-                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
-                <div class="notification-title">Học Online năm 2022</div>
-            </div>
-            <div class="notification">
-                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
-                <div class="notification-title">Học Online năm 2022</div>
-            </div>
-            <div class="notification">
-                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
-                <div class="notification-title">Học Online năm 2022</div>
-            </div>
-            <div class="notification">
-                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
-                <div class="notification-title">Học Online năm 2022</div>
-            </div>
-            <div class="notification">
-                <div class="notification-detail">[Phòng Đại Học] - 25/2/2022</div>
-                <div class="notification-title">Học Online năm 2022</div>
-            </div>
-        </div>
-    </div>

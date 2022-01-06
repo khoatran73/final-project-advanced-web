@@ -10,8 +10,9 @@ const User = new Schema({
     avatar: String,
     role: Number, // 1: admin, 2: Phòng/Khoa, 3: sinh vieen
     class: String,
-    faculty: String,
+    faculty: Number,
     posts_like: { type: Array, default: [] },
+    user_created: String,
     hash: String,
     salt: String
 }, { timestamps: true })

@@ -20,6 +20,13 @@ $(document).ready(function () {
         }
     }
 
+    // hide error text
+    {
+        $("input").keydown(() => {
+            $(".error-text").css("visibility", "hidden")
+        })
+    }
+
     // Login
     {
         $('#login-form').submit(function (e) {
@@ -41,7 +48,7 @@ $(document).ready(function () {
                         window.location.href = "/"
                     } else {
                         $(".error-text").css("visibility", "visible")
-                        $(".error-text").html(res.message)
+                        $(".error-text").html("Email hoặc mật khẩu không đúng!")
                     }
                 },
             });
@@ -86,9 +93,9 @@ $(document).ready(function () {
         let check = data.post != null ? data.post : data;
         if (check.video != null) {
             media += `<iframe src="https://www.youtube.com/embed/${check.video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-        } else if (check.image!=null) {
+        } else if (check.image != null) {
             media += `<img class="image-up" src="${check.image}" width="100%" ><br><br>`
-        }else{media=``}
+        } else { media = `` }
         return media;
     }
     //Load post-------------------------------------------------------------------------------------------
@@ -104,13 +111,13 @@ $(document).ready(function () {
             }
         });
     }
-    function getCountLike(postID){
+    function getCountLike(postID) {
         $.ajax({
             type: 'GET',
             url: `/post/get-countlike-post/${postID}`,
             cache: false,
             success: function (res) {
-               $("#count-like"+ postID).html(res.like)
+                $("#count-like" + postID).html(res.like)
             }
         });
     }
@@ -126,9 +133,13 @@ $(document).ready(function () {
                     if (res.code === 0) {
                         html += `<div class="main-center-item post" id="${post._id}">
                         <div class="post-top">
-                            <img src="${res.user.avatar}" alt="" class="image-40">
+                            <a href="/profile/${res.user._id}">
+                                <img src="${res.user.avatar}" alt="" class="image-40">
+                            </a>
                             <div class="name-group">
-                                <div class="name">${res.user.name}</div>
+                                <a href="/profile/${res.user._id}">
+                                    <div class="name">${res.user.name}</div>
+                                </a>
                                 <div class="time">${new Date(post.createdAt).toLocaleString('en-JM')}</div>
                             </div>
                             <div class="action  ${post._id}">
@@ -222,9 +233,6 @@ $(document).ready(function () {
                     countComments(post._id)
                     checkLike(post._id)
                     getCountLike(post._id)
-                   
-                    
-                    
                 }
             });
         })
@@ -232,30 +240,30 @@ $(document).ready(function () {
 
     handleDropdown("dropdown")
     // read more comments
-    function moreComments(postID){
-        $("#more-comment"+postID).click(()=>{
-            let start=0;
-            let limit =0;
-            loadComment(start, limit,postID)
+    function moreComments(postID) {
+        $("#more-comment" + postID).click(() => {
+            let start = 0;
+            let limit = 0;
+            loadComment(start, limit, postID)
         })
     }
-    function checkLike(postID){
+    function checkLike(postID) {
         $.ajax({
             type: 'GET',
             url: `/post/check-like/${postID}`,
             success: function (res) {
-               if(res.code==0){
-                   if(res.like){
-                        $("#like-icon"+postID).append(`<i class="like-btn${postID} far fa-thumbs-up active"></i> Like`)
-                   }else{
-                        $("#like-icon"+postID).append(`<i class="like-btn${postID} far fa-thumbs-up "></i> Like`)
-                   }
+                if (res.code == 0) {
+                    if (res.like) {
+                        $("#like-icon" + postID).append(`<i class="like-btn${postID} far fa-thumbs-up active"></i> Like`)
+                    } else {
+                        $("#like-icon" + postID).append(`<i class="like-btn${postID} far fa-thumbs-up "></i> Like`)
+                    }
                 }
             }
         })
 
     }
-    
+
     function handleDropdown(className) {
         $("." + className).click(function (e) {
             e.stopPropagation()
@@ -276,16 +284,16 @@ $(document).ready(function () {
     }
 
     //Load comment--------------------------
-    function loadComment(start, limitCmt,postId) {
+    function loadComment(start, limitCmt, postId) {
         let count = 0;
         $.ajax({
             type: 'GET',
             url: `/comment/get-comment/${postId}`,
-            data:{start:start,limitCmt:limitCmt},
+            data: { start: start, limitCmt: limitCmt },
             success: function (res) {
                 count = res.comments?.length
                 if (res.code === 0) {
-                    $("#comment" +postId).html('');
+                    $("#comment" + postId).html('');
                     showComment(res.comments)
                 }
             }
@@ -300,16 +308,16 @@ $(document).ready(function () {
             url: `/comment/get-count-comment/${postId}`,
             cache: false,
             success: function (res) {
-                if(res.code==0){
-                    count=res.count;
-                    $("#count-cmt"+postId).html(`${count} bình luận`)
-                }else{
-                    $("#count-cmt"+postId).html(`0 bình luận`)
+                if (res.code == 0) {
+                    count = res.count;
+                    $("#count-cmt" + postId).html(`${count} bình luận`)
+                } else {
+                    $("#count-cmt" + postId).html(`0 bình luận`)
                 }
             }
         });
         return count;
-        
+
     }
     //show comments
     function showComment(comments) {
@@ -319,13 +327,15 @@ $(document).ready(function () {
                 url: `/comment/get-user-comment/${data.user_email}`,
                 cache: false,
                 success: function (res) {
-                    if(res.code === 0){
+                    if (res.code === 0) {
                         let html = `
                         <div class="comment">
-                            <img src="${res.user.avatar}" alt="" class="image-34">
+                            <a href="/profile/${res.user._id}">
+                                <img src="${res.user.avatar}" alt="" class="image-34">
+                            </a>
                             <div class="content">
                                 <div class="name">
-                                    <span>${res.user.name}</span>
+                                    <a href="/profile/${res.user._id}">${res.user.name}</a>
                                     <span>${new Date(data.createdAt).toLocaleString('en-JM')}</span>
                                 </div>
                                 <div class="description">
@@ -343,9 +353,9 @@ $(document).ready(function () {
         })
     }
     function checkImageCmt(data) {
-        let img=``;
-        if(data.image!=null){
-            img+=`<img src="${data.image}" alt="">`
+        let img = ``;
+        if (data.image != null) {
+            img += `<img src="${data.image}" alt="">`
         }
         return img;
     }
@@ -354,16 +364,16 @@ $(document).ready(function () {
         $(".comment-btn").click(function (e) {
             const post = e.target.parentNode.parentNode
             post.children[3].style.display = "block"
-            loadComment(0,1,postID)
+            loadComment(0, 1, postID)
         })
     }
-    
+
 
     //----Add new comment
     function addComment(postID) {
         $("#comment-form" + postID).submit(e => {
             e.preventDefault();
-            
+
             const data = new FormData($('#comment-form' + postID)[0])
             $("#content").val('');
             $.ajax({
@@ -374,9 +384,9 @@ $(document).ready(function () {
                 contentType: false,
                 cache: false,
                 success: function (res) {
-                    $("#count-cmt"+postID).html(``)
-                    $("#content"+postID).val('')
-                    loadComment(0,1,postID)
+                    $("#count-cmt" + postID).html(``)
+                    $("#content" + postID).val('')
+                    loadComment(0, 1, postID)
                     countComments(postID)
                 }
             });
@@ -385,8 +395,8 @@ $(document).ready(function () {
 
     ///Like react
     function handleLikeReact(postID) {
-        $("#like-icon"+postID).click(function () {
-            if ($(".like-btn" + postID).hasClass("active")){
+        $("#like-icon" + postID).click(function () {
+            if ($(".like-btn" + postID).hasClass("active")) {
                 $(".like-btn" + postID).removeClass("active")
                 $.ajax({
                     type: 'PUT',
@@ -480,3 +490,100 @@ $(document).ready(function () {
     }
 
 })
+
+
+// Noti dropdown
+{
+    $(".notification-dropdown").click(function (e) {
+        const children = e.target.children.length === 0 ? e.target : e.target.children[0]
+
+        if (children.classList.toString().includes("fa-chevron-up")) {
+            children.classList.remove("fa-chevron-up")
+            children.classList.add("fa-chevron-down")
+            $(".notification-dropdown-menu").css("display", "block")
+            $(".notification-dropdown-menu").css("transform", "translateY(0px)")
+        } else if (children.classList.toString().includes("fa-chevron-down")) {
+            children.classList.remove("fa-chevron-down")
+            children.classList.add("fa-chevron-up")
+            $(".notification-dropdown-menu").css("display", "none")
+            $(".notification-dropdown-menu").css("transform", "translateY(-100%)")
+        }
+    })
+}
+
+// notification bar click
+{
+    $(".notification-direction").click(function () {
+        window.location.href = "/notification/all"
+    })
+
+    $(".all-notify").click(function () {
+        window.location.href = "/notification/all"
+    })
+
+    $(".faculty-notify").click(function () {
+        window.location.href = "/notification/faculty"
+    })
+}
+
+// Admin add user
+{
+    $("#add-user-form").submit(e => {
+        e.preventDefault()
+
+        const data = new FormData($("#add-user-form")[0])
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/add-user",
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                console.log(res)
+                if (res.code === 0) {
+                    swal("Good Job!", "Thêm Phòng - Khoa thành công!!", "success")
+                        .then(() => {
+                            $('#add-user-modal').modal('hide')
+                            location.reload()
+                        })
+                } else {
+                    $(".error-text").css("visibility", "visible")
+                    $(".error-text").html(res.message)
+                }
+            }
+        })
+    })
+}
+
+{
+    const facultyHelper = {
+        1: "Phòng Công tác học sinh sinh viên (CTHSSV)",
+        2: "Phòng Đại Học",
+        3: "Phòng Sau đại học",
+        4: "Phòng điện toán và máy tính",
+        5: "Phòng khảo thí và kiểm định chất lượng",
+        6: "Phòng tài chính",
+        7: "Trung tâm tin học",
+        8: "Trung tâm đào tạo phát triển xã hội (SDTC)",
+        9: "Trung tâm phát triển Khoa học quản lý và Ứng dụng công nghệ (ATEM)",
+        10: "Trung tâm hợp tác doanh nghiệp và cựu sinh viên",
+        11: "Khoa Luật",
+        12: "Trung tâm ngoại ngữ - tin học - bồi dưỡng văn hóa",
+        13: "Viện chính sách kinh tế và kinh doanh",
+        14: "Khoa Mỹ thuật công nghiệp",
+        15: "Khoa Điện - Điện tử",
+        16: "Khoa Công nghệ thông tin",
+        17: "Khoa Quản trị kinh doanh",
+        18: "Khoa Môi trường và bảo hộ lao động",
+        19: "Khoa Lao động công đoàn",
+        20: "Khoa Tài chính ngân hàng",
+        21: "Khoa giáo dục quốc tế",
+    }
+
+    document.querySelectorAll(".user-faculty")?.forEach(faculty => {
+        const facultyInner = parseInt(faculty.innerHTML.trim())
+        if (facultyHelper[facultyInner])
+            faculty.innerHTML = facultyHelper[facultyInner]
+    })
+}

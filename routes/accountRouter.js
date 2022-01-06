@@ -8,8 +8,10 @@ require('../middleware/passport')(passport)
 router.get('/login', accountController.login)
 router.post("/login", accountController.auth)
 router.get("/logout", accountController.logout)
+
+router.get('/reset-password/:_id', isSignIn, accountController.resetPassword)
+
 router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
-router.get('/profile', isSignIn, accountController.home)
 router.get('/google/callback',
     passport.authenticate('google', {
         successRedirect: '/',

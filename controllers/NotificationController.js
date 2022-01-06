@@ -2,6 +2,19 @@ const Notification = require('../models/Notification')
 const User = require('../models/User')
 
 class NotificationController {
+    async getAll(req, res) {
+        const user = req.session.passport?.user || req.session.user
+        await Notification.find({})
+            .then(notifications => {
+                res.render("notification", { user: user, notifications: notifications })
+            })
+    }
+
+    getFaculty(req, res) {
+        const user = req.session.passport?.user || req.session.user
+        return res.render("faculty", { user: user })
+    }
+
     async getAllNotifications(req, res) {
         await Notification.find({})
             .then(notifications => {
@@ -60,15 +73,14 @@ class NotificationController {
         const { title, content } = req.body
         if (!title || !content) return res.json({ code: 1, message: "please enter enough information" })
 
-        let faculty
-        await User.findOne({ email: req.session.email })
-            .then(user => faculty = user.faculty)
+        const faculty = req.session.passport?.user?.faculty || req.session.user?.faculty
+        const email = req.session.passport?.user?.email || req.session.user?.email
 
         const notification = new Notification({
             title: title,
             content: content,
             faculty: faculty,
-            user_email: req.session.email
+            user_email: email
         })
 
         notification.save()
@@ -118,10 +130,11 @@ class NotificationController {
         await Notification.findOne({ _id: _id })
             .then(async notification => {
                 if (notification) {
-                    if (notification.user_read.includes(req.session.email))
+                    const email = req.session.passport?.user?.email || req.session.user?.email
+                    if (notification.user_read.includes(email))
                         return res.json({ code: 1, message: "already read" })
 
-                    notification.user_read.push(req.session.email)
+                    notification.user_read.push(email)
                     await Notification.updateOne({ _id: _id }, { user_read: notification.user_read })
                         .then(() => res.json({ code: 0, message: "success" }))
                         .catch(err => res.json({ code: 2, message: err.message }))
