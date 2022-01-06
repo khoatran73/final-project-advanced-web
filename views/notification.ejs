@@ -1,118 +1,122 @@
 <%- include('./layouts/head.ejs') %>
 
-<body>
-    <div class="wrapper">
-        <%- include('./layouts/nav.ejs') %>
-            <section class="main">
-                <div class="main-left">
-                    <h3>Danh Mục</h3>
-                    <div class="main-left-item">
-                        <a href="/">
-                            <i class="fas fa-home"></i>
-                            Trang Chủ
-                        </a>
-                    </div>
-                    <div class="main-left-item">
-                        <a href="/profile/<%=user._id%>">
-                            <i class="fas fa-user"></i>
-                            Trang Cá Nhân
-                        </a>
-                    </div>
-                    <% if (user.role == 1) { %>
+    <body>
+        <div class="wrapper">
+            <%- include('./layouts/nav.ejs') %>
+                <section class="main">
+                    <div class="main-left">
+                        <h3>Danh Mục</h3>
                         <div class="main-left-item">
-                            <a href="/admin">
+                            <a href="/">
+                                <i class="fas fa-home"></i>
+                                Trang Chủ
+                            </a>
+                        </div>
+                        <div class="main-left-item">
+                            <a href="/profile/<%=user._id%>">
                                 <i class="fas fa-user"></i>
-                                Quản lí tài khoản
-                            </a>
-                        </div> 
-                    <% } %>
-                    <div class="main-left-item notification-bar active">
-                        <div class="notification-direction">
-                            <i class="fas fa-bell"></i>
-                            Thông Báo
-                        </div>
-                        <div class="notification-dropdown">
-                            <i class="fas fa-chevron-up"></i>
-                            <div class="notification-dropdown-menu">
-                                <div class="faculty-notify notification-dropdown-item">
-                                    <i class="fas fa-users"></i>
-                                    Theo Phòng Ban
-                                </div>
-                                <div class="all-notify notification-dropdown-item active">
-                                    <i class="fas fa-bell"></i>
-                                    Tất Cả Thông Báo
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="main-center main-notification-center">
-                    <div class="main-center-item notification-action">
-                        <form>
-                            <div class="form-group">
-                                <label for="notification-name">Tìm kiếm thông báo</label>
-                                <input type="text" class="form-control" id="notification-name" name="notification-name"
-                                    placeholder="Tên thông báo...">
-                            </div>
-                            <div class="form-group">
-                                <label for="faculty">Khoa/Phòng</label>
-                                <select class="form-control" id="faculty" name="faculty">
-                                    <option value="all">Tất cả</option>
-                                    <option value="phong-dai-hoc">Phòng Đại Học</option>
-                                    <option value="khoa-cntt">Khoa CNTT</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-info">Tìm kiếm</button>
-                        </form>
-                    </div>
-                    <div class="main-center-item notification-list">
-                        <div class="notification-item">
-                            <a href="">
-                                <div class="title" title="Title">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam eius aut
-                                    blanditiis debitis fugiat ullam impedit recusandae. Facere est ipsam, similique
-                                    saepe
-                                    sequi
-                                    natus perspiciatis excepturi omnis, dolor voluptas sed!
-                                </div>
-                                <div class="new-tag">New</div>
-                                <div class="time">[Phòng Tài chính] - 25/12/2021</div>
+                                Trang Cá Nhân
                             </a>
                         </div>
-                        <div class="notification-item">
-                            <a href="">
-                                <div class="title" title="Title">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam eius aut
-                                    blanditiis debitis fugiat ullam impedit recusandae. Facere est ipsam, similique
-                                    saepe
-                                    sequi
-                                    natus perspiciatis excepturi omnis, dolor voluptas sed!
+                        <% if (user.role==1) { %>
+                            <div class="main-left-item">
+                                <a href="/admin">
+                                    <i class="fas fa-user"></i>
+                                    Quản lí tài khoản
+                                </a>
+                            </div>
+                            <% } %>
+                                <div class="main-left-item notification-bar active">
+                                    <div class="notification-direction">
+                                        <i class="fas fa-bell"></i>
+                                        Thông Báo
+                                    </div>
+                                    <div class="notification-dropdown">
+                                        <i class="fas fa-chevron-up"></i>
+                                        <div class="notification-dropdown-menu">
+                                            <div class="faculty-notify notification-dropdown-item">
+                                                <i class="fas fa-users"></i>
+                                                Theo Phòng Ban
+                                            </div>
+                                            <div class="all-notify notification-dropdown-item active">
+                                                <i class="fas fa-bell"></i>
+                                                Tất Cả Thông Báo
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="new-tag">New</div>
-                                <div class="time">[Phòng Tài chính] - 25/12/2021</div>
-                            </a>
+                    </div>
+                    <div class="main-center main-notification-center">
+                        <div class="main-center-item notification-action">
+                            <form>
+                                <div class="form-group">
+                                    <label for="notification-name">Tìm kiếm thông báo</label>
+                                    <input type="text" class="form-control" id="notification-name"
+                                        name="notification-name" placeholder="Tên thông báo...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="faculty">Khoa/Phòng</label>
+                                    <select class="form-control" id="faculty" name="faculty">
+                                        <option value="all">Tất cả</option>
+                                        <option value="phong-dai-hoc">Phòng Đại Học</option>
+                                        <option value="khoa-cntt">Khoa CNTT</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-info">Tìm kiếm</button>
+                            </form>
+                        </div>
+                        <div class="main-center-item notification-list">
+                            <div class="notification-item">
+                                <a href="">
+                                    <div class="title" title="Title">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam eius aut
+                                        blanditiis debitis fugiat ullam impedit recusandae. Facere est ipsam, similique
+                                        saepe
+                                        sequi
+                                        natus perspiciatis excepturi omnis, dolor voluptas sed!
+                                    </div>
+                                    <div class="new-tag">New</div>
+                                    <div class="time">[Phòng Tài chính] - 25/12/2021</div>
+                                </a>
+                            </div>
+                            <div class="notification-item">
+                                <a href="">
+                                    <div class="title" title="Title">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam eius aut
+                                        blanditiis debitis fugiat ullam impedit recusandae. Facere est ipsam, similique
+                                        saepe
+                                        sequi
+                                        natus perspiciatis excepturi omnis, dolor voluptas sed!
+                                    </div>
+                                    <div class="new-tag">New</div>
+                                    <div class="time">[Phòng Tài chính] - 25/12/2021</div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="main-center-item notification-pagination">
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
-                    <div class="main-center-item notification-pagination">
-                        <nav aria-label="...">
-                            <ul class="pagination">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </section>
-</body>
-<script src="/javascripts/main.js"></script>
+                </section>
+        </div>
+        <div id="loading">
+            <img src="/image/loading.svg" />
+        </div>
+    </body>
+    <script src="/javascripts/main.js"></script>
 
-</html>
+    </html>

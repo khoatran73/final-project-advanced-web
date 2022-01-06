@@ -14,5 +14,17 @@ module.exports = {
             next()
         else
             res.redirect('/')
+    }, isNotStudent: function (req, res, next) {
+        const user = req.session.user || req.session.passport?.user
+        if (user && user.role === 2 || user.role === 1)
+            next()
+        else
+            res.redirect('/')
+    }, rejectUser: function (req, res, next) {
+        const user = req.session.user || req.session.passport?.user
+        if (user)
+            res.redirect('/')
+        else
+            next()
     }
 }

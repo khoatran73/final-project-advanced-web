@@ -89,37 +89,6 @@ class AdminController {
         }
     }
 
-    async editUserAvatar(req, res) {
-        const _id = req.params._id
-
-        if (req.file) {
-            const iH = JSON.parse(imageHelper(req.file))
-            if (iH.code !== 0) {
-                return res.json({ code: iH.code, message: iH.message })
-            } else {
-                await User.findOne({ _id: _id })
-                    .then(async user => {
-                        if (user) {
-                            await cloudinary.destroys(user.cloudinary_id)
-
-                            const uploader = await cloudinary.uploads(req.file.path, "advanced-web/avatar")
-
-                            await User.updateOne({ _id: _id }, {
-                                avatar: uploader.url,
-                                cloudinary_id: uploader.cloudinary_id,
-                            })
-                                .then(() => res.json({ code: 0, message: "edit user avatar successfully" }))
-                        } else {
-                            return res.json({ code: 1, message: "invalid id" })
-                        }
-                    })
-                    .catch(() => res.json({ code: 1, message: "invalid format id" }))
-            }
-        } else {
-            return res.json({ code: 1, message: "file not found" })
-        }
-    }
-
     async deleteUser(req, res) {
         const _id = req.params._id
 

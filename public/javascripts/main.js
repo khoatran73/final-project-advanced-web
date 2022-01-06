@@ -1,23 +1,27 @@
 $(document).ready(function () {
+    // display loading
+    $(document).ajaxStart(function () {
+        $('#loading').show()
+    }).ajaxStop(function () {
+        $('#loading').hide()
+    })
+
     // display password
     {
-        const password = document.querySelector("#password")
+        $(".eye").click(e => {
+            const eye = e.target
+            const input = e.target.parentNode.children[1]
 
-        const eye = document.querySelector("#eye")
-
-        if (eye) {
-            eye.onclick = () => {
-                if (password.type === "password") {
-                    password.type = "text"
-                    eye.classList.remove("fa-eye")
-                    eye.classList.add("fa-eye-slash")
-                } else {
-                    password.type = "password"
-                    eye.classList.remove("fa-eye-slash")
-                    eye.classList.add("fa-eye")
-                }
+            if (input.type === "password") {
+                input.type = "text"
+                eye.classList.remove("fa-eye")
+                eye.classList.add("fa-eye-slash")
+            } else {
+                input.type = "password"
+                eye.classList.remove("fa-eye-slash")
+                eye.classList.add("fa-eye")
             }
-        }
+        })
     }
 
     // hide error text
@@ -31,6 +35,7 @@ $(document).ready(function () {
     {
         $('#login-form').submit(function (e) {
             e.preventDefault()
+
             const data = JSON.stringify({
                 email: $('#email').val(),
                 password: $('#password').val()
@@ -56,6 +61,38 @@ $(document).ready(function () {
 
         $("#gg-login-btn").click(() => {
             window.location.href = "/account/auth/google"
+        })
+    }
+
+    // reset password
+    {
+        $('#reset-password-form').submit(function (e) {
+            e.preventDefault()
+
+            const url = location.pathname
+
+            const data = JSON.stringify({
+                oldPassword: $('#oldPassword').val(),
+                newPassword: $('#newPassword').val(),
+                reNewPassword: $('#reNewPassword').val()
+            })
+
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                data: data,
+                processData: false,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 0) {
+                        window.location.href = "/account/logout"
+                    } else {
+                        $(".error-text").css("visibility", "visible")
+                        $(".error-text").html(res.message)
+                    }
+                },
+            });
         })
     }
 
@@ -427,16 +464,7 @@ $(document).ready(function () {
 
     //logout 
     $('.logout').click(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/account/logout',
-            cache: false,
-            success: function (data) {
-                if (data.code == 0) {
-                    window.location.href = "http://localhost:3000/account/login"
-                }
-            }
-        });
+        window.location.href = "http://localhost:3000/account/logout"
     })
 
     // display modal add post
@@ -585,5 +613,63 @@ $(document).ready(function () {
         const facultyInner = parseInt(faculty.innerHTML.trim())
         if (facultyHelper[facultyInner])
             faculty.innerHTML = facultyHelper[facultyInner]
+    })
+}
+
+// edit user image
+{
+    $("#user-image").change(function () {
+        const data = new FormData($("#image-form")[0])
+
+        $.ajax({
+            type: "PUT",
+            url: "/account/edit-user-avatar/",
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res.code === 0) {
+                    location.reload()
+                }
+            },
+            error: function (err) {
+
+            }
+        })
+    })
+}
+
+// edit Khoa + lop
+{
+    $("#edit-profile-btn").click(function () {
+        $("#faculty").val($("#user-faculty").html().toString().trim()).change()
+    })
+
+    $("#edit-profile-form").submit(function (e) {
+        e.preventDefault()
+
+        const data = JSON.stringify({
+            name: $("#name").val(),
+            faculty: $("#faculty").children("option:selected").val() || null,
+            class: $("#class").val() || null,
+        })
+
+        $.ajax({
+            type: 'PUT',
+            url: '/account/edit-user-info',
+            data: data,
+            processData: false,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                if (res.code === 0) {
+                    $("#edit-profile-modal").modal("hide")
+                    location.reload()
+                } else {
+                    $(".error-text").css("visibility", "visible")
+                    $(".error-text").html("Email hoặc mật khẩu không đúng!")
+                }
+            },
+        });
     })
 }

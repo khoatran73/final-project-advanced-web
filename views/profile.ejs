@@ -1,146 +1,189 @@
 <%- include('./layouts/head.ejs') %>
 
-<body>
-    <div class="wrapper">
-        <%- include('./layouts/nav.ejs') %>
-        <%- include('./layouts/main-right.ejs') %>
-            <div class="main-left">
-                <h3>Danh Mục</h3>
-                <div class="main-left-item ">
-                    <a href="/">
-                        <i class="fas fa-home"></i>
-                        Trang Chủ
-                    </a>
-                </div>
-                <div class="main-left-item active">
-                    <a href="/profile/<%=user._id%>">
-                        <i class="fas fa-user"></i>
-                        Trang Cá Nhân
-                    </a>
-                </div>
-                <% if (user.role == 1) { %>
-                    <div class="main-left-item">
-                        <a href="/admin">
-                            <i class="fas fa-user"></i>
-                            Quản lí tài khoản
-                        </a>
-                    </div> 
-                <% } %>
-                <div class="main-left-item notification-bar">
-                    <div class="notification-direction">
-                        <i class="fas fa-bell"></i>
-                        Thông Báo
-                    </div>
-                    <div class="notification-dropdown">
-                        <i class="fas fa-chevron-up"></i>
-                        <div class="notification-dropdown-menu">
-                            <div class="faculty-notify notification-dropdown-item">
-                                <i class="fas fa-users"></i>
-                                Theo Phòng Ban
-                            </div>
-                            <div class="all-notify notification-dropdown-item">
-                                <i class="fas fa-bell"></i>
-                                Tất Cả Thông Báo
-                            </div>
+    <body>
+        <div class="wrapper">
+            <%- include('./layouts/nav.ejs') %>
+                <%- include('./layouts/main-right.ejs') %>
+                    <div class="main-left">
+                        <h3>Danh Mục</h3>
+                        <div class="main-left-item ">
+                            <a href="/">
+                                <i class="fas fa-home"></i>
+                                Trang Chủ
+                            </a>
                         </div>
+                        <div class="main-left-item active">
+                            <a href="/profile/<%=user._id%>">
+                                <i class="fas fa-user"></i>
+                                Trang Cá Nhân
+                            </a>
+                        </div>
+                        <% if (user.role==1) { %>
+                            <div class="main-left-item">
+                                <a href="/admin">
+                                    <i class="fas fa-user"></i>
+                                    Quản lí tài khoản
+                                </a>
+                            </div>
+                            <% } %>
+                                <div class="main-left-item notification-bar">
+                                    <div class="notification-direction">
+                                        <i class="fas fa-bell"></i>
+                                        Thông Báo
+                                    </div>
+                                    <div class="notification-dropdown">
+                                        <i class="fas fa-chevron-up"></i>
+                                        <div class="notification-dropdown-menu">
+                                            <div class="faculty-notify notification-dropdown-item">
+                                                <i class="fas fa-users"></i>
+                                                Theo Phòng Ban
+                                            </div>
+                                            <div class="all-notify notification-dropdown-item">
+                                                <i class="fas fa-bell"></i>
+                                                Tất Cả Thông Báo
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                     </div>
-                </div>
-            </div>
-            <div class="main-center">
-                <div class="profile main-center-item">
-                    <div class="bg-top">
-                    </div>
-                    <div class="profile-content">
-                        <div class="avatar">
-                            <img src="<%= profile.avatar%>" alt="" class="image-40">
-                            <% if (user.email == profile.email) { %>
-                                <form id="image-form" action="" enctype="multipart/form-data" method="POST">
-                                    <label for="user-image"><i class="fas fa-camera"></i></label>
-                                    <input type="file" name="image" id="user-image" accept="image/png, image/jpeg">
-                                </form>
+                    <div class="main-center">
+                        <div class="profile main-center-item">
+                            <div class="bg-top">
+                            </div>
+                            <div class="profile-content">
+                                <div class="avatar">
+                                    <img src="<%= profile.avatar%>" alt="" class="image-40">
+                                    <% if (user.email==profile.email) { %>
+                                        <form id="image-form" action="" enctype="multipart/form-data" method="POST">
+                                            <label for="user-image"><i class="fas fa-camera"></i></label>
+                                            <input type="file" name="avatar" id="user-image"
+                                                accept="image/png, image/jpeg">
+                                        </form>
+                                        <% } %>
+                                </div>
+                                <div class="profile-form">
+                                    <div class="profile-form-info">
+                                        <h4>
+                                            <%= profile.name %>
+                                        </h4>
+                                    </div>
+                                    <% if (profile.role !=1 ) { %>
+                                        <div class="profile-form-info">
+                                            <i class="fas fa-graduation-cap"></i>
+                                            <% if (profile.faculty) { %>
+                                                <span class="user-faculty">
+                                                    <%= profile.faculty %>
+                                                </span>
+                                                <%} else {%>Khoa __ <%}%>
+                                        </div>
+                                        <%}%>
+                                            <% if (profile.role==3) { %>
+                                                <div class="profile-form-info">
+                                                    <i class="fas fa-chalkboard-teacher"></i>
+                                                    Lớp <% if (profile.class) { %>
+                                                        <%= profile.class %>
+                                                            <%} else {%> __ <%}%>
+                                                </div>
+                                                <%}%>
+                                </div>
+                            </div>
+                            <% if (user.email==profile.email) { %>
+                                <button type="button" class="btn btn-info" id="edit-profile-btn" data-toggle="modal"
+                                    data-target="#edit-profile-modal">Chỉnh sửa thông tin</button>
                                 <% } %>
                         </div>
-                        <div class="profile-form">
-                            <div class="profile-form-info">
-                                <h4><%= profile.name %></h4>
-                            </div>
-                            <div class="profile-form-info">
-                                <i class="fas fa-graduation-cap"></i>
-                                Khoa <% if (profile.faculty) { %> <%= profile.faculty %> <%} else {%> __ <%}%>
-                                
-                            </div>
-                            <div class="profile-form-info">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                                Lớp <% if (profile.class) { %> <%= profile.class %> <%} else {%> __ <%}%>
+                        <div id="post-list" class="post-list">
+
+                        </div>
+                    </div>
+                    </section>
+
+                    <div class="modal fade" id="edit-profile-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <img src="<%= user.avatar%>" alt="" class="image-40">
+                                    <b>
+                                        <%= user.name%>
+                                    </b>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" method="POST" enctype="multipart/form-data" id="edit-profile-form">
+                                        <div class="form-group">
+                                            <label for="name">Tên hiển thị</label>
+                                            <input type="text" class="form-control" id="name" name="name"
+                                                placeholder="Khoa..." value="<%= user.name %>">
+                                        </div>
+                                        <% if (user.role==3) { %>
+                                            <div class="form-group">
+                                                <div id="user-faculty">
+                                                    <%= user.faculty %>
+                                                </div>
+                                                <label for="faculty">Khoa của bạn</label>
+                                                <div class="form-group">
+                                                    <label for="faculty">Đơn vị</label>
+                                                    <select class="form-control" id="faculty" name="faculty">
+                                                        <option value="14">Khoa Mỹ thuật công nghiệp</option>
+                                                        <option value="15">Khoa Điện - Điện tử</option>
+                                                        <option value="16">Khoa Công nghệ thông tin</option>
+                                                        <option value="17">Khoa Quản trị kinh doanh</option>
+                                                        <option value="18">Khoa Môi trường và bảo hộ lao động</option>
+                                                        <option value="19">Khoa Lao động công đoàn</option>
+                                                        <option value="20">Khoa Tài chính ngân hàng</option>
+                                                        <option value="21">Khoa giáo dục quốc tế</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <%} %>
+                                                <% if (user.role==3) { %>
+                                                    <div class="form-group">
+                                                        <label for="class">Lớp của bạn</label>
+                                                        <input type="text" class="form-control" id="class" name="class"
+                                                            placeholder="Lớp..." <% if (user.class) { %>value=<%=
+                                                            user.class %>
+                                                            <%}%>>
+                                                    </div>
+                                                    <% } %>
+                                                        <div class="alert alert-danger error-text" role="alert">
+                                                            Error Message
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Đóng</button>
+                                                            <button type="submit" class="btn btn-success">Lưu</button>
+                                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <% if (user.email == profile.email) { %>
-                    <button type="button" class="btn btn-info" id="save-profile-btn" data-toggle="modal"
-                        data-target="#edit-profile-modal">Chỉnh sửa thông tin</button>
-                    <% } %>
-                </div>
-                <div id="post-list" class="post-list">
 
-                </div>
-            </div>
-
-            </section>
-
-            <div class="modal fade" id="edit-profile-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <img src="img.jfif" alt="" class="image-40">
-                            <b>Khoa</b>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="POST" enctype="multipart/form-data" id="edit-profile-form">
-                                <div class="form-group">
-                                    <label for="faculty">Khoa của bạn</label>
-                                    <input type="text" class="form-control" id="faculty" name="faculty"
-                                        placeholder="Khoa...">
+                    <div class="modal fade" id="like-list-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Những người thích</h5>
                                 </div>
-                                <div class="form-group">
-                                    <label for="class">Lớp của bạn</label>
-                                    <input type="text" class="form-control" id="class" name="class"
-                                        placeholder="Lớp...">
+                                <div class="modal-body">
+                                    <div class="like-list">
+                                        <a href="">
+                                            <img src="img.jfif" class="image-34" alt="">
+                                            <span>Anh Khoa</span>
+                                        </a href="">
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </div>
                                 </div>
-                                <div class="alert alert-danger error-text" role="alert">
-                                    Error Message
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
-                                <div class="text-right">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                                    <button type="submit" class="btn btn-success">Lưu</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="like-list-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Những người thích</h5>
-                        </div>
-                        <div class="modal-body">
-                            <div class="like-list">
-                                <a href="">
-                                    <img src="img.jfif" class="image-34" alt="">
-                                    <span>Anh Khoa</span>
-                                </a href="">
-                                <i class="fas fa-thumbs-up"></i>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
                     </div>
-                </div>
-            </div>
-</body>
-<script src="/javascripts/main.js"></script>
+        </div>
+        <div id="loading">
+            <img src="/image/loading.svg" />
+        </div>
+    </body>
+    <script src="/javascripts/main.js"></script>
 
-</html>
+    </html>

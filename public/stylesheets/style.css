@@ -1302,4 +1302,24 @@ table img {
     }
 }
 
+#user-faculty {
+    display: none;
+}
 
+/* Loading */
+#loading {
+    position: fixed;
+    display: none;
+    top: calc(50% - 60px);
+    left: calc(50% - 60px);
+    z-index: 9999;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+}
+
+#loading img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
