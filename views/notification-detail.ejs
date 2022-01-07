@@ -38,7 +38,7 @@
                                                 <i class="fas fa-users"></i>
                                                 Theo Phòng Ban
                                             </div>
-                                            <div class="all-notify notification-dropdown-item active">
+                                            <div class="all-notify notification-dropdown-item">
                                                 <i class="fas fa-bell"></i>
                                                 Tất Cả Thông Báo
                                             </div>
@@ -53,46 +53,56 @@
                                 </div>
                     </div>
                     <div class="main-center main-notification-center">
-                        <div class="main-center-item notification-action">
-                            <form>
-                                <div class="form-group">
-                                    <label for="notification-name">Tìm kiếm thông báo</label>
-                                    <input type="text" class="form-control" id="notification-name"
-                                        name="notification-name" placeholder="Tên thông báo...">
-                                </div>
-                                <div class="form-group">
-                                    <label for="faculty">Khoa/Phòng</label>
-                                    <select class="form-control" id="faculty" name="faculty">
-                                        <option value="all">Tất cả</option>
-                                        <option value="phong-dai-hoc">Phòng Đại Học</option>
-                                        <option value="khoa-cntt">Khoa CNTT</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-info">Tìm kiếm</button>
-                            </form>
+                        <div class="main-center-item">
+                            <h2 class="text-info">
+                                <%= notification.title %>
+                            </h2>
+                            <div class="text-right">
+                                <a href="/notification/<%= notification.faculty %>" class="text-primary">[<span
+                                        class="user-faculty">
+                                        <%= notification.faculty %>
+                                    </span>]</a>
+                                - <span class="time-convert">
+                                    <%= notification.createdAt %>
+                                </span>
+                            </div>
                         </div>
-                        <div class="main-center-item notification-list">
-                            <% notifications.forEach(notification=> { %>
-                                <div class="notification-item">
-                                    <a href="/notification/<%= notification.faculty %>/<%= notification._id %>">
-                                        <div class="title" title="Title">
-                                            <%= notification.title %>
-                                        </div>
-                                        <!-- notification.user_read.forEach(userRead => {
-                                            if (userRead == user.email) {
-                                                
-                                            }
-                                        }) -->
-                                        <div class="new-tag">New</div>
-                                        <div class="time">[<span class="user-faculty">
-                                                <%= notification.faculty %>
-                                            </span>] - <span class="time-convert">
-                                                <%= notification.createdAt %>
-                                            </span></div>
-                                    </a>
-                                </div>
-                                <% }) %>
+                        <div class="main-center-item faculty-list">
+                            <div>
+                                <% notification.content.forEach(ct=> { %>
+                                    <% if (ct.type=="header" ) { %>
+                                        <h<%=ct.data.level%> class="ce-header"><%=ct.data.text%>
+                                        </h<%=ct.data.level%>>
+                                        <% } else if (ct.type=="paragraph" ) { %>
+                                            <div class="ce-paragraph cdx-block">
+                                                <%=ct.data.text%>
+                                            </div>
+                                            <% } else if (ct.type=="list" ) %>
+                                                <% if (ct.data.style=="ordered" ) {%>
+                                                    <% if (ct.data.items) { %>
+                                                        <ol class="cdx-block cdx-list cdx-list--ordered">
+                                                            <% ct.data.items.forEach(function(item) { %>
+                                                                <li class="cdx-list__item">
+                                                                    <%=item%>
+                                                                </li>
+                                                                <% }) %>
+                                                        </ol>
+                                                        <% } %>
+                                                            <% } else { %>
+                                                                <% if (ct.data.items) { %>
+                                                                    <ul class="cdx-block cdx-list cdx-list--unordered">
+                                                                        <% ct.data.items.forEach(function(item) { %>
+                                                                            <li class="cdx-list__item">
+                                                                                <%=item%>
+                                                                            </li>
+                                                                            <% }) %>
+                                                                    </ul>
+                                                                    <% } %>
 
+                                                                        <% } %>
+                                                                            <% }) %>
+
+                            </div>
                         </div>
                         <div class="main-center-item notification-pagination">
                             <nav aria-label="...">
@@ -112,12 +122,16 @@
                             </nav>
                         </div>
                     </div>
+
                 </section>
         </div>
         <div id="loading">
             <img src="/image/loading.svg" />
         </div>
     </body>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
     <script src="/javascripts/main.js"></script>
 
     </html>

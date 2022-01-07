@@ -4,7 +4,7 @@ const User = require('../models/User')
 class NotificationController {
     async getAll(req, res) {
         const user = req.session.passport?.user || req.session.user
-        await Notification.find({})
+        await Notification.find({}).sort({ _id: -1 })
             .then(notifications => {
                 res.render("notification", { user: user, notifications: notifications })
             })
@@ -13,6 +13,11 @@ class NotificationController {
     getFaculty(req, res) {
         const user = req.session.passport?.user || req.session.user
         return res.render("faculty", { user: user })
+    }
+
+    async getAddNotify(req, res) {
+        const user = req.session.user
+        return res.render("add-notify", { user: user })
     }
 
     async getAllNotifications(req, res) {
@@ -57,24 +62,25 @@ class NotificationController {
     async getFacultyNotificationById(req, res) {
         const faculty = req.params.faculty
         const _id = req.params._id
+        const user = req.session.passport?.user || req.session.user
 
-        await Notification.find({ _id: _id, faculty: faculty })
+        await Notification.findOne({ _id: _id, faculty: faculty })
             .then(notification => {
-                if (notification.length > 0) {
-                    return res.json({ code: 0, message: "success", notification: notification })
+                if (notification) {
+                    return res.render("notification-detail", { user: user, notification: notification })
                 } else {
-                    return res.json({ code: 1, message: "invalid id" })
+                    return res.render("error")
                 }
             })
-            .catch(err => res.json({ code: 2, message: err.message }))
+            .catch(() => res.render("error"))
     }
 
     async addNotification(req, res) {
         const { title, content } = req.body
-        if (!title || !content) return res.json({ code: 1, message: "please enter enough information" })
+        if (!title || content.length === 0) return res.json({ code: 1, message: "Vui lòng điền đủ thông tin" })
 
-        const faculty = req.session.passport?.user?.faculty || req.session.user?.faculty
-        const email = req.session.passport?.user?.email || req.session.user?.email
+        const faculty = req.session.user?.faculty
+        const email = req.session.user?.email
 
         const notification = new Notification({
             title: title,

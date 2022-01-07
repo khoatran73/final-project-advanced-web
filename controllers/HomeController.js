@@ -1,7 +1,12 @@
-const User = require('../models/User')
+const Notification = require('../models/Notification')
 class HomeController {
     async home(req, res) {
-        return res.render("index", { user: req.session.passport?.user || req.session.user })
+        const user = req.session.passport?.user || req.session.user
+
+        await Notification.find({}).sort({ _id: -1 })
+            .then(notifications => {
+                return res.render("index", { user: user, notifications: notifications })
+            })
     }
 }
 

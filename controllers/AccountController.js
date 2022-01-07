@@ -132,8 +132,6 @@ class LoginController {
                     .then(() => {
                         if (req.session.user) {
                             req.session.user.name = req.body.name
-                            req.session.user.faculty = req.body.faculty
-                            req.session.user.class = req.body.class
                         } else if (req.session.passport.user) {
                             req.session.passport.user.name = req.body.name
                             req.session.passport.user.faculty = req.body.faculty

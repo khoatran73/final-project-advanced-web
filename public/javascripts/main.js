@@ -97,21 +97,21 @@ $(document).ready(function () {
     }
 
     //add post --------------------------------------------------------
-    if (!location.pathname.includes("account")){
-        let start=0;
-        let limit=10;
+    if (!location.pathname.includes("account")) {
+        let start = 0;
+        let limit = 10;
         loadIndex10Post(start, limit)
-        $(window).scroll(function() {
+        $(window).scroll(function () {
             if ($(window).scrollTop() + $(window).height() > $("#post-list").height()) {
                 start = start + limit;
-                setTimeout(function() {
+                setTimeout(function () {
                     console.log(start)
                     loadIndex10Post(start, limit)
                 }, 100);
             }
         })
     }
-        
+
 
     $('#add-form').submit((e) => {
         e.preventDefault();
@@ -157,8 +157,7 @@ $(document).ready(function () {
             data: { limit: limitpost, start: start },
             cache: false,
             success: function (res) {
-                console.log(res)
-                if(res.code==0){
+                if (res.code == 0) {
                     showPost(res.posts)
                 }
             }
@@ -176,8 +175,7 @@ $(document).ready(function () {
     }
 
     function showPost(posts) {
-
-        if(posts){
+        if (posts) {
             posts.forEach(function (post) {
                 let html = ``;
                 $.ajax({
@@ -186,8 +184,8 @@ $(document).ready(function () {
                     cache: false,
                     success: function (res) {
                         if (res.code === 0) {
-                            html += 
-                            `<div class="main-center-item post" id="${post._id}">
+                            html +=
+                                `<div class="main-center-item post" id="${post._id}">
                             <div id="post-top${post._id}" class="post-top">
                                 <a href="/profile/${res.user._id}">
                                     <img src="${res.user.avatar}" alt="" class="image-40">
@@ -198,8 +196,6 @@ $(document).ready(function () {
                                     </a>
                                     <div class="time">${new Date(post.createdAt).toLocaleString('en-JM')}</div>
                                 </div>
-                                
-                                
                             </div>
                             <div class="post-main">
                                 <div class="content">
@@ -260,12 +256,12 @@ $(document).ready(function () {
                         </div>
                         `;
                             $('#post-list').append(html);
-                            checkHandlePost(post,res.user)
-                            
+                            checkHandlePost(post, res.user)
+
                         }
-                        
-    
-                        
+
+
+
                         displayCommentBox(post._id)
                         showLikeList(post._id)
                         addComment(post._id)
@@ -275,20 +271,20 @@ $(document).ready(function () {
                         checkLike(post._id)
                         getCountLike(post._id)
                         showUserLike(post)
-                        
-                        
+
+
                     }
                 });
             })
         }
-       
+
     }
-    function checkHandlePost(post,user){
+    function checkHandlePost(post, user) {
         $.ajax({
             type: 'GET',
             url: `/post/check-user-post/${post._id}`,
             success: function (res) {
-                let html=`
+                let html = `
                 <div class="action  ${post._id}">
                     <i class="fas fa-ellipsis-h"></i>
                     <div class="action-dropdown">
@@ -303,14 +299,14 @@ $(document).ready(function () {
                     </div>
                 </div>
                 `
-                if(res.code==0){
-                    $("#post-top"+post._id).append(html)
-                    if(!window.location.pathname.includes("profile")){
+                if (res.code == 0) {
+                    $("#post-top" + post._id).append(html)
+                    if (!window.location.pathname.includes("profile")) {
                         handleDropdown(post._id)
-                        handlePost(post,user)
+                        handlePost(post, user)
                     }
-                    
-                    
+
+
                 }
             }
 
@@ -324,7 +320,7 @@ $(document).ready(function () {
                 url: '/post/get-user-post/?email=' + email,
                 cache: false,
                 success: function (res) {
-                    if(res.code==0){
+                    if (res.code == 0) {
                         let html = `
                         <div  class="like-list">
                             <a href="/profile/${res.user._id}">
@@ -334,7 +330,7 @@ $(document).ready(function () {
                             <i class="fas fa-thumbs-up"></i>
                         </div>
                         `
-                        $("#modal-body"+post._id).append(html)
+                        $("#modal-body" + post._id).append(html)
 
                     }
                 }
@@ -348,7 +344,7 @@ $(document).ready(function () {
                 url: '/post/get-user-post/?email=' + email,
                 cache: false,
                 success: function (res) {
-                    if(res.code==0){
+                    if (res.code == 0) {
                         let html = `
                         <div  class="like-list">
                             <a href="/profile/${res.user._id}">
@@ -358,7 +354,7 @@ $(document).ready(function () {
                             <i class="fas fa-thumbs-up"></i>
                         </div>
                         `
-                        $("#modal-body-profile"+post._id).append(html)
+                        $("#modal-body-profile" + post._id).append(html)
 
                     }
                 }
@@ -406,8 +402,8 @@ $(document).ready(function () {
         })
 
     }
-    function handlePost(post,user){
-        $("#deletePost"+post._id).click(function () {
+    function handlePost(post, user) {
+        $("#deletePost" + post._id).click(function () {
             swal({
                 title: "DELETE",
                 text: "Bạn có chắc muốn xóa bài viết này ?",
@@ -421,7 +417,7 @@ $(document).ready(function () {
                             type: 'DELETE',
                             url: `/post/delete-post/${post._id}`,
                             success: function (res) {
-                                if(res.code==0){
+                                if (res.code == 0) {
                                     swal({
                                         title: "SUCCESS",
                                         text: "Post was deleted",
@@ -437,8 +433,8 @@ $(document).ready(function () {
                     }
                 })
         })
-        $("#updatePost"+post._id).click(function(){
-            let html=`
+        $("#updatePost" + post._id).click(function () {
+            let html = `
                 <div class="modal fade" id="update-modal${post._id}" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -498,12 +494,12 @@ $(document).ready(function () {
                     </div>
                 </div>
             `
-            if(window.location.pathname.includes("profile")){
+            if (window.location.pathname.includes("profile")) {
                 $("#wrapper-profile").append(html)
-            }else{
+            } else {
                 $("#main-wrapper").append(html)
             }
-            $("#update-modal"+ post._id).modal("show");
+            $("#update-modal" + post._id).modal("show");
             $("input[name=media-update-checked]").change(() => displayupdateMedia())
 
             function displayupdateMedia() {
@@ -512,7 +508,7 @@ $(document).ready(function () {
                 $(`.${mediaChecked}`).css("display", "block")
                 $(`.${mediaUnChecked}`).css("display", "none")
             }
-            $("#update-form").submit(e=>{
+            $("#update-form").submit(e => {
                 e.preventDefault()
                 const data = new FormData($('#update-form')[0])
                 $('#video-update').val('');
@@ -525,14 +521,14 @@ $(document).ready(function () {
                     cache: false,
                     success: function (res) {
                         if (res.code == 0) {
-                            if(window.location.pathname.includes("profile")){
+                            if (window.location.pathname.includes("profile")) {
                                 $('#user-post-list').html('');
                                 loadProfilePost(window.location.pathname.split('/')[2])
-                                $('#update-modal'+post._id).modal('hide');
-                            }else{
+                                $('#update-modal' + post._id).modal('hide');
+                            } else {
                                 $('#post-list').html("");
                                 loadIndex10Post(0, 10);
-                                $('#update-modal'+post._id).modal('hide');
+                                $('#update-modal' + post._id).modal('hide');
                             }
                         } else {
                             $(".error-text").css("visibility", "visible")
@@ -562,7 +558,7 @@ $(document).ready(function () {
             if ($("." + postID).hasClass("active"))
                 $("." + postID).removeClass("active")
         })
-        
+
     }
 
     //Load comment--------------------------
@@ -577,7 +573,7 @@ $(document).ready(function () {
                 if (res.code === 0) {
                     $("#comment" + postId).html('');
                     showComment(res.comments)
-                }else{
+                } else {
                     $("#comment" + postId).html('');
                 }
             }
@@ -644,57 +640,56 @@ $(document).ready(function () {
                         </div>`
                         $("#comment" + data.post_id).append(html);
                         handleComment(data)
-                        
+
                     }
                 }
             });
         })
     }
-   function handleComment(data) {
-    $("#comment" + data.post_id).mousedown(function() {
-        $.ajax({
-            type: 'GET',
-            url: `/comment/check-user-comment/${data._id}`,
-            cache: false,
-            success: function (res) {
-                if(res.code == 0){
-                    timer = setTimeout(function() {
-                        swal({
-                            title: "DELETE",
-                            text: "Bạn có muốn xóa bình luận này ?",
-                            icon: "warning",
-                            buttons: true,
-                            dangerMode: true,
-                        })
-                        .then((willDelete) => {
-                            if (willDelete) {
-                                $.ajax({
-                                    type: 'DELETE',
-                                    url: `/comment/delete-comment/${data._id}`,
-                                    cache: false,
-                                    success: function (res) {
-                                        console.log(res);
-                                        if(res.code == 0){
-                                            swal({
-                                                title: "SUCCESS",
-                                                text: "Comment was deleted",
-                                                icon: "success",
-                                                buttons: true,
-                                                dangerMode: true,
-                                            })
-                                            loadComment(0, 1, data.post_id)
-                                            countComments(data.post_id)
-                                        }
+    function handleComment(data) {
+        $("#comment" + data.post_id).mousedown(function () {
+            $.ajax({
+                type: 'GET',
+                url: `/comment/check-user-comment/${data._id}`,
+                cache: false,
+                success: function (res) {
+                    if (res.code == 0) {
+                        timer = setTimeout(function () {
+                            swal({
+                                title: "DELETE",
+                                text: "Bạn có muốn xóa bình luận này ?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            })
+                                .then((willDelete) => {
+                                    if (willDelete) {
+                                        $.ajax({
+                                            type: 'DELETE',
+                                            url: `/comment/delete-comment/${data._id}`,
+                                            cache: false,
+                                            success: function (res) {
+                                                if (res.code == 0) {
+                                                    swal({
+                                                        title: "SUCCESS",
+                                                        text: "Comment was deleted",
+                                                        icon: "success",
+                                                        buttons: true,
+                                                        dangerMode: true,
+                                                    })
+                                                    loadComment(0, 1, data.post_id)
+                                                    countComments(data.post_id)
+                                                }
+                                            }
+                                        });
                                     }
-                                });
-                            }
-                        })
-                    }, 1000);
+                                })
+                        }, 1000);
+                    }
                 }
-            }
-        });
-    })
-   }
+            });
+        })
+    }
     function checkImageCmt(data) {
         let img = ``;
         if (data.image != null) {
@@ -804,14 +799,14 @@ $(document).ready(function () {
             type: 'GET',
             url: '/post/get-all-post',
             cache: false,
-            data: {_id:id},
+            data: { _id: id },
             success: function (res) {
                 showprofilePost(res.posts)
             }
         });
     }
     function showprofilePost(posts) {
-        if(posts){
+        if (posts) {
             posts.forEach(function (post) {
                 let html = ``;
                 $.ajax({
@@ -905,9 +900,9 @@ $(document).ready(function () {
                         </div>
                         `;
                             $('#user-post-list').append(html);
-                            handlePost(post,res.user)
+                            handlePost(post, res.user)
                         }
-    
+
                         handleDropdown(post._id)
                         displayCommentBox(post._id)
                         showLikeList(post._id)
@@ -918,7 +913,7 @@ $(document).ready(function () {
                         checkLikeprofile(post._id)
                         getCountLike(post._id)
                         showUserLikeProfile(post)
-                        
+
                     }
                 });
             })
@@ -982,75 +977,73 @@ $(document).ready(function () {
         })
     }
 
-})
+    // Noti dropdown
+    {
+        $(".notification-dropdown").click(function (e) {
+            const children = e.target.children.length === 0 ? e.target : e.target.children[0]
 
-
-// Noti dropdown
-{
-    $(".notification-dropdown").click(function (e) {
-        const children = e.target.children.length === 0 ? e.target : e.target.children[0]
-
-        if (children.classList.toString().includes("fa-chevron-up")) {
-            children.classList.remove("fa-chevron-up")
-            children.classList.add("fa-chevron-down")
-            $(".notification-dropdown-menu").css("display", "block")
-            $(".notification-dropdown-menu").css("transform", "translateY(0px)")
-        } else if (children.classList.toString().includes("fa-chevron-down")) {
-            children.classList.remove("fa-chevron-down")
-            children.classList.add("fa-chevron-up")
-            $(".notification-dropdown-menu").css("display", "none")
-            $(".notification-dropdown-menu").css("transform", "translateY(-100%)")
-        }
-    })
-}
-
-
-// notification bar click
-{
-    $(".notification-direction").click(function () {
-        window.location.href = "/notification/all"
-    })
-
-    $(".all-notify").click(function () {
-        window.location.href = "/notification/all"
-    })
-
-    $(".faculty-notify").click(function () {
-        window.location.href = "/notification/faculty"
-    })
-}
-
-// Admin add user
-{
-    $("#add-user-form").submit(e => {
-        e.preventDefault()
-
-        const data = new FormData($("#add-user-form")[0])
-
-        $.ajax({
-            type: "POST",
-            url: "/admin/add-user",
-            data: data,
-            processData: false,
-            contentType: false,
-            success: function (res) {
-                console.log(res)
-                if (res.code === 0) {
-                    swal("Good Job!", "Thêm Phòng - Khoa thành công!!", "success")
-                        .then(() => {
-                            $('#add-user-modal').modal('hide')
-                            location.reload()
-                        })
-                } else {
-                    $(".error-text").css("visibility", "visible")
-                    $(".error-text").html(res.message)
-                }
+            if (children.classList.toString().includes("fa-chevron-up")) {
+                children.classList.remove("fa-chevron-up")
+                children.classList.add("fa-chevron-down")
+                $(".notification-dropdown-menu").css("display", "block")
+                $(".notification-dropdown-menu").css("transform", "translateY(0px)")
+            } else if (children.classList.toString().includes("fa-chevron-down")) {
+                children.classList.remove("fa-chevron-down")
+                children.classList.add("fa-chevron-up")
+                $(".notification-dropdown-menu").css("display", "none")
+                $(".notification-dropdown-menu").css("transform", "translateY(-100%)")
             }
         })
-    })
-}
+    }
 
-{
+    // notification bar click
+    {
+        $(".notification-direction").click(function () {
+            window.location.href = "/notification/all"
+        })
+
+        $(".all-notify").click(function () {
+            window.location.href = "/notification/all"
+        })
+
+        $(".faculty-notify").click(function () {
+            window.location.href = "/notification/faculty"
+        })
+
+        $(".add-notify").click(function () {
+            window.location.href = "/notification/add-notify"
+        })
+    }
+
+    // Admin add user
+    {
+        $("#add-user-form").submit(e => {
+            e.preventDefault()
+
+            const data = new FormData($("#add-user-form")[0])
+
+            $.ajax({
+                type: "POST",
+                url: "/admin/add-user",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.code === 0) {
+                        swal("Good Job!", "Thêm Phòng - Khoa thành công!!", "success")
+                            .then(() => {
+                                $('#add-user-modal').modal('hide')
+                                location.reload()
+                            })
+                    } else {
+                        $(".error-text").css("visibility", "visible")
+                        $(".error-text").html(res.message)
+                    }
+                }
+            })
+        })
+    }
+
     const facultyHelper = {
         1: "Phòng Công tác học sinh sinh viên (CTHSSV)",
         2: "Phòng Đại Học",
@@ -1074,68 +1067,202 @@ $(document).ready(function () {
         20: "Khoa Tài chính ngân hàng",
         21: "Khoa giáo dục quốc tế",
     }
-
-    document.querySelectorAll(".user-faculty")?.forEach(faculty => {
-        const facultyInner = parseInt(faculty.innerHTML.trim())
-        if (facultyHelper[facultyInner])
-            faculty.innerHTML = facultyHelper[facultyInner]
-    })
-}
-
-// edit user image
-{
-    $("#user-image").change(function () {
-        const data = new FormData($("#image-form")[0])
-
-        $.ajax({
-            type: "PUT",
-            url: "/account/edit-user-avatar/",
-            data: data,
-            processData: false,
-            contentType: false,
-            success: function (res) {
-                if (res.code === 0) {
-                    location.reload()
-                }
-            },
-            error: function (err) {
-
-            }
+    
+    {
+        document.querySelectorAll(".user-faculty")?.forEach(faculty => {
+            const facultyInner = parseInt(faculty.innerHTML.trim())
+            if (facultyHelper[facultyInner])
+                faculty.innerHTML = facultyHelper[facultyInner]
         })
-    })
-}
+    }
 
-// edit Khoa + lop
-{
-    $("#edit-profile-btn").click(function () {
-        $("#faculty").val($("#user-faculty").html().toString().trim()).change()
-    })
+    // edit user image
+    {
+        $("#user-image").change(function () {
+            const data = new FormData($("#image-form")[0])
 
-    $("#edit-profile-form").submit(function (e) {
-        e.preventDefault()
+            $.ajax({
+                type: "PUT",
+                url: "/account/edit-user-avatar/",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res.code === 0) {
+                        location.reload()
+                    }
+                },
+                error: function (err) {
 
-        const data = JSON.stringify({
-            name: $("#name").val(),
-            faculty: $("#faculty").children("option:selected").val() || null,
-            class: $("#class").val() || null,
+                }
+            })
+        })
+    }
+
+    // edit Khoa + lop
+    {
+        $("#edit-profile-btn").click(function () {
+            $("#faculty").val($("#user-faculty").html().toString().trim()).change()
         })
 
-        $.ajax({
-            type: 'PUT',
-            url: '/account/edit-user-info',
-            data: data,
-            processData: false,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (res) {
-                if (res.code === 0) {
-                    $("#edit-profile-modal").modal("hide")
-                    location.reload()
-                } else {
-                    $(".error-text").css("visibility", "visible")
-                    $(".error-text").html("Email hoặc mật khẩu không đúng!")
+        $("#edit-profile-form").submit(function (e) {
+            e.preventDefault()
+
+            const data = JSON.stringify({
+                name: $("#name").val(),
+                faculty: $("#faculty").children("option:selected").val() || null,
+                class: $("#class").val() || null,
+            })
+
+            $.ajax({
+                type: 'PUT',
+                url: '/account/edit-user-info',
+                data: data,
+                processData: false,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 0) {
+                        $("#edit-profile-modal").modal("hide")
+                        location.reload()
+                    } else {
+                        $(".error-text").css("visibility", "visible")
+                        $(".error-text").html("Email hoặc mật khẩu không đúng!")
+                    }
+                },
+            });
+        })
+    }
+
+    {
+        document.querySelectorAll(".time-convert").forEach(time => {
+            const inner = time.innerHTML.toString().trim()
+            const timeConverted = new Date(inner).toLocaleString('en-JM')
+
+            time.innerHTML = timeConverted
+        })
+    }
+
+    // Editor
+    if (location.pathname.includes("add-notify")) {
+        const editor = new EditorJS({
+            holder: 'editorjs',
+            tools: {
+                header: {
+                    class: Header,
+                    inlineToolbar: ['link']
+                },
+                list: {
+                    class: List,
+                    inlineToolbar: true
                 }
             },
-        });
-    })
-}
+        })
+
+        const editorjs = document.querySelector("#editorjs")
+        editorjs.addEventListener("keyup", function () {
+            editor.save().then((data) => {
+                showResult(data)
+            })
+        })
+
+        function showResult(data) {
+            const result = document.querySelector("#result")
+            result.innerHTML = ""
+
+            const blocks = data.blocks
+
+            blocks.forEach((block) => {
+                if (block.type === "header") {
+                    const header = document.createElement(`h${block.data.level}`)
+                    header.classList.add("ce-header")
+                    header.innerHTML = block.data.text
+                    result.appendChild(header)
+                } else if (block.type === "paragraph") {
+                    const p = document.createElement("p")
+                    p.classList.add("ce-paragraph")
+                    p.classList.add("cdx-block")
+                    p.innerHTML = block.data.text
+                    result.appendChild(p)
+                } else if (block.type === "list") {
+                    if (block.data.style === "ordered") {
+                        const ol = document.createElement("ol")
+                        ol.classList.add("cdx-block")
+                        ol.classList.add("cdx-list")
+                        ol.classList.add("cdx-list--ordered")
+                        block.data.items.forEach((item) => {
+                            const li = document.createElement("li")
+                            li.classList.add("cdx-list__item")
+                            li.innerHTML = item
+                            ol.appendChild(li)
+                        })
+                        result.appendChild(ol)
+                    } else {
+                        const ul = document.createElement("ul")
+                        ul.classList.add("cdx-block")
+                        ul.classList.add("cdx-list")
+                        ul.classList.add("cdx-list--unordered")
+                        block.data.items.forEach((item) => {
+                            const li = document.createElement("li")
+                            li.classList.add("cdx-list__item")
+                            li.innerHTML = item
+                            ul.appendChild(li)
+                        })
+                        result.appendChild(ul)
+                    }
+                } else if (!block.type) {
+                    result.appendChild(document.createElement("br"))
+                }
+            })
+        }
+
+        $("#save-notify-btn").click(function () {
+            editor.save().then((data) => {
+                const notify = JSON.stringify({
+                    title: $("#title").val(),
+                    content: data.blocks
+                })
+
+                $.ajax({
+                    type: "POST",
+                    url: "/notification/add-notification",
+                    data: notify,
+                    processData: false,
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                        if (res.code === 0) {
+                            swal("Good Job!", "Thêm thông báo thành công!!", "success")
+                                .then(() => {
+                                    window.location.href = "/notification/all"
+                                })
+                        } else {
+                            swal("Opps..!!", res.message, "warning")
+                        }
+                    }
+                })
+            })
+        })
+    }
+
+
+    // faculty list
+    if (location.pathname.includes("faculty")) {
+        const facultyList = document.querySelector("#faculty-list")
+        facultyList.innerHTML = ""
+        for (let i = 1; i <= 21; i++) {
+            const faculty = document.createElement("div")
+            faculty.classList.add("faculty")
+            faculty.innerHTML = `<a href="/notification/${i}">
+                <div class="faculty-img">
+                    <img src="/image/logo.png" alt="">
+                </div>
+                <div class="faculty-name">${facultyHelper[i]}</div>
+            </a>`
+
+            facultyList.appendChild(faculty)
+        }
+    }
+})
+
+

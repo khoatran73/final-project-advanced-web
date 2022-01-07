@@ -4,7 +4,7 @@ const User = require('./User')
 
 const Notification = new Schema({
     title: String,
-    content: String,
+    content: Array,
     faculty: Number,
     user_email: { type: String, ref: User },
     user_read: { type: Array, default: [] }
