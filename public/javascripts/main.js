@@ -1285,57 +1285,150 @@ $(document).ready(function () {
             const titleSearch = $("#notification-title").val()
             const facultySearch = $("#notification-faculty").val()
 
-            if (!location.pathname.includes(facultySearch)) {
-                console.log("location")
-                window.location.href = `/notification/${facultySearch}/?title=${titleSearch}`
-            }
-
             $.ajax({
                 type: 'GET',
                 url: `/notification/search/${facultySearch}/?title=${titleSearch}`,
                 success: function (res) {
                     if (res.code === 0) {
-                        updateURL(titleSearch)
-                        updateListNotification(res.notifications)
+                        updateURL(facultySearch, titleSearch)
+                        paging(res.notifications)
                     }
                 }
             })
 
-            function updateURL(titleSearch) {
-                const url = new URL(window.location)
-                url.searchParams.set('title', titleSearch)
-                window.history.pushState({}, '', url)
-            }
-
-            function updateListNotification(notifications) {
-                const notificationList = document.querySelector(".notification-list")
-                notificationList.innerHTML = ""
-
-                notifications.forEach(notification => {
-                    const item = document.createElement("div")
-                    item.classList.add("notification-item")
-                    item.innerHTML = `
-                        <a href="/notification/${notification.faculty}/${notification._id}">
-                        <div class="title" title="Title">
-                            ${notification.title}
-                        </div>
-                        <div class="new-tag">New</div>
-                        <div class="time">[<span class="user-faculty">
-                            ${notification.faculty}
-                            </span>] - <span class="time-convert">
-                            ${notification.createdAt}
-                            </span></div>
-                    </a>
-                    `
-
-                    notificationList.appendChild(item)
-                })
-
-                converTime()
-                convertFaculty()
+            function updateURL(faculty, titleSearch) {
+                window.history.pushState({}, '', `/notification/${faculty}/?title=${titleSearch}`)
             }
         })
     }
+
+    // Paging
+    if (location.pathname.includes("notification")) {
+        let faculty = location.pathname.slice(14)
+        faculty = faculty.includes("/") ? faculty.replace("/", "") : faculty
+
+        $.ajax({
+            type: 'GET',
+            url: `/notification/get-notification/${faculty}`,
+            success: function (res) {
+                if (res.code === 0) {
+                    paging(res.notifications)
+                }
+            }
+        })
+    }
+
+    function paging(datas) {
+        let start = 0
+        let end = 9
+        let currentPage = datas.length === 0 ? 0 : 1
+        const totalPages = Math.ceil(datas.length / 10)
+
+        loadData()
+        function loadData() {
+            const notificationList = document.querySelector("#notification-list")
+            notificationList.innerHTML = ""
+
+            if (datas.length === 0) {
+                notificationList.innerHTML = `<div class="notification-item"><h5>Không tìm thấy thông báo phù hợp</h5></div>`
+            }
+            datas.map((data, index) => {
+                if (start <= index && index <= end) {
+                    div = document.createElement("div")
+                    div.classList.add("notification-item")
+                    div.innerHTML = `
+                        <a href="/notification/${data.faculty}/${data._id}">
+                            <div class="title" title="Title">
+                                ${data.title}
+                            </div>
+                            <div class="new-tag">New</div>
+                            <div class="time">[<span class="user-faculty">${data.faculty}</span>] - <span class="time-convert">${data.createdAt}</span></div>
+                        </a>
+                    `
+                    notificationList.appendChild(div)
+                }
+            })
+            converTime()
+            convertFaculty()
+        }
+
+        function changeStartAndEnd(currentPage) {
+            if (currentPage > totalPages) {
+                return
+            }
+            start = (currentPage - 1) * 10
+            end = start + 9
+        }
+
+        renderPageNumber()
+        function renderPageNumber() {
+            const paging = document.querySelector("#paging")
+            paging.innerHTML = ""
+
+            if (currentPage === 0) {
+                return
+            }
+
+            const prevPage = document.createElement("li")
+            prevPage.classList.add("page-item")
+            prevPage.classList.add("prev-page")
+            if (currentPage === 1) {
+                prevPage.classList.add("disabled")
+            }
+            prevPage.innerHTML = `<a class="page-link" href="#" tabindex="-1">Previous</a>`
+            paging.appendChild(prevPage)
+
+            for (let i = 1; i <= totalPages; i++) {
+                const page = document.createElement("li")
+                page.classList.add("page-item")
+                if (currentPage === i) {
+                    page.classList.add("active")
+                    page.innerHTML = `<a class="page-link page-number" href="#">${i}</a>`
+                } else {
+                    page.innerHTML = `<a class="page-link page-number" href="#">${i}<span class="sr-only">(current)</span></a>`
+                }
+                paging.appendChild(page)
+            }
+            const nextPage = document.createElement("li")
+            if (currentPage === totalPages) {
+                nextPage.classList.add("disabled")
+            }
+            nextPage.classList.add("page-item")
+            nextPage.classList.add("next-page")
+            nextPage.innerHTML = `<a class="page-link" href="#">Next</a>`
+            paging.appendChild(nextPage)
+
+            $(".page-number").click(e => {
+                e.preventDefault()
+                setCurrentPage(parseInt(e.target.innerHTML.toString()))
+                renderPageNumber()
+                loadData()
+            })
+
+            $(".prev-page").click(e => {
+                e.preventDefault()
+                if (currentPage === 1) {
+                    return
+                }
+
+                setCurrentPage(currentPage - 1)
+                renderPageNumber()
+                loadData()
+            })
+
+            $(".next-page").click(e => {
+                e.preventDefault()
+                if (currentPage === totalPages)
+                    return
+                setCurrentPage(currentPage + 1)
+                renderPageNumber()
+                loadData()
+            })
+        }
+
+        function setCurrentPage(pageNumber) {
+            currentPage = pageNumber
+            changeStartAndEnd(currentPage)
+        }
+    }
 })
-
-
