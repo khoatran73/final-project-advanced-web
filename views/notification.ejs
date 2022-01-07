@@ -36,7 +36,7 @@
                                         <div class="notification-dropdown-menu">
                                             <div class="faculty-notify notification-dropdown-item">
                                                 <i class="fas fa-users"></i>
-                                                Theo Phòng Ban
+                                                Theo Đơn Vị
                                             </div>
                                             <div class="all-notify notification-dropdown-item active">
                                                 <i class="fas fa-bell"></i>
@@ -54,18 +54,39 @@
                     </div>
                     <div class="main-center main-notification-center">
                         <div class="main-center-item notification-action">
-                            <form>
+                            <form id="notify-form-search">
                                 <div class="form-group">
                                     <label for="notification-name">Tìm kiếm thông báo</label>
-                                    <input type="text" class="form-control" id="notification-name"
+                                    <input type="text" class="form-control" id="notification-title"
                                         name="notification-name" placeholder="Tên thông báo...">
                                 </div>
                                 <div class="form-group">
-                                    <label for="faculty">Khoa/Phòng</label>
-                                    <select class="form-control" id="faculty" name="faculty">
-                                        <option value="all">Tất cả</option>
-                                        <option value="phong-dai-hoc">Phòng Đại Học</option>
-                                        <option value="khoa-cntt">Khoa CNTT</option>
+                                    <label for="notification-faculty">Đơn vị</label>
+                                    <select class="form-control" id="notification-faculty" name="faculty">
+                                        <option value="all">Tất cả thông báo</option>
+                                        <option value="1">Phòng Công tác học sinh sinh viên (CTHSSV)</option>
+                                        <option value="2">Phòng Đại Học</option>
+                                        <option value="3">Phòng Sau đại học</option>
+                                        <option value="4">Phòng điện toán và máy tính</option>
+                                        <option value="5">Phòng khảo thí và kiểm định chất lượng</option>
+                                        <option value="6">Phòng tài chính</option>
+                                        <option value="7">Trung tâm tin học</option>
+                                        <option value="8">Trung tâm đào tạo phát triển xã hội (SDTC)</option>
+                                        <option value="9">Trung tâm phát triển Khoa học quản lý và Ứng dụng công
+                                            nghệ (ATEM)</option>
+                                        <option value="10">Trung tâm hợp tác doanh nghiệp và cựu sinh viên</option>
+                                        <option value="11">Khoa Luật</option>
+                                        <option value="12">Trung tâm ngoại ngữ - tin học - bồi dưỡng văn hóa
+                                        </option>
+                                        <option value="13">Viện chính sách kinh tế và kinh doanh</option>
+                                        <option value="14">Khoa Mỹ thuật công nghiệp</option>
+                                        <option value="15">Khoa Điện - Điện tử</option>
+                                        <option value="16">Khoa Công nghệ thông tin</option>
+                                        <option value="17">Khoa Quản trị kinh doanh</option>
+                                        <option value="18">Khoa Môi trường và bảo hộ lao động</option>
+                                        <option value="19">Khoa Lao động công đoàn</option>
+                                        <option value="20">Khoa Tài chính ngân hàng</option>
+                                        <option value="21">Khoa giáo dục quốc tế</option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-info">Tìm kiếm</button>

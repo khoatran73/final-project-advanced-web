@@ -6,12 +6,12 @@ const { isFaculty, isSignIn} = require('../middleware/authenticate')
 router.get("/all", isSignIn, notificationController.getAll)
 router.get("/faculty", isSignIn, notificationController.getFaculty)
 router.get("/add-notify", isFaculty, notificationController.getAddNotify)
+router.get("/search/:faculty", isSignIn, notificationController.searchNotification)
 router.get('/:faculty/:_id', isSignIn, notificationController.getFacultyNotificationById)
-
-
+router.get('/:faculty', isSignIn, notificationController.getAllFacultyNotification)
 router.get('/get-all-notifications', isSignIn, notificationController.getAllNotifications)
 router.get('/get-notification/:_id', isSignIn, notificationController.getNotificationById)
-router.get('/get-faculty-notification/:faculty', isSignIn, notificationController.getAllFacultyNotification)
+router.get("/", isSignIn, notificationController.getAll)
 
 
 router.post('/add-notification', isFaculty, notificationController.addNotification)

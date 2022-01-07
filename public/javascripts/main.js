@@ -1067,14 +1067,16 @@ $(document).ready(function () {
         20: "Khoa Tài chính ngân hàng",
         21: "Khoa giáo dục quốc tế",
     }
-    
-    {
+
+    function convertFaculty() {
         document.querySelectorAll(".user-faculty")?.forEach(faculty => {
             const facultyInner = parseInt(faculty.innerHTML.trim())
             if (facultyHelper[facultyInner])
                 faculty.innerHTML = facultyHelper[facultyInner]
         })
     }
+
+    convertFaculty()
 
     // edit user image
     {
@@ -1134,7 +1136,7 @@ $(document).ready(function () {
         })
     }
 
-    {
+    function converTime() {
         document.querySelectorAll(".time-convert").forEach(time => {
             const inner = time.innerHTML.toString().trim()
             const timeConverted = new Date(inner).toLocaleString('en-JM')
@@ -1142,6 +1144,8 @@ $(document).ready(function () {
             time.innerHTML = timeConverted
         })
     }
+
+    converTime()
 
     // Editor
     if (location.pathname.includes("add-notify")) {
@@ -1262,6 +1266,75 @@ $(document).ready(function () {
 
             facultyList.appendChild(faculty)
         }
+    }
+
+    {
+        // hold input search
+        const titleSearchValue = location.search.slice(7)
+        let facultySearchValue = location.pathname.slice(14)
+        facultySearchValue = facultySearchValue.includes("/") ? facultySearchValue.replace("/", "") : facultySearchValue
+        facultySearchValue = facultySearchValue ? facultySearchValue : "all"
+
+        $("#notification-title").val(titleSearchValue)
+        $("#notification-faculty").val(facultySearchValue).change()
+
+
+        $("#notify-form-search").submit(e => {
+            e.preventDefault()
+
+            const titleSearch = $("#notification-title").val()
+            const facultySearch = $("#notification-faculty").val()
+
+            if (!location.pathname.includes(facultySearch)) {
+                console.log("location")
+                window.location.href = `/notification/${facultySearch}/?title=${titleSearch}`
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: `/notification/search/${facultySearch}/?title=${titleSearch}`,
+                success: function (res) {
+                    if (res.code === 0) {
+                        updateURL(titleSearch)
+                        updateListNotification(res.notifications)
+                    }
+                }
+            })
+
+            function updateURL(titleSearch) {
+                const url = new URL(window.location)
+                url.searchParams.set('title', titleSearch)
+                window.history.pushState({}, '', url)
+            }
+
+            function updateListNotification(notifications) {
+                const notificationList = document.querySelector(".notification-list")
+                notificationList.innerHTML = ""
+
+                notifications.forEach(notification => {
+                    const item = document.createElement("div")
+                    item.classList.add("notification-item")
+                    item.innerHTML = `
+                        <a href="/notification/${notification.faculty}/${notification._id}">
+                        <div class="title" title="Title">
+                            ${notification.title}
+                        </div>
+                        <div class="new-tag">New</div>
+                        <div class="time">[<span class="user-faculty">
+                            ${notification.faculty}
+                            </span>] - <span class="time-convert">
+                            ${notification.createdAt}
+                            </span></div>
+                    </a>
+                    `
+
+                    notificationList.appendChild(item)
+                })
+
+                converTime()
+                convertFaculty()
+            }
+        })
     }
 })
 

@@ -1,10 +1,11 @@
 const Notification = require('../models/Notification')
-const User = require('../models/User')
 
 class NotificationController {
     async getAll(req, res) {
         const user = req.session.passport?.user || req.session.user
-        await Notification.find({}).sort({ _id: -1 })
+        const titleSearch = req.query.title || ""
+
+        await Notification.find({ title: { $regex: titleSearch, $options: "i" } }).sort({ _id: -1 })
             .then(notifications => {
                 res.render("notification", { user: user, notifications: notifications })
             })
@@ -12,12 +13,32 @@ class NotificationController {
 
     getFaculty(req, res) {
         const user = req.session.passport?.user || req.session.user
+
         return res.render("faculty", { user: user })
     }
 
     async getAddNotify(req, res) {
         const user = req.session.user
         return res.render("add-notify", { user: user })
+    }
+
+    async searchNotification(req, res) {
+        const faculty = req.params.faculty
+        const titleSearch = req.query.title || ""
+
+        if (faculty === "all") {
+            await Notification.find({ title: { $regex: titleSearch, $options: "i" } }).sort({ _id: -1 })
+                .then(notifications => {
+                    return res.json({ code: 0, message: "ok", notifications: notifications })
+                })
+                .catch(err => res.json({ code: 2, message: err.message }))
+        } else {
+            await Notification.find({ faculty: faculty, title: { $regex: titleSearch, $options: "i" } })
+                .then(notifications => {
+                    return res.json({ code: 0, message: "ok", notifications: notifications })
+                })
+                .catch(err => res.json({ code: 2, message: err.message }))
+        }
     }
 
     async getAllNotifications(req, res) {
@@ -47,16 +68,14 @@ class NotificationController {
 
     async getAllFacultyNotification(req, res) {
         const faculty = req.params.faculty
+        const user = req.session.passport?.user || req.session.user
+        const titleSearch = req.query.title || ""
 
-        await Notification.find({ faculty: faculty })
+        await Notification.find({ faculty: faculty, title: { $regex: titleSearch, $options: "i" } })
             .then(notifications => {
-                if (notifications.length > 0) {
-                    return res.json({ code: 0, message: "success", notifications: notifications })
-                } else {
-                    return res.json({ code: 1, message: "no notifications yet" })
-                }
+                return res.render("notification", { user: user, notifications: notifications })
             })
-            .catch(err => res.json({ code: 2, message: err.message }))
+            .catch(() => res.render("error"))
     }
 
     async getFacultyNotificationById(req, res) {
@@ -68,8 +87,6 @@ class NotificationController {
             .then(notification => {
                 if (notification) {
                     return res.render("notification-detail", { user: user, notification: notification })
-                } else {
-                    return res.render("error")
                 }
             })
             .catch(() => res.render("error"))
