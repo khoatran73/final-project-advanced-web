@@ -97,8 +97,21 @@ $(document).ready(function () {
     }
 
     //add post --------------------------------------------------------
-    if (!location.pathname.includes("account"))
-        loadIndex10Post(0, 10)
+    if (!location.pathname.includes("account")){
+        let start=0;
+        let limit=10;
+        loadIndex10Post(start, limit)
+        $(window).scroll(function() {
+            if ($(window).scrollTop() + $(window).height() > $("#post-list").height()) {
+                start = start + limit;
+                setTimeout(function() {
+                    console.log(start)
+                    loadIndex10Post(start, limit)
+                }, 100);
+            }
+        })
+    }
+        
 
     $('#add-form').submit((e) => {
         e.preventDefault();
@@ -144,8 +157,10 @@ $(document).ready(function () {
             data: { limit: limitpost, start: start },
             cache: false,
             success: function (res) {
-
-                showPost(res.posts)
+                console.log(res)
+                if(res.code==0){
+                    showPost(res.posts)
+                }
             }
         });
     }
@@ -161,7 +176,8 @@ $(document).ready(function () {
     }
 
     function showPost(posts) {
-        if (posts) {
+
+        if(posts){
             posts.forEach(function (post) {
                 let html = ``;
                 $.ajax({
@@ -170,8 +186,9 @@ $(document).ready(function () {
                     cache: false,
                     success: function (res) {
                         if (res.code === 0) {
-                            html += `<div class="main-center-item post" id="${post._id}">
-                            <div class="post-top">
+                            html += 
+                            `<div class="main-center-item post" id="${post._id}">
+                            <div id="post-top${post._id}" class="post-top">
                                 <a href="/profile/${res.user._id}">
                                     <img src="${res.user.avatar}" alt="" class="image-40">
                                 </a>
@@ -181,19 +198,7 @@ $(document).ready(function () {
                                     </a>
                                     <div class="time">${new Date(post.createdAt).toLocaleString('en-JM')}</div>
                                 </div>
-                                <div class="action  ${post._id}">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                    <div class="action-dropdown">
-                                        <div id="updatePost${post._id}" class="action-dropdown-item">
-                                            <i class="fas fa-edit"></i>
-                                            Chỉnh sửa bài viết
-                                        </div>
-                                        <div id="deletePost${post._id}" class="action-dropdown-item">
-                                            <i class="fas fa-trash-alt"></i>
-                                            Xóa bài viết
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 
                             </div>
                             <div class="post-main">
@@ -255,10 +260,12 @@ $(document).ready(function () {
                         </div>
                         `;
                             $('#post-list').append(html);
-                            handlePost(post, res.user)
+                            checkHandlePost(post,res.user)
+                            
                         }
-
-                        handleDropdown(post._id)
+                        
+    
+                        
                         displayCommentBox(post._id)
                         showLikeList(post._id)
                         addComment(post._id)
@@ -268,11 +275,46 @@ $(document).ready(function () {
                         checkLike(post._id)
                         getCountLike(post._id)
                         showUserLike(post)
-
+                        
+                        
                     }
                 });
             })
         }
+       
+    }
+    function checkHandlePost(post,user){
+        $.ajax({
+            type: 'GET',
+            url: `/post/check-user-post/${post._id}`,
+            success: function (res) {
+                let html=`
+                <div class="action  ${post._id}">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <div class="action-dropdown">
+                        <div id="updatePost${post._id}" class="action-dropdown-item">
+                            <i class="fas fa-edit"></i>
+                            Chỉnh sửa bài viết
+                        </div>
+                        <div id="deletePost${post._id}" class="action-dropdown-item">
+                            <i class="fas fa-trash-alt"></i>
+                            Xóa bài viết
+                        </div>
+                    </div>
+                </div>
+                `
+                if(res.code==0){
+                    $("#post-top"+post._id).append(html)
+                    if(!window.location.pathname.includes("profile")){
+                        handleDropdown(post._id)
+                        handlePost(post,user)
+                    }
+                    
+                    
+                }
+            }
+
+        })
     }
     //show users like posts 
     function showUserLike(post) {
@@ -282,7 +324,7 @@ $(document).ready(function () {
                 url: '/post/get-user-post/?email=' + email,
                 cache: false,
                 success: function (res) {
-                    if (res.code == 0) {
+                    if(res.code==0){
                         let html = `
                         <div  class="like-list">
                             <a href="/profile/${res.user._id}">
@@ -292,7 +334,7 @@ $(document).ready(function () {
                             <i class="fas fa-thumbs-up"></i>
                         </div>
                         `
-                        $("#modal-body" + post._id).append(html)
+                        $("#modal-body"+post._id).append(html)
 
                     }
                 }
@@ -306,7 +348,7 @@ $(document).ready(function () {
                 url: '/post/get-user-post/?email=' + email,
                 cache: false,
                 success: function (res) {
-                    if (res.code == 0) {
+                    if(res.code==0){
                         let html = `
                         <div  class="like-list">
                             <a href="/profile/${res.user._id}">
@@ -316,7 +358,7 @@ $(document).ready(function () {
                             <i class="fas fa-thumbs-up"></i>
                         </div>
                         `
-                        $("#modal-body-profile" + post._id).append(html)
+                        $("#modal-body-profile"+post._id).append(html)
 
                     }
                 }
@@ -364,23 +406,39 @@ $(document).ready(function () {
         })
 
     }
-    function handlePost(post, user) {
-        $("#deletePost" + post._id).click(function () {
-            $.ajax({
-                type: 'DELETE',
-                url: `/post/delete-post/${post._id}`,
-                success: function (res) {
-                    console.log(res)
-                    if (res.code == 0) {
-                        alert('Delete post successfully')
-                        $('#post-list').html("");
-                        loadIndex10Post(0, 10);
-                    }
-                }
+    function handlePost(post,user){
+        $("#deletePost"+post._id).click(function () {
+            swal({
+                title: "DELETE",
+                text: "Bạn có chắc muốn xóa bài viết này ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
             })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: `/post/delete-post/${post._id}`,
+                            success: function (res) {
+                                if(res.code==0){
+                                    swal({
+                                        title: "SUCCESS",
+                                        text: "Post was deleted",
+                                        icon: "success",
+                                        buttons: true,
+                                        dangerMode: true,
+                                    })
+                                    $('#post-list').html("");
+                                    loadIndex10Post(0, 10);
+                                }
+                            }
+                        })
+                    }
+                })
         })
-        $("#updatePost" + post._id).click(function () {
-            let html = `
+        $("#updatePost"+post._id).click(function(){
+            let html=`
                 <div class="modal fade" id="update-modal${post._id}" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -440,12 +498,12 @@ $(document).ready(function () {
                     </div>
                 </div>
             `
-            if (window.location.pathname.includes("profile")) {
+            if(window.location.pathname.includes("profile")){
                 $("#wrapper-profile").append(html)
-            } else {
+            }else{
                 $("#main-wrapper").append(html)
             }
-            $("#update-modal" + post._id).modal("show");
+            $("#update-modal"+ post._id).modal("show");
             $("input[name=media-update-checked]").change(() => displayupdateMedia())
 
             function displayupdateMedia() {
@@ -454,7 +512,7 @@ $(document).ready(function () {
                 $(`.${mediaChecked}`).css("display", "block")
                 $(`.${mediaUnChecked}`).css("display", "none")
             }
-            $("#update-form").submit(e => {
+            $("#update-form").submit(e=>{
                 e.preventDefault()
                 const data = new FormData($('#update-form')[0])
                 $('#video-update').val('');
@@ -467,14 +525,14 @@ $(document).ready(function () {
                     cache: false,
                     success: function (res) {
                         if (res.code == 0) {
-                            if (window.location.pathname.includes("profile")) {
+                            if(window.location.pathname.includes("profile")){
                                 $('#user-post-list').html('');
                                 loadProfilePost(window.location.pathname.split('/')[2])
-                                $('#update-modal' + post._id).modal('hide');
-                            } else {
+                                $('#update-modal'+post._id).modal('hide');
+                            }else{
                                 $('#post-list').html("");
                                 loadIndex10Post(0, 10);
-                                $('#update-modal' + post._id).modal('hide');
+                                $('#update-modal'+post._id).modal('hide');
                             }
                         } else {
                             $(".error-text").css("visibility", "visible")
@@ -504,6 +562,7 @@ $(document).ready(function () {
             if ($("." + postID).hasClass("active"))
                 $("." + postID).removeClass("active")
         })
+        
     }
 
     //Load comment--------------------------
@@ -518,6 +577,8 @@ $(document).ready(function () {
                 if (res.code === 0) {
                     $("#comment" + postId).html('');
                     showComment(res.comments)
+                }else{
+                    $("#comment" + postId).html('');
                 }
             }
         });
@@ -567,24 +628,73 @@ $(document).ready(function () {
                                     </div>
                                     ${checkImageCmt(data)}
                                 </div>
-                                <div class="comment-dropdown">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                    <ul class="comment-dropdown-menu">
-                                        <div class="comment-dropdown-item">
-                                            <i class="fas fa-trash-alt"></i>
-                                            Xóa comment
-                                        </div>
-                                    </ul>
+                            </div>
+                            <div class="comment-dropdown">
+                                <div class="comment-dropdown-menu">
+                                    <div class="faculty-notify comment-dropdown-item">
+                                        <i class="fas fa-users"></i>
+                                        Theo Phòng Ban
+                                    </div>
+                                    <div class="all-notify comment-dropdown-item">
+                                        <i class="fas fa-bell"></i>
+                                        Tất Cả Thông Báo
+                                    </div>
                                 </div>
                             </div>
                         </div>`
                         $("#comment" + data.post_id).append(html);
+                        handleComment(data)
+                        
                     }
                 }
             });
         })
     }
-
+   function handleComment(data) {
+    $("#comment" + data.post_id).mousedown(function() {
+        $.ajax({
+            type: 'GET',
+            url: `/comment/check-user-comment/${data._id}`,
+            cache: false,
+            success: function (res) {
+                if(res.code == 0){
+                    timer = setTimeout(function() {
+                        swal({
+                            title: "DELETE",
+                            text: "Bạn có muốn xóa bình luận này ?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                $.ajax({
+                                    type: 'DELETE',
+                                    url: `/comment/delete-comment/${data._id}`,
+                                    cache: false,
+                                    success: function (res) {
+                                        console.log(res);
+                                        if(res.code == 0){
+                                            swal({
+                                                title: "SUCCESS",
+                                                text: "Comment was deleted",
+                                                icon: "success",
+                                                buttons: true,
+                                                dangerMode: true,
+                                            })
+                                            loadComment(0, 1, data.post_id)
+                                            countComments(data.post_id)
+                                        }
+                                    }
+                                });
+                            }
+                        })
+                    }, 1000);
+                }
+            }
+        });
+    })
+   }
     function checkImageCmt(data) {
         let img = ``;
         if (data.image != null) {
@@ -694,14 +804,14 @@ $(document).ready(function () {
             type: 'GET',
             url: '/post/get-all-post',
             cache: false,
-            data: { _id: id },
+            data: {_id:id},
             success: function (res) {
                 showprofilePost(res.posts)
             }
         });
     }
     function showprofilePost(posts) {
-        if (posts) {
+        if(posts){
             posts.forEach(function (post) {
                 let html = ``;
                 $.ajax({
@@ -795,9 +905,9 @@ $(document).ready(function () {
                         </div>
                         `;
                             $('#user-post-list').append(html);
-                            handlePost(post, res.user)
+                            handlePost(post,res.user)
                         }
-
+    
                         handleDropdown(post._id)
                         displayCommentBox(post._id)
                         showLikeList(post._id)
@@ -808,7 +918,7 @@ $(document).ready(function () {
                         checkLikeprofile(post._id)
                         getCountLike(post._id)
                         showUserLikeProfile(post)
-
+                        
                     }
                 });
             })
@@ -837,6 +947,7 @@ $(document).ready(function () {
     {
         $("#search-input").focus(function () {
             $(".search-list").css("display", "flex")
+
         })
 
         $("#search-input").focusout(function () {
@@ -872,6 +983,7 @@ $(document).ready(function () {
     }
 
 })
+
 
 // Noti dropdown
 {

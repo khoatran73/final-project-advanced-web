@@ -15,5 +15,6 @@ router.get("/check-like/:_id", isSignIn, postController.checkLiked)
 router.delete("/delete-post-image/:_id", isSignIn, postController.deletePostImage)
 router.delete("/delete-post-video/:_id", isSignIn, postController.deletePostVideo)
 router.delete("/delete-post/:_id", isSignIn, postController.deletePost)
+router.get("/check-user-post/:_id", isSignIn, postController.checkUserPost)
 
 module.exports = router

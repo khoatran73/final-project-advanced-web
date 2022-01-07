@@ -78,6 +78,21 @@ class CommentController {
                 .catch(() => res.json({ code: 1, message: "invalid format post id" }))
         }
     }
+    async checkUserComment(req, res) {
+        const commentId = req.params.comment_id
+
+        await Comment.findOne({ _id: commentId })
+            .then(async comment => {
+                if (comment) {
+                    if (comment.user_email !== (req.session.user?.email || req.session.passport?.user?.email)) {
+                        return res.json({ code: 1, message: "not your comment" })
+                    }else{
+                        return res.json({ code: 0, message: "This is your comment" })
+                    }
+                }
+            })
+            .catch(() => res.json({ code: 1, message: "invalid format comment id" }))
+    }
 
     async deleteComment(req, res) {
         const commentId = req.params.comment_id

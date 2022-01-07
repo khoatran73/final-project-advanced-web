@@ -11,5 +11,6 @@ router.get("/get-user-comment/:user_email", isSignIn, commentController.getUserO
 router.post("/add-comment/:post_id", isSignIn, upload.single("comment-image"), commentController.addComment)
 router.put("/edit-comment/:comment_id", isSignIn, upload.single("image"), commentController.editComment)
 router.delete("/delete-comment/:comment_id", isSignIn, commentController.deleteComment)
+router.get("/check-user-comment/:comment_id", isSignIn, commentController.checkUserComment)
 
 module.exports = router
