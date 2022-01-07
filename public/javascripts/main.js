@@ -567,27 +567,23 @@ $(document).ready(function () {
                                     </div>
                                     ${checkImageCmt(data)}
                                 </div>
+                                <div class="comment-dropdown">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                    <ul class="comment-dropdown-menu">
+                                        <div class="comment-dropdown-item">
+                                            <i class="fas fa-trash-alt"></i>
+                                            Xóa comment
+                                        </div>
+                                    </ul>
+                                </div>
                             </div>
                         </div>`
                         $("#comment" + data.post_id).append(html);
-
                     }
-
                 }
             });
         })
-
     }
-
-    // <div class="comment-dropdown">
-    //     <i class="fas fa-ellipsis-h"></i>
-    //     <ul class="comment-dropdown-menu">
-    //         <div class="comment-dropdown-item">
-    //             <i class="fas fa-trash-alt"></i>
-    //             Xóa comment
-    //         </div>
-    //     </ul>
-    // </div>
 
     function checkImageCmt(data) {
         let img = ``;
