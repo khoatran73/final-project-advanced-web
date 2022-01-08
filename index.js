@@ -36,12 +36,7 @@ io.on("connection", socket => {
 })
 
 app.set('view engine', 'ejs')
-app.use((err, req, res, next) => {
-	console.error(err.message)
-	res.type('text/plain')
-	res.status(500)
-	res.send('500 - Server Error')
-})
+
 
 route(app)
 
