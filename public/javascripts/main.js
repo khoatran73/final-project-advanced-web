@@ -1042,15 +1042,15 @@ $(document).ready(function () {
     }
 
     const facultyHelper = {
-        1: "Phòng Công tác học sinh sinh viên (CTHSSV)",
+        1: "Phòng Công tác học sinh sinh viên",
         2: "Phòng Đại Học",
         3: "Phòng Sau đại học",
         4: "Phòng điện toán và máy tính",
         5: "Phòng khảo thí và kiểm định chất lượng",
         6: "Phòng tài chính",
         7: "Trung tâm tin học",
-        8: "Trung tâm đào tạo phát triển xã hội (SDTC)",
-        9: "Trung tâm phát triển Khoa học quản lý và Ứng dụng công nghệ (ATEM)",
+        8: "Trung tâm đào tạo phát triển xã hội",
+        9: "Trung tâm phát triển Khoa học quản lý và Ứng dụng công nghệ",
         10: "Trung tâm hợp tác doanh nghiệp và cựu sinh viên",
         11: "Khoa Luật",
         12: "Trung tâm ngoại ngữ - tin học - bồi dưỡng văn hóa",

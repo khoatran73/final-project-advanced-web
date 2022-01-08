@@ -1,12 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Error</h1>
-</body>
-</html>
+<%- include('./layouts/head.ejs') %>
+
+    <body>
+
+        <body>
+            <div class="wrapper">
+                <%- include('./layouts/nav.ejs') %>
+                    <section class="main">
+                        <div class="main-left">
+                            <h3>Danh Mục</h3>
+                            <div class="main-left-item">
+                                <a href="/">
+                                    <i class="fas fa-home"></i>
+                                    Trang Chủ
+                                </a>
+                            </div>
+                            <div class="main-left-item">
+                                <a href="/profile/<%=user._id%>">
+                                    <i class="fas fa-user"></i>
+                                    Trang Cá Nhân
+                                </a>
+                            </div>
+                            <% if (user.role==1) { %>
+                                <div class="main-left-item">
+                                    <a href="/admin">
+                                        <i class="fas fa-user"></i>
+                                        Quản lí tài khoản
+                                    </a>
+                                </div>
+                                <% } %>
+                                    <div class="main-left-item notification-bar">
+                                        <div class="notification-direction">
+                                            <i class="fas fa-bell"></i>
+                                            Thông Báo
+                                        </div>
+                                        <div class="notification-dropdown">
+                                            <i class="fas fa-chevron-up"></i>
+                                            <div class="notification-dropdown-menu">
+                                                <div class="faculty-notify notification-dropdown-item">
+                                                    <i class="fas fa-users"></i>
+                                                    Theo Đơn Vị
+                                                </div>
+                                                <div class="all-notify notification-dropdown-item">
+                                                    <i class="fas fa-bell"></i>
+                                                    Tất Cả Thông Báo
+                                                </div>
+                                                <% if (user.role==2) { %>
+                                                    <div class="add-notify notification-dropdown-item">
+                                                        <i class="fas fa-plus"></i>
+                                                        Thêm thông báo
+                                                    </div>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                        <div class="main-center main-notification-center">
+                            <div class="main-center-item error-container">
+                                <div class="error-template">
+                                    <h2>Oops!</h2>
+                                    <h3>Không tìm thấy Trang</h3>
+                                    <div class="error-details text-danger">
+                                        Xin lỗi, không tìm thấy trang được yêu cầu
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+            </div>
+            <div id="loading">
+                <img src="/image/loading.svg" />
+            </div>
+        </body>
+    </body>
+    <script src="/javascripts/main.js"></script>
+
+    </html>

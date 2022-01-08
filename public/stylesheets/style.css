@@ -1526,12 +1526,15 @@ table img {
     object-fit: cover;
 }
 
-.toast.show {
-    z-index: 99999;
-    max-width: 800px;
+.toast {
     position: fixed;
     top: 10px;
     left: 10px;
+}
+
+.toast.show {
+    z-index: 99999;
+    max-width: 800px;
     background-color: #89dd9c;
 }
 
@@ -1543,4 +1546,15 @@ table img {
     font-size: 16px;
     color: var(--blue-active);
     font-weight: 600;
+}
+
+/* error page */
+.error-container {
+    background-image: url("/image/error.png");
+}
+
+.error-template {
+    padding: 37px 15px;
+    text-align: center;
+    user-select: none;
 }
