@@ -1,123 +1,128 @@
 <header class="header">
-    <div class="nav">
-        <div class="nav-left">
-            <div class="nav-ipad">
-                <i class="fas fa-bars" id="navbar-icon"></i>
-                <div class="nav-ipad-container">
-                    <div class="nav-ipad-user">
-                        <img src="<%=user.avatar%>" alt="">
-                    </div>
-                    <div class="nav-ipad-item">
-                        <a href="/">
-                            <i class="fas fa-home"></i>
-                            Trang Chủ
-                        </a>
-                    </div>
-                    <% if (user.role==1 || user.role==2) { %>
-                    <div class="nav-ipad-item">
-                        <a href="/account/reset-password/<%= user._id %>">
-                            <i class="fas fa-key"></i>
-                            Đổi mật khẩu
-                        </a>
-                    </div>
-                    <% } %>
-                    <div class="nav-ipad-item">
-                        <a href="/profile/<%=user._id%>">
-                            <i class="fas fa-user"></i>
-                            Trang Cá Nhân
-                        </a>
-                    </div>
-                    <% if (user.role==1) { %>
+    <% if (locals.user) { %>
+        <div class="nav">
+            <div class="nav-left">
+                <div class="nav-ipad">
+                    <i class="fas fa-bars" id="navbar-icon"></i>
+                    <div class="nav-ipad-container">
+                        <div class="nav-ipad-user">
+                            <img src="<%=user.avatar%>" alt="">
+                        </div>
                         <div class="nav-ipad-item">
-                            <a href="/admin">
-                                <i class="fas fa-user"></i>
-                                Quản lí tài khoản
+                            <a href="/">
+                                <i class="fas fa-home"></i>
+                                Trang Chủ
                             </a>
                         </div>
-                        <% } %>
-                    <div class="nav-ipad-item notification-bar">
-                        <div class="notification-direction">
-                            <i class="fas fa-bell"></i>
-                            Thông Báo
-                        </div>
-                        <div class="ipad-notification-dropdown">
-                            <div class="faculty-notify notification-dropdown-item">
-                                <i class="fas fa-users"></i>
-                                Theo Đơn Vị
-                            </div>
-                            <div class="all-notify notification-dropdown-item">
-                                <i class="fas fa-bell"></i>
-                                Tất Cả Thông Báo
-                            </div>
-                            <% if (user.role==2) { %>
-                                <div class="add-notify notification-dropdown-item">
-                                    <i class="fas fa-plus"></i>
-                                    Thêm thông báo
-                                </div>
-                                <% } %>
-                        </div>
-                    </div>
-                    <div class="nav-ipad-item logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Đăng Xuất
-                    </div>
-                </div>
-                <div class="nav-ipad-overlay"></div>
-            </div>
-            <a href="/" class="logo">
-                <img src="/image/logo.png" alt="Logo">
-            </a>
-        </div>
-        <div class="nav-center">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Tìm người dùng..." id="search-input">
-            <div class="search-list" id="search-list">
-                <a class="user-search" href="">
-                    <img src="" alt="" class="image-34">
-                    <span>
-                        <%=user.name %>
-                    </span>
-                </a>
-                <a class="user-search" href="">
-                    <img src="" alt="" class="image-34">
-                    <span>Anh Khoa</span>
-                </a>
-            </div>
-
-            <!-- Dung xoa -->
-            <div id="user-email"><%= user.email %></div>
-        </div>
-        <div class="nav-right">
-            <div class="user-group">
-                <a href="/profile/<%=user._id%>"><img src="<%=user.avatar%>" alt=""></a>
-                <div class="dropdown">
-                    <i class="fas fa-sort-down"></i>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="/profile/<%= user._id %>">
-                                <i class="fas fa-user"></i>
-                                Trang cá nhân
-                            </a>
-                        </li>
                         <% if (user.role==1 || user.role==2) { %>
-                            <li>
+                            <div class="nav-ipad-item">
                                 <a href="/account/reset-password/<%= user._id %>">
                                     <i class="fas fa-key"></i>
                                     Đổi mật khẩu
                                 </a>
-                            </li>
+                            </div>
                             <% } %>
-                                <li class="logout">
-                                    <a href="/account/logout">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                        Đăng xuất
+                                <div class="nav-ipad-item">
+                                    <a href="/profile/<%=user._id%>">
+                                        <i class="fas fa-user"></i>
+                                        Trang Cá Nhân
+                                    </a>
+                                </div>
+                                <% if (user.role==1) { %>
+                                    <div class="nav-ipad-item">
+                                        <a href="/admin">
+                                            <i class="fas fa-user"></i>
+                                            Quản lí tài khoản
+                                        </a>
+                                    </div>
+                                    <% } %>
+                                        <div class="nav-ipad-item notification-bar">
+                                            <div class="notification-direction">
+                                                <i class="fas fa-bell"></i>
+                                                Thông Báo
+                                            </div>
+                                            <div class="ipad-notification-dropdown">
+                                                <div class="faculty-notify notification-dropdown-item">
+                                                    <i class="fas fa-users"></i>
+                                                    Theo Đơn Vị
+                                                </div>
+                                                <div class="all-notify notification-dropdown-item">
+                                                    <i class="fas fa-bell"></i>
+                                                    Tất Cả Thông Báo
+                                                </div>
+                                                <% if (user.role==2) { %>
+                                                    <div class="add-notify notification-dropdown-item">
+                                                        <i class="fas fa-plus"></i>
+                                                        Thêm thông báo
+                                                    </div>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                        <div class="nav-ipad-item logout">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                            Đăng Xuất
+                                        </div>
+                    </div>
+                    <div class="nav-ipad-overlay"></div>
+                </div>
+                <a href="/" class="logo">
+                    <img src="/image/logo.png" alt="Logo">
+                </a>
+            </div>
+            <div class="nav-center">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Tìm người dùng..." id="search-input">
+                <div class="search-list" id="search-list">
+                    <a class="user-search" href="">
+                        <img src="" alt="" class="image-34">
+                        <span>
+                            <%=user.name %>
+                        </span>
+                    </a>
+                    <a class="user-search" href="">
+                        <img src="" alt="" class="image-34">
+                        <span>Anh Khoa</span>
+                    </a>
+                </div>
+
+                <!-- Dung xoa -->
+                <div id="user-email">
+                    <%= user.email %>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="user-group">
+                    <a href="/profile/<%=user._id%>"><img src="<%=user.avatar%>" alt=""></a>
+                    <div class="dropdown">
+                        <i class="fas fa-sort-down"></i>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/profile/<%= user._id %>">
+                                    <i class="fas fa-user"></i>
+                                    Trang cá nhân
+                                </a>
+                            </li>
+                            <% if (user.role==1 || user.role==2) { %>
+                                <li>
+                                    <a href="/account/reset-password/<%= user._id %>">
+                                        <i class="fas fa-key"></i>
+                                        Đổi mật khẩu
                                     </a>
                                 </li>
-                    </ul>
+                                <% } %>
+                                    <li class="logout">
+                                        <a href="/account/logout">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                            Đăng xuất
+                                        </a>
+                                    </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <% } %>
+
 </header>
 <div class="toast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
