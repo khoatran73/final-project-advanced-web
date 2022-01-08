@@ -1278,7 +1278,7 @@ table img {
 }
 
 .result {
-    background-color: #e2e7f0;
+    background-color: #efffff;
 }
 
 #result {
@@ -1557,4 +1557,20 @@ table img {
     padding: 37px 15px;
     text-align: center;
     user-select: none;
+}
+
+.edit-noti {
+    margin-right: 10px;
+}
+
+.edit-noti > i {
+    margin-right: 4px;
+}
+
+.table-bordered-custom {
+    margin: 10px 0;
+}
+
+.table-bordered-custom td, .table-bordered-custom th{
+    border-color: #e8e8eb;
 }

@@ -66,6 +66,17 @@ class NotificationController {
         }
     }
 
+    async getNotificationDetail(req, res) {
+        const _id = req.params._id
+        const email = req.session.passport?.user?.email || req.session.user?.email
+
+        await Notification.findOne({ _id: _id })
+            .then(notification => {
+                if (notification.user_email !== email) return res.json({ code: 1, message: "Not your notification" })
+                return res.json({ code: 0, message: "success", notification: notification })
+            })
+            .catch(err => res.json({ code: 2, message: err.message }))
+    }
 
     async addNotification(req, res) {
         const { title, content } = req.body
@@ -88,13 +99,15 @@ class NotificationController {
 
     async editNotification(req, res) {
         const _id = req.params._id
+        const email = req.session.user.email
 
         const { title, content } = req.body
-        if (!title || !content) return res.json({ code: 1, message: "please enter enough information" })
+        if (!title || content.length === 0) return res.json({ code: 1, message: "Vui lòng điền đủ thông tin" })
         else {
             await Notification.findOne({ _id: _id })
                 .then(async notification => {
                     if (notification) {
+                        if (notification.user_email !== email) return res.json({ code: 1, message: "Không được sửa thông báo của người khác" })
                         await Notification.updateOne({ _id: _id }, { title: title, content: content })
                             .then(() => res.json({ code: 0, message: "edit notification success" }))
                             .catch(err => res.json({ code: 2, message: err.message }))
@@ -102,7 +115,7 @@ class NotificationController {
                         return res.json({ code: 1, message: "invalid id" })
                     }
                 })
-                .catch(() => res.json({ code: 1, message: "invalid format id" }))
+                .catch(err => res.json({ code: 2, message: err.message }))
         }
     }
 

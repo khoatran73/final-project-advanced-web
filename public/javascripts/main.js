@@ -96,14 +96,14 @@ $(document).ready(function () {
     }
 
     //add post --------------------------------------------------------
-    let postaction ="inactive"
+    let postaction = "inactive"
     if (!location.pathname.includes("account")) {
         let start = 0;
         let limit = 10;
         loadIndex10Post(start, limit)
         $(window).scroll(function () {
-            if ($(window).scrollTop() + $(window).height() > $("#post-list").height() && postaction =="inactive") {
-                postaction="active"
+            if ($(window).scrollTop() + $(window).height() > $("#post-list").height() && postaction == "inactive") {
+                postaction = "active"
                 start = start + limit;
                 setTimeout(function () {
                     loadIndex10Post(start, limit)
@@ -158,10 +158,10 @@ $(document).ready(function () {
             cache: false,
             success: function (res) {
                 if (res.code == 0) {
-                    
+
                     postaction = 'inactive'
                     showPost(res.posts)
-                }else{
+                } else {
                     postaction = 'active'
                 }
             }
@@ -281,7 +281,7 @@ $(document).ready(function () {
                     }
                 });
             })
-            
+
         }
 
     }
@@ -326,7 +326,7 @@ $(document).ready(function () {
             url: `/post/get-all-user-like-post/${post._id}`,
             cache: false,
             success: function (postLike) {
-                postLike.users_like.forEach(email=>{
+                postLike.users_like.forEach(email => {
                     $.ajax({
                         type: 'GET',
                         url: '/post/get-user-post/?email=' + email,
@@ -343,7 +343,7 @@ $(document).ready(function () {
                                 </div>
                                 `
                                 $("#modal-body" + post._id).append(html)
-        
+
                             }
                         }
                     })
@@ -358,7 +358,7 @@ $(document).ready(function () {
             url: `/post/get-all-user-like-post/${post._id}`,
             cache: false,
             success: function (postLike) {
-                postLike.users_like.forEach(email=>{
+                postLike.users_like.forEach(email => {
                     $.ajax({
                         type: 'GET',
                         url: '/post/get-user-post/?email=' + email,
@@ -375,7 +375,7 @@ $(document).ready(function () {
                                 </div>
                                 `
                                 $("#modal-body-profile" + post._id).append(html)
-        
+
                             }
                         }
                     })
@@ -939,7 +939,7 @@ $(document).ready(function () {
                         checkLikeprofile(post._id)
                         getCountLike(post._id)
                         showUserLikeProfile(post)
-                        
+
 
                     }
                 });
@@ -1208,20 +1208,62 @@ $(document).ready(function () {
 
 
     // Editor
-    if (location.pathname.includes("add-notify")) {
+    if (location.pathname.includes("add-notify") || location.pathname.includes("edit-notify")) {
         const editor = new EditorJS({
             holder: 'editorjs',
             tools: {
                 header: {
                     class: Header,
-                    inlineToolbar: ['link']
+                    inlineToolbar: true,
+                    config: {
+                        placeholder: 'header...',
+                        defaultLevel: 3
+                    }
                 },
                 list: {
                     class: List,
                     inlineToolbar: true
-                }
+                },
+                table: {
+                    class: Table,
+                    inlineToolbar: true,
+                    config: {
+                        rows: 2,
+                        cols: 3,
+                    }
+                },
+                paragraph: {
+                    config: { placeholder: 'Nội dung...' }
+                },
             },
         })
+
+        const _id = location.search.replace("?_id=", "").replace("/", "")
+        if (location.pathname.includes("edit-notify")) {
+            $.ajax({
+                type: 'GET',
+                url: `/notification/get-notify-detail/${_id}`,
+                success: function (res) {
+                    if (res.code === 0) {
+                        updateEditor(res.notification)
+                    }
+                }
+            })
+        }
+
+        function updateEditor(notification) {
+            $("#title").val(notification.title)
+
+            editor.isReady
+                .then(() => {
+                    editor.render({
+                        "blocks": notification.content
+                    })
+                })
+                .catch((reason) => {
+                    console.log(`Editor.js initialization failed because of ${reason}`)
+                });
+        }
 
         const editorjs = document.querySelector("#editorjs")
         editorjs.addEventListener("keyup", function () {
@@ -1230,56 +1272,6 @@ $(document).ready(function () {
             })
         })
 
-        function showResult(data) {
-            const result = document.querySelector("#result")
-            result.innerHTML = ""
-
-            const blocks = data.blocks
-
-            blocks.forEach((block) => {
-                if (block.type === "header") {
-                    const header = document.createElement(`h${block.data.level}`)
-                    header.classList.add("ce-header")
-                    header.innerHTML = block.data.text
-                    result.appendChild(header)
-                } else if (block.type === "paragraph") {
-                    const p = document.createElement("p")
-                    p.classList.add("ce-paragraph")
-                    p.classList.add("cdx-block")
-                    p.innerHTML = block.data.text
-                    result.appendChild(p)
-                } else if (block.type === "list") {
-                    if (block.data.style === "ordered") {
-                        const ol = document.createElement("ol")
-                        ol.classList.add("cdx-block")
-                        ol.classList.add("cdx-list")
-                        ol.classList.add("cdx-list--ordered")
-                        block.data.items.forEach((item) => {
-                            const li = document.createElement("li")
-                            li.classList.add("cdx-list__item")
-                            li.innerHTML = item
-                            ol.appendChild(li)
-                        })
-                        result.appendChild(ol)
-                    } else {
-                        const ul = document.createElement("ul")
-                        ul.classList.add("cdx-block")
-                        ul.classList.add("cdx-list")
-                        ul.classList.add("cdx-list--unordered")
-                        block.data.items.forEach((item) => {
-                            const li = document.createElement("li")
-                            li.classList.add("cdx-list__item")
-                            li.innerHTML = item
-                            ul.appendChild(li)
-                        })
-                        result.appendChild(ul)
-                    }
-                } else if (!block.type) {
-                    result.appendChild(document.createElement("br"))
-                }
-            })
-        }
-
         $("#save-notify-btn").click(function () {
             editor.save().then((data) => {
                 const notify = JSON.stringify({
@@ -1287,26 +1279,115 @@ $(document).ready(function () {
                     content: data.blocks
                 })
 
-                $.ajax({
-                    type: "POST",
-                    url: "/notification/add-notification",
-                    data: notify,
-                    processData: false,
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (res) {
-                        if (res.code === 0) {
-                            socket.emit("newNotification", res.notification)
-                            swal("Good Job!", "Thêm thông báo thành công!!", "success")
-                                .then(() => {
-                                    window.location.href = "/notification/all"
-                                })
-                        } else {
-                            swal("Opps..!!", res.message, "warning")
+                if (location.pathname.includes("add-notify")) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/notification/add-notification",
+                        data: notify,
+                        processData: false,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (res) {
+                            if (res.code === 0) {
+                                socket.emit("newNotification", res.notification)
+                                swal("Good Job!", "Thêm thông báo thành công!!", "success")
+                                    .then(() => {
+                                        window.location.href = "/notification/all"
+                                    })
+                            } else {
+                                swal("Opps..!!", res.message, "warning")
+                            }
                         }
-                    }
-                })
+                    })
+                } else if (location.pathname.includes("edit-notify")) {
+                    $.ajax({
+                        type: "PUT",
+                        url: `/notification/edit-notification/${_id}`,
+                        data: notify,
+                        processData: false,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (res) {
+                            if (res.code === 0) {
+                                swal("Good Job!", "Sửa báo thành công!!", "success")
+                                    .then(() => {
+                                        window.location.href = "/notification/all"
+                                    })
+                            } else {
+                                swal("Opps..!!", res.message, "warning")
+                            }
+                        }
+                    })
+                }
             })
+        })
+    }
+
+    function showResult(data) {
+        const result = document.querySelector("#result")
+        result.innerHTML = ""
+
+        const blocks = data.blocks
+
+        blocks.forEach((block) => {
+            if (block.type === "header") {
+                const header = document.createElement(`h${block.data.level}`)
+                header.classList.add("ce-header")
+                header.innerHTML = block.data.text
+                result.appendChild(header)
+            } else if (block.type === "paragraph") {
+                const p = document.createElement("p")
+                p.classList.add("ce-paragraph")
+                p.classList.add("cdx-block")
+                p.innerHTML = block.data.text
+                result.appendChild(p)
+            } else if (block.type === "list") {
+                if (block.data.style === "ordered") {
+                    const ol = document.createElement("ol")
+                    ol.classList.add("cdx-block")
+                    ol.classList.add("cdx-list")
+                    ol.classList.add("cdx-list--ordered")
+                    block.data.items.forEach((item) => {
+                        const li = document.createElement("li")
+                        li.classList.add("cdx-list__item")
+                        li.innerHTML = item
+                        ol.appendChild(li)
+                    })
+                    result.appendChild(ol)
+                } else {
+                    const ul = document.createElement("ul")
+                    ul.classList.add("cdx-block")
+                    ul.classList.add("cdx-list")
+                    ul.classList.add("cdx-list--unordered")
+                    block.data.items.forEach((item) => {
+                        const li = document.createElement("li")
+                        li.classList.add("cdx-list__item")
+                        li.innerHTML = item
+                        ul.appendChild(li)
+                    })
+                    result.appendChild(ul)
+                }
+            } else if (block.type === "table") {
+                const table = document.createElement("table")
+                table.classList.add("table")
+                table.classList.add("table-bordered")
+
+                block.data.content.forEach((trText, index) => {
+                    const tr = document.createElement("tr")
+                    trText.map(tdText => {
+                        let td = document.createElement("td")
+                        if (block.data.withHeadings && index === 0)
+                            td = document.createElement("th")
+
+                        td.innerHTML = tdText
+                        tr.appendChild(td)
+                    })
+                    table.appendChild(tr)
+                })
+                result.appendChild(table)
+            } else if (!block.type) {
+                result.appendChild(document.createElement("br"))
+            }
         })
     }
 

@@ -58,51 +58,67 @@
                                 <%= notification.title %>
                             </h2>
                             <div class="text-right">
-                                <a href="/notification/<%= notification.faculty %>" class="text-primary">[<span
-                                        class="user-faculty">
-                                        <%= notification.faculty %>
-                                    </span>]</a>
-                                - <span class="time-convert">
-                                    <%= notification.createdAt %>
-                                </span>
+                                <% if (user.email===notification.user_email) { %>
+                                    <a class="edit-noti text-primary"
+                                        href="/notification/edit-notify/?_id=<%=notification._id%>"><i
+                                            class="fas fa-edit"></i>Sửa</a>
+                                    <%} %>
+                                        <a href="/notification/<%= notification.faculty %>" class="text-info">[<span
+                                                class="user-faculty">
+                                                <%= notification.faculty %>
+                                            </span>]</a>
+                                        - <span class="time-convert">
+                                            <%= notification.createdAt %>
+                                        </span>
                             </div>
                         </div>
                         <div class="main-center-item faculty-list">
-                            <div>
-                                <% notification.content.forEach(ct=> { %>
-                                    <% if (ct.type=="header" ) { %>
-                                        <h<%=ct.data.level%> class="ce-header"><%=ct.data.text%>
-                                        </h<%=ct.data.level%>>
-                                        <% } else if (ct.type=="paragraph" ) { %>
-                                            <div class="ce-paragraph cdx-block">
-                                                <%=ct.data.text%>
-                                            </div>
-                                            <% } else if (ct.type=="list" ) %>
-                                                <% if (ct.data.style=="ordered" ) {%>
-                                                    <% if (ct.data.items) { %>
-                                                        <ol class="cdx-block cdx-list cdx-list--ordered">
-                                                            <% ct.data.items.forEach(function(item) { %>
-                                                                <li class="cdx-list__item">
-                                                                    <%=item%>
-                                                                </li>
-                                                                <% }) %>
-                                                        </ol>
-                                                        <% } %>
-                                                            <% } else { %>
-                                                                <% if (ct.data.items) { %>
-                                                                    <ul class="cdx-block cdx-list cdx-list--unordered">
-                                                                        <% ct.data.items.forEach(function(item) { %>
-                                                                            <li class="cdx-list__item">
-                                                                                <%=item%>
-                                                                            </li>
-                                                                            <% }) %>
-                                                                    </ul>
-                                                                    <% } %>
-
-                                                                        <% } %>
-                                                                            <% }) %>
-
-                            </div>
+                            <% notification.content.forEach(ct=> { %>
+                                <% if (ct.type=="header" ) { %>
+                                    <h<%=ct.data.level%> class="ce-header"><%=ct.data.text%>
+                                    </h<%=ct.data.level%>>
+                                <% } else if (ct.type=="paragraph" ) { %>
+                                    <div class="ce-paragraph cdx-block">
+                                            <%=ct.data.text%>
+                                    </div>
+                                <% } else if (ct.type=="list" ) { %>
+                                    <% if (ct.data.style=="ordered" ) {%>
+                                        <% if (ct.data.items) { %>
+                                            <ol class="cdx-block cdx-list cdx-list--ordered">
+                                                <% ct.data.items.forEach(function(item) { %>
+                                                    <li class="cdx-list__item">
+                                                        <%=item%>
+                                                    </li>
+                                                <% }) %>
+                                            </ol>
+                                        <% } %>
+                                    <% } else { %>
+                                        <% if (ct.data.items) { %>
+                                            <ul class="cdx-block cdx-list cdx-list--unordered">
+                                                <% ct.data.items.forEach(function(item) { %>
+                                                    <li class="cdx-list__item">
+                                                        <%=item%>
+                                                    </li>
+                                                <% }) %>
+                                            </ul>
+                                        <% } %>
+                                    <% } %>
+                                <% } else if (ct.type=="table" ) { %>
+                                    <table class="table table-bordered table-bordered-custom">
+                                        <% ct.data.content.forEach(function (trText, index) { %>
+                                            <tr>
+                                                <% trText.forEach(function (tdText) { %>
+                                                    <% if (ct.data.withHeadings==true && index == 0) {%>
+                                                        <th><%= tdText%></th>
+                                                    <% } else {%>
+                                                        <td><%= tdText%></td>
+                                                    <% }%>
+                                                <%  }) %>
+                                            </tr>
+                                        <% }) %>
+                                    </table>
+                                <%}%>
+                            <% }) %>
                         </div>
                     </div>
 
