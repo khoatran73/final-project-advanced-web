@@ -407,6 +407,12 @@ a:hover {
     right: 8px;
 }
 
+.ipad-notification-dropdown {
+    top: 17px;
+    right: 10px;
+    margin-left: 20px;
+}
+
 .notification-dropdown > i {
     margin: 0 !important;
 }
@@ -1364,10 +1370,30 @@ table img {
         border-radius: 5px;
         transition: all linear 0.2s;
         transition-delay: 0.05s;
+        position: relative;
+    }
+
+    .notification-bar {
+        padding: 0;
+    }
+
+    .notification-direction {
+        padding: 16px 10px;
+        transition: all linear 0.2s;
+        transition-delay: 0.05s;
+        border-radius: 5px;
+    }
+
+    .notification-direction:hover {
+        background-color: var(--bg-color);
     }
 
     .nav-ipad-item:hover {
         background-color: var(--bg-color);
+    }
+
+    .notification-bar:hover {
+        background-color: #fff;
     }
 
     .nav-ipad-item i {

@@ -8,17 +8,58 @@
                         <img src="<%=user.avatar%>" alt="">
                     </div>
                     <div class="nav-ipad-item">
-                        <i class="fas fa-home"></i>
-                        Trang Chủ
+                        <a href="/">
+                            <i class="fas fa-home"></i>
+                            Trang Chủ
+                        </a>
                     </div>
+                    <% if (user.role==1 || user.role==2) { %>
                     <div class="nav-ipad-item">
-                        <i class="fas fa-user"></i>
-                        Trang Cá Nhân
+                        <a href="/account/reset-password/<%= user._id %>">
+                            <i class="fas fa-key"></i>
+                            Đổi mật khẩu
+                        </a>
+                    </div>
+                    <% } %>
+                    <div class="nav-ipad-item">
+                        <a href="/profile/<%=user._id%>">
+                            <i class="fas fa-user"></i>
+                            Trang Cá Nhân
+                        </a>
+                    </div>
+                    <% if (user.role==1) { %>
+                        <div class="nav-ipad-item">
+                            <a href="/admin">
+                                <i class="fas fa-user"></i>
+                                Quản lí tài khoản
+                            </a>
+                        </div>
+                        <% } %>
+                    <div class="nav-ipad-item notification-bar">
+                        <div class="notification-direction">
+                            <i class="fas fa-bell"></i>
+                            Thông Báo
+                        </div>
+                        <div class="ipad-notification-dropdown">
+                            <div class="faculty-notify notification-dropdown-item">
+                                <i class="fas fa-users"></i>
+                                Theo Đơn Vị
+                            </div>
+                            <div class="all-notify notification-dropdown-item">
+                                <i class="fas fa-bell"></i>
+                                Tất Cả Thông Báo
+                            </div>
+                            <% if (user.role==2) { %>
+                                <div class="add-notify notification-dropdown-item">
+                                    <i class="fas fa-plus"></i>
+                                    Thêm thông báo
+                                </div>
+                                <% } %>
+                        </div>
                     </div>
                     <div class="nav-ipad-item logout">
                         <i class="fas fa-sign-out-alt"></i>
                         Đăng Xuất
-
                     </div>
                 </div>
                 <div class="nav-ipad-overlay"></div>
@@ -55,20 +96,20 @@
                                 Trang cá nhân
                             </a>
                         </li>
-                        <% if (user.role == 1 || user.role == 2) { %>
+                        <% if (user.role==1 || user.role==2) { %>
                             <li>
                                 <a href="/account/reset-password/<%= user._id %>">
                                     <i class="fas fa-key"></i>
                                     Đổi mật khẩu
                                 </a>
                             </li>
-                        <% } %>
-                        <li class="logout">
-                            <a href="/account/logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Đăng xuất
-                            </a>
-                        </li>
+                            <% } %>
+                                <li class="logout">
+                                    <a href="/account/logout">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Đăng xuất
+                                    </a>
+                                </li>
                     </ul>
                 </div>
             </div>
@@ -83,6 +124,6 @@
         </button>
     </div>
     <div class="toast-body" id="toast-body">
-        
+
     </div>
 </div>

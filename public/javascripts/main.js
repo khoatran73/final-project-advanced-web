@@ -918,7 +918,6 @@ $(document).ready(function () {
         }
     }
 
-
     //logout 
     $('.logout').click(function () {
         window.location.href = "http://localhost:3000/account/logout"
@@ -1151,11 +1150,11 @@ $(document).ready(function () {
     // Hiện toast
     socket.on("message", notify => {
         renderToast(notify)
-        $(".toast").toast("show")
 
         function renderToast(notify) {
-            if (location.pathname.includes("add-notify"))
+            if (location.pathname.includes("add-notify")) {
                 return
+            }
 
             const strong = document.createElement("strong")
             strong.classList.add("user-faculty")
@@ -1173,6 +1172,8 @@ $(document).ready(function () {
             document.querySelector("#toast-body").appendChild(link)
 
             convertFaculty()
+
+            $(".toast").toast("show")
         }
     })
 
