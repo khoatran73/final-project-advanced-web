@@ -34,6 +34,7 @@ class NotificationController {
                     }
                 }
             })
+            .catch(error => console.log(error))
 
         await Notification.findOne({ _id: _id, faculty: faculty }).sort({ _id: -1 })
             .then(notification => {
