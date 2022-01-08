@@ -10,6 +10,8 @@ router.get('/login', rejectUser, accountController.login)
 router.post("/login", rejectUser, accountController.auth)
 router.get("/logout", isSignIn, accountController.logout)
 
+router.get("/search-users", isSignIn, accountController.searchUsers)
+
 router.get('/reset-password/:_id', isNotStudent, accountController.renderResetPassword)
 router.put('/reset-password/:_id', isNotStudent, accountController.resetPassword)
 router.put("/edit-user-avatar/", isSignIn, upload.single("avatar"), accountController.editUserAvatar)

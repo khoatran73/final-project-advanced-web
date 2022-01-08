@@ -966,14 +966,48 @@ $(document).ready(function () {
 
     // display search list
     {
-        $("#search-input").focus(function () {
+        $("#search-input").keyup(function (e) {
             $(".search-list").css("display", "flex")
+            const name = e.target.value
 
+            $.ajax({
+                type: 'GET',
+                url: '/account/search-users/?name=' + name,
+                cache: false,
+                success: function (res) {
+                    if (res.code === 0) {
+                        updateSearchList(res.users)
+                    }
+                }
+            })
+
+            function updateSearchList(users) {
+                
+
+                const searchList = document.querySelector("#search-list")
+                searchList.innerHTML = ""
+
+                if (users.length === 0) {
+                    searchList.innerHTML = "Không tìm thấy người dùng"
+                    return
+                }
+                users.map(user => { 
+                    const userSearch = document.createElement("a")
+                    userSearch.classList.add("user-search")
+                    userSearch.setAttribute("href", `/profile/${user._id}`)
+                    userSearch.innerHTML = `<img src=${user.avatar} alt="${user.name}" class="image-34">
+                    <span>${user.name}</span>`
+                    searchList.appendChild(userSearch)
+                }) 
+            }
         })
 
-        $("#search-input").focusout(function () {
+        $(window).click(function () {
             $(".search-list").css("display", "none")
         })
+        // $("#search-input").focusout(function () {
+        //     $(".search-list").css("display", "none")
+        // })
     }
 
     {

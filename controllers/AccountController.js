@@ -7,6 +7,16 @@ class LoginController {
         res.render('login')
     }
 
+    async searchUsers(req, res) {
+        const name = req.query.name
+
+        await User.find({ name: { $regex: name, $options: "i" } })
+            .then(users => {
+                return res.json({ code: 0, users: users })
+            })
+            .catch(err => res.json({ code: 2, message: err.message }))
+    }
+
     async auth(req, res) {
         const { email, password } = req.body
 
@@ -77,7 +87,6 @@ class LoginController {
                 }
             })
     }
-
 
     async editUserAvatar(req, res) {
         const email = req.session.passport?.user?.email || req.session.user?.email
