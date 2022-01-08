@@ -73,6 +73,12 @@
                                             <%= profile.name %>
                                         </h4>
                                     </div>
+                                    <% if (profile.role ==1 ) { %>
+                                        <div class="profile-form-info">
+                                            <i class="fas fa-hammer"></i>
+                                            <span>Mình là Admin nên mình hong có khoa :(</span>
+                                        </div>
+                                        <%}%>
                                     <% if (profile.role !=1 ) { %>
                                         <div class="profile-form-info">
                                             <i class="fas fa-graduation-cap"></i>
