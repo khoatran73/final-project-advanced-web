@@ -44,10 +44,16 @@ class PostController {
     }
 
     async getUserOfPost(req, res) {
+        
         let email = req.query.email;
+        let email1 = req.session.passport?.user.email||req.session.user.email
         User.findOne({ email: email }).
             then(user => {
-                return res.json({ code: 0, message: "success", user: user })
+                 User.findOne({ email: email1})
+                .then(user1 => {
+                    return res.json({ code: 0, message: "success", user: user ,user1: user1 });
+                })
+                
             })
             .catch(err => res.json({ code: 1, message: err }))
     }

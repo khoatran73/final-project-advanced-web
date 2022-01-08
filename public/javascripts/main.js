@@ -228,7 +228,7 @@ $(document).ready(function () {
                             </div>
                             <div class="comment-area" id="${post._id}" >
                                 <div class="comment-box">
-                                    <img src="${res.user.avatar}" alt="" class="image-34">
+                                    <img src="${res.user1.avatar}" alt="" class="image-34">
                                     <form id="comment-form${post._id}" action="" enctype="multipart/form-data" class="comment-form">
                                         <input id="content${post._id}" name="content" type="text" placeholder="Aa...">
                                         <label for="comment-image" title="Đính kèm ảnh"><i class="fas fa-camera"></i></label>
