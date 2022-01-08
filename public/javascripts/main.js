@@ -1311,7 +1311,7 @@ $(document).ready(function () {
                             if (res.code === 0) {
                                 swal("Good Job!", "Sửa báo thành công!!", "success")
                                     .then(() => {
-                                        window.location.href = "/notification/all"
+                                        window.location.href = `/notification/${res.notification.faculty}/${res.notification._id}`
                                     })
                             } else {
                                 swal("Opps..!!", res.message, "warning")
@@ -1391,6 +1391,39 @@ $(document).ready(function () {
         })
     }
 
+    // delete notify
+    {
+        $("#delete-notify").click(e => {
+            e.preventDefault()
+            const url = e.target.href
+            swal({
+                title: "DELETE",
+                text: "Xóa thông báo này ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: url,
+                            success: function (res) {
+                                if (res.code == 0) {
+                                    swal({
+                                        title: "SUCCESS",
+                                        text: "Xóa Thông báo thành công!",
+                                        icon: "success",
+                                        buttons: true,
+                                        dangerMode: true,
+                                    }).then(() => window.location.href = "/notification/all")
+                                }
+                            }
+                        });
+                    }
+                })
+        })
+    }
 
     // faculty list
     if (location.pathname.includes("faculty")) {

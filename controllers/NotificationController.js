@@ -109,7 +109,7 @@ class NotificationController {
                     if (notification) {
                         if (notification.user_email !== email) return res.json({ code: 1, message: "Không được sửa thông báo của người khác" })
                         await Notification.updateOne({ _id: _id }, { title: title, content: content })
-                            .then(() => res.json({ code: 0, message: "edit notification success" }))
+                            .then(() => res.json({ code: 0, message: "edit notification success", notification: notification }))
                             .catch(err => res.json({ code: 2, message: err.message }))
                     } else {
                         return res.json({ code: 1, message: "invalid id" })
@@ -125,6 +125,8 @@ class NotificationController {
         await Notification.findOne({ _id: _id })
             .then(async notification => {
                 if (notification) {
+                    if (notification.user_email !== req.session.user.email)
+                        return res.json({ code: 1, message: "not your notification" })
                     await Notification.deleteOne({ _id: _id })
                         .then(() => res.json({ code: 0, message: "delete notification success" }))
                         .catch(err => res.json({ code: 2, message: err.message }))

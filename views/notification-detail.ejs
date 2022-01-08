@@ -59,9 +59,16 @@
                             </h2>
                             <div class="text-right">
                                 <% if (user.email===notification.user_email) { %>
+                                    <a class="edit-noti text-danger" id="delete-notify"
+                                        href="/notification/delete-notification/<%=notification._id%>">
+                                        <i class="fas fa-trash"></i>
+                                        Xóa
+                                    </a>
                                     <a class="edit-noti text-primary"
-                                        href="/notification/edit-notify/?_id=<%=notification._id%>"><i
-                                            class="fas fa-edit"></i>Sửa</a>
+                                        href="/notification/edit-notify/?_id=<%=notification._id%>">
+                                        <i class="fas fa-edit"></i>
+                                        Sửa
+                                    </a>
                                     <%} %>
                                         <a href="/notification/<%= notification.faculty %>" class="text-info">[<span
                                                 class="user-faculty">
@@ -72,11 +79,10 @@
                                         </span>
                             </div>
                         </div>
-                        <div class="main-center-item faculty-list">
+                        <div class="main-center-item">
                             <% notification.content.forEach(ct=> { %>
                                 <% if (ct.type=="header" ) { %>
-                                    <h<%=ct.data.level%> class="ce-header"><%=ct.data.text%>
-                                    </h<%=ct.data.level%>>
+                                    <h<%=ct.data.level%> class="ce-header"><%=ct.data.text%></h<%=ct.data.level%>>
                                 <% } else if (ct.type=="paragraph" ) { %>
                                     <div class="ce-paragraph cdx-block">
                                             <%=ct.data.text%>

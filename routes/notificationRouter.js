@@ -29,7 +29,7 @@ router.post('/add-notification', isFaculty, notificationController.addNotificati
 
 
 router.put('/edit-notification/:_id', isFaculty, notificationController.editNotification)
-// router.delete('/delete-notification/:_id', isFaculty, notificationController.deleteNotification)
+router.delete('/delete-notification/:_id', isFaculty, notificationController.deleteNotification)
 // router.put('/update-user-read/:_id', isSignIn, notificationController.updateUserRead)
 
 module.exports = router
