@@ -989,14 +989,14 @@ $(document).ready(function () {
                     searchList.innerHTML = "Không tìm thấy người dùng"
                     return
                 }
-                users.map(user => { 
+                users.map(user => {
                     const userSearch = document.createElement("a")
                     userSearch.classList.add("user-search")
                     userSearch.setAttribute("href", `/profile/${user._id}`)
                     userSearch.innerHTML = `<img src=${user.avatar} alt="${user.name}" class="image-34">
                     <span>${user.name}</span>`
                     searchList.appendChild(userSearch)
-                }) 
+                })
             }
         })
 
