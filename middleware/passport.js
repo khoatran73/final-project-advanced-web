@@ -16,9 +16,10 @@ module.exports = function(passport) {
             User.findOne({ 'uid' : profile.id }, function(err, user) {
                 if (err)
                     return done(err);
-                if(profile.emails[0].value.split('@', 2)[1]!=='student.tdtu.edu.vn'){
+                if(profile.emails[0].value.split('@', 2)[1]!=='student.tdtu.edu.vn' && profile.emails[0].value.split('@', 2)[1]!=='tdtu.edu.vn'){
                     return done(null,false, {message: 'Vui lòng đăng nhập bằng email sinh viên!'});
                 }
+                
                 if (user) {
                     return done(null, user); 
                 } else {
@@ -33,7 +34,7 @@ module.exports = function(passport) {
                     newUser.save(function(err) {
                         if (err)
                             throw err;
-                        return done(null, newUser);
+                        return done(null, newUser); 
                     });
                 }
 

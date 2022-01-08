@@ -24,7 +24,8 @@ module.exports = {
         const user = req.session.user || req.session.passport?.user
         if (user)
             res.redirect('/')
-        else
+        else{
             next()
+        }
     }
 }

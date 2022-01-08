@@ -5,6 +5,7 @@ const { isSignIn } = require('../middleware/authenticate')
 const upload = require('../cloud-images/multer')
 
 router.get('/get-post', isSignIn, postController.getPost)
+router.get('/get-all-user-like-post/:_id', isSignIn, postController.getAllUserLikePost)
 router.get('/get-user-post', isSignIn, postController.getUserOfPost)
 router.get('/get-countlike-post/:id', isSignIn, postController.getlikeOfPost)
 router.get('/get-all-post', isSignIn, postController.getAllPost)

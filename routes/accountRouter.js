@@ -19,8 +19,8 @@ router.get('/auth/google', rejectUser, passport.authenticate('google', { scope: 
 router.get('/google/callback', rejectUser,
     passport.authenticate('google', {
         successRedirect: '/',
-        failureRedirect: '/login',
-        failureFlash: true
+        failureRedirect: '../../account/login',
+        failureFlash: false
     }))
 
 

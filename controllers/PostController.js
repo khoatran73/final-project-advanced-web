@@ -357,6 +357,15 @@ class PostController {
                 }
             }).catch(err => { return res.json({ code: 1, message: err.message }) })
     }
+    async getAllUserLikePost(req, res) {
+        const _id = req.params._id
+        await Post.findOne({ _id: _id })
+            .then(async post => {
+                if (post) {
+                    return res.json({ code: 0, message: "Success",users_like:post.users_like });
+                }
+            }).catch(err => { return res.json({ code: 1, message: err.message }) })
+    }
 
 }
 

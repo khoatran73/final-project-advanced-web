@@ -96,16 +96,18 @@ $(document).ready(function () {
     }
 
     //add post --------------------------------------------------------
+    let postaction ="inactive"
     if (!location.pathname.includes("account")) {
         let start = 0;
         let limit = 10;
         loadIndex10Post(start, limit)
         $(window).scroll(function () {
-            if ($(window).scrollTop() + $(window).height() > $("#post-list").height()) {
+            if ($(window).scrollTop() + $(window).height() > $("#post-list").height() && postaction =="inactive") {
+                postaction="active"
                 start = start + limit;
                 setTimeout(function () {
                     loadIndex10Post(start, limit)
-                }, 100);
+                }, 1500);
             }
         })
     }
@@ -156,7 +158,11 @@ $(document).ready(function () {
             cache: false,
             success: function (res) {
                 if (res.code == 0) {
+                    
+                    postaction = 'inactive'
                     showPost(res.posts)
+                }else{
+                    postaction = 'active'
                 }
             }
         });
@@ -263,7 +269,7 @@ $(document).ready(function () {
                         displayCommentBox(post._id)
                         showLikeList(post._id)
                         addComment(post._id)
-                        handleLikeReact(post._id)
+                        handleLikeReact(post)
                         moreComments(post._id)
                         countComments(post._id)
                         checkLike(post._id)
@@ -271,9 +277,11 @@ $(document).ready(function () {
                         showUserLike(post)
 
 
+
                     }
                 });
             })
+            
         }
 
     }
@@ -312,51 +320,67 @@ $(document).ready(function () {
     }
     //show users like posts 
     function showUserLike(post) {
-        post.users_like.forEach(email => {
-            $.ajax({
-                type: 'GET',
-                url: '/post/get-user-post/?email=' + email,
-                cache: false,
-                success: function (res) {
-                    if (res.code == 0) {
-                        let html = `
-                        <div  class="like-list">
-                            <a href="/profile/${res.user._id}">
-                                <img src="${res.user.avatar}" class="image-34" alt="">
-                                <span>${res.user.name}</span>
-                            </a>
-                            <i class="fas fa-thumbs-up"></i>
-                        </div>
-                        `
-                        $("#modal-body" + post._id).append(html)
-
-                    }
-                }
-            })
+        $("#modal-body" + post._id).html("");
+        $.ajax({
+            type: 'GET',
+            url: `/post/get-all-user-like-post/${post._id}`,
+            cache: false,
+            success: function (postLike) {
+                postLike.users_like.forEach(email=>{
+                    $.ajax({
+                        type: 'GET',
+                        url: '/post/get-user-post/?email=' + email,
+                        cache: false,
+                        success: function (res) {
+                            if (res.code == 0) {
+                                let html = `
+                                <div  class="like-list">
+                                    <a href="/profile/${res.user._id}">
+                                        <img src="${res.user.avatar}" class="image-34" alt="">
+                                        <span>${res.user.name}</span>
+                                    </a>
+                                    <i class="fas fa-thumbs-up"></i>
+                                </div>
+                                `
+                                $("#modal-body" + post._id).append(html)
+        
+                            }
+                        }
+                    })
+                })
+            }
         })
     }
     function showUserLikeProfile(post) {
-        post.users_like.forEach(email => {
-            $.ajax({
-                type: 'GET',
-                url: '/post/get-user-post/?email=' + email,
-                cache: false,
-                success: function (res) {
-                    if (res.code == 0) {
-                        let html = `
-                        <div  class="like-list">
-                            <a href="/profile/${res.user._id}">
-                                <img src="${res.user.avatar}" class="image-34" alt="">
-                                <span>${res.user.name}</span>
-                            </a>
-                            <i class="fas fa-thumbs-up"></i>
-                        </div>
-                        `
-                        $("#modal-body-profile" + post._id).append(html)
-
-                    }
-                }
-            })
+        $("#modal-body-profile" + post._id).html("")
+        $.ajax({
+            type: 'GET',
+            url: `/post/get-all-user-like-post/${post._id}`,
+            cache: false,
+            success: function (postLike) {
+                postLike.users_like.forEach(email=>{
+                    $.ajax({
+                        type: 'GET',
+                        url: '/post/get-user-post/?email=' + email,
+                        cache: false,
+                        success: function (res) {
+                            if (res.code == 0) {
+                                let html = `
+                                <div  class="like-list">
+                                    <a href="/profile/${res.user._id}">
+                                        <img src="${res.user.avatar}" class="image-34" alt="">
+                                        <span>${res.user.name}</span>
+                                    </a>
+                                    <i class="fas fa-thumbs-up"></i>
+                                </div>
+                                `
+                                $("#modal-body-profile" + post._id).append(html)
+        
+                            }
+                        }
+                    })
+                })
+            }
         })
     }
     handleDropdown("dropdown")
@@ -730,59 +754,63 @@ $(document).ready(function () {
     }
 
     ///Like react
-    function handleLikeReact(postID) {
-        $("#like-icon" + postID).click(function () {
-            if ($(".like-btn" + postID).hasClass("active")) {
-                $(".like-btn" + postID).removeClass("active")
+    function handleLikeReact(post) {
+        $("#like-icon" + post._id).click(function () {
+            if ($(".like-btn" + post._id).hasClass("active")) {
+                $(".like-btn" + post._id).removeClass("active")
                 $.ajax({
                     type: 'PUT',
-                    url: `/post/update-like/${postID}`,
+                    url: `/post/update-like/${post._id}`,
                     processData: false,
                     contentType: false,
                     cache: false,
                     success: function (res) {
-                        getCountLike(postID)
+                        showUserLike(post)
+                        getCountLike(post._id)
                     }
                 });
             }
             else {
-                $(".like-btn" + postID).addClass("active")
+                $(".like-btn" + post._id).addClass("active")
                 $.ajax({
                     type: 'PUT',
-                    url: `/post/update-like/${postID}`,
+                    url: `/post/update-like/${post._id}`,
                     processData: false,
                     contentType: false,
                     cache: false,
                     success: function (res) {
-                        getCountLike(postID)
+                        showUserLike(post)
+                        getCountLike(post._id)
                     }
                 });
             }
         })
-        $("#like-icon-profile" + postID).click(function () {
-            if ($(".like-btn" + postID).hasClass("active")) {
-                $(".like-btn" + postID).removeClass("active")
+        $("#like-icon-profile" + post._id).click(function () {
+            if ($(".like-btn" + post._id).hasClass("active")) {
+                $(".like-btn" + post._id).removeClass("active")
                 $.ajax({
                     type: 'PUT',
-                    url: `/post/update-like/${postID}`,
+                    url: `/post/update-like/${post._id}`,
                     processData: false,
                     contentType: false,
                     cache: false,
                     success: function (res) {
-                        getCountLike(postID)
+                        showUserLikeProfile(post)
+                        getCountLike(post._id)
                     }
                 });
             }
             else {
-                $(".like-btn" + postID).addClass("active")
+                $(".like-btn" + post._id).addClass("active")
                 $.ajax({
                     type: 'PUT',
-                    url: `/post/update-like/${postID}`,
+                    url: `/post/update-like/${post._id}`,
                     processData: false,
                     contentType: false,
                     cache: false,
                     success: function (res) {
-                        getCountLike(postID)
+                        showUserLikeProfile(post)
+                        getCountLike(post._id)
                     }
                 });
             }
@@ -905,12 +933,13 @@ $(document).ready(function () {
                         displayCommentBox(post._id)
                         showLikeList(post._id)
                         addComment(post._id)
-                        handleLikeReact(post._id)
+                        handleLikeReact(post)
                         moreComments(post._id)
                         countComments(post._id)
                         checkLikeprofile(post._id)
                         getCountLike(post._id)
                         showUserLikeProfile(post)
+                        
 
                     }
                 });
