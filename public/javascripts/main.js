@@ -949,7 +949,7 @@ $(document).ready(function () {
 
     //logout 
     $('.logout').click(function () {
-        window.location.href = "http://localhost:3000/account/logout"
+        window.location.href = "/account/logout"
     })
 
     // display modal add post
@@ -982,8 +982,6 @@ $(document).ready(function () {
             })
 
             function updateSearchList(users) {
-                
-
                 const searchList = document.querySelector("#search-list")
                 searchList.innerHTML = ""
 
