@@ -155,13 +155,13 @@ class PostController {
                                 return res.json({ code: 1, message: iH.message })
                             }
                         }
-                        if (!req.body.video&&!req.file) {
+                        if (!req.body.video&&!req.file&& post.video || !req.body.video&&!req.file&& !post.image ) {
                             await cloudinary.destroys(post.cloudinary_id)
                             await Post.updateOne({ _id: _id }, {
                                 description: description,
-                                image: null,
+                                image: null||post.image,
                                 cloudinary_id: result?.cloudinary_id || post.cloudinary_id,
-                                video:null,
+                                video:null||post.video,
                             })
                                 .then(() => res.json({ code: 0, message: "update post successfully" }))
                                 .catch(err => res.json({ code: 2, message: err.message }))
