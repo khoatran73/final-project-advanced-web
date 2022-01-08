@@ -22,6 +22,18 @@ class NotificationController {
         const faculty = req.params.faculty
         const _id = req.params._id
         const user = req.session.passport?.user || req.session.user
+        const email = user?.email
+
+        // update user read
+        await Notification.findOne({ _id: _id })
+            .then(async notification => {
+                if (notification) {
+                    if (!notification.user_read.includes(email)) {
+                        notification.user_read.push(email)
+                        await Notification.updateOne({ _id: _id }, { user_read: notification.user_read })
+                    }
+                }
+            })
 
         await Notification.findOne({ _id: _id, faculty: faculty }).sort({ _id: -1 })
             .then(notification => {
@@ -145,7 +157,7 @@ class NotificationController {
                 if (notification) {
                     const email = req.session.passport?.user?.email || req.session.user?.email
                     if (notification.user_read.includes(email))
-                        return res.json({ code: 1, message: "already read" })
+                        return res.json({ code: 0, message: "already read" })
 
                     notification.user_read.push(email)
                     await Notification.updateOne({ _id: _id }, { user_read: notification.user_read })

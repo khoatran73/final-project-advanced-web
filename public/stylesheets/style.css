@@ -1574,3 +1574,15 @@ table img {
 .table-bordered-custom td, .table-bordered-custom th{
     border-color: #e8e8eb;
 }
+
+#user-email {
+    position: absolute;
+    top: -100%; 
+    display: none;
+    left: 0;
+}
+
+.notify-seen {
+    background: var(--bg-color);
+
+}

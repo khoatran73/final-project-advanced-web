@@ -1509,16 +1509,26 @@ $(document).ready(function () {
                 return
             }
 
+            const userEmail = $("#user-email").html()
+
             datas.map((data, index) => {
                 if (start <= index && index <= end) {
+                    let newTag = `<div class="new-tag">New</div>`
+                    let seen = false
+                    if (data.user_read.includes(userEmail)) {
+                        seen = true
+                        newTag = ``
+                    }
+
                     div = document.createElement("div")
                     div.classList.add("notification-item")
+                    if (seen) div.classList.add("notify-seen")
                     div.innerHTML = `
                         <a href="/notification/${data.faculty}/${data._id}">
                             <div class="title" title="Title">
                                 ${data.title}
                             </div>
-                            <div class="new-tag">New</div>
+                            ${newTag}
                             <div class="time">[<span class="user-faculty">${data.faculty}</span>] - <span class="time-convert">${data.createdAt}</span></div>
                         </a>
                     `
