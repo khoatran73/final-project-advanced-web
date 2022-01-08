@@ -7,20 +7,22 @@
         <% if (locals.notifications) { %>
             <div class="main-right-list">
                 <% notifications.forEach((notification, index)=> { %>
-                    <a href="/notification/<%= notification.faculty %>/<%= notification._id %>">
-                        <div class="notification">
-                            <div class="notification-detail">[<span class="user-faculty">
-                                    <%= notification.faculty %>
-                                </span>] - <span class="time-convert">
-                                    <%= notification.createdAt %>
-                                </span>
+                    <% if (index >= 0 && index < 6) { %>
+                        <a href="/notification/<%= notification.faculty %>/<%= notification._id %>">
+                            <div class="notification">
+                                <div class="notification-detail">[<span class="user-faculty">
+                                        <%= notification.faculty %>
+                                    </span>] - <span class="time-convert">
+                                        <%= notification.createdAt %>
+                                    </span>
+                                </div>
+                                <div class="notification-title">
+                                    <%= notification.title %>
+                                </div>
                             </div>
-                            <div class="notification-title">
-                                <%= notification.title %>
-                            </div>
-                        </div>
-                    </a>
-                    <% }) %>
+                        </a>
+                    <% } %>
+                <% }) %>
             </div>
             <% } %>
     </div>

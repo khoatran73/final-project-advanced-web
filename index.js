@@ -1,13 +1,17 @@
 const express = require('express')
 const app = express()
+const port = process.env.PORT || 3000
+const http = require('http')
+const server = http.createServer(app)
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
 const MemoryStore = require('session-memory-store')(expressSession)
 const cookieSession = require('cookie-session')
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 const route = require('./routes/index')
-const port = process.env.PORT || 3000
 const db = require('./server/server')
+const socketio = require('socket.io')
+const io = socketio(server)
 require('ejs')
 require('dotenv').config()
 
@@ -24,9 +28,16 @@ app.use(cookieSession({
     cookie: { maxAge: 60 * 60 * 1000 }
 }))
 
+// Socket io
+io.on("connection", socket => {
+    socket.on("newNotification", notify => {
+        io.emit("message", notify)
+    })
+})
+
 app.set('view engine', 'ejs')
 route(app)
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log("sever is running on port " + port)
 })

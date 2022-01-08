@@ -6,11 +6,11 @@ const { isFaculty, isSignIn } = require('../middleware/authenticate')
 // render view
 router.get("/all", isSignIn, notificationController.renderView)
 router.get("/faculty", isSignIn, notificationController.renderFaculty)
+router.get("/add-notify", isFaculty, notificationController.renderAddNotification)
 router.get("/:faculty", isSignIn, notificationController.renderView)
 
 // dung ajax
 router.get('/get-notification/:faculty', isSignIn, notificationController.getAllFacultyNotification)
-router.get("/add-notify", isFaculty, notificationController.renderAddNotification)
 router.get("/search/:faculty", isSignIn, notificationController.searchNotification)
 
 // noti detail
@@ -19,7 +19,10 @@ router.get('/:faculty/:_id', isSignIn, notificationController.renderNotification
 // render view
 router.get("/", isSignIn, notificationController.renderView)
 
-// router.post('/add-notification', isFaculty, notificationController.addNotification)
+// add notification
+router.post('/add-notification', isFaculty, notificationController.addNotification)
+
+
 // router.put('/edit-notification/:_id', isFaculty, notificationController.editNotification)
 // router.delete('/delete-notification/:_id', isFaculty, notificationController.deleteNotification)
 // router.put('/update-user-read/:_id', isSignIn, notificationController.updateUserRead)

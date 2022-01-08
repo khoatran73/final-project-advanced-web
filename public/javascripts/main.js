@@ -6,7 +6,6 @@ $(document).ready(function () {
         $('#loading').hide()
     })
 
-    // display password
     {
         $(".eye").click(e => {
             const eye = e.target
@@ -105,7 +104,6 @@ $(document).ready(function () {
             if ($(window).scrollTop() + $(window).height() > $("#post-list").height()) {
                 start = start + limit;
                 setTimeout(function () {
-                    console.log(start)
                     loadIndex10Post(start, limit)
                 }, 100);
             }
@@ -1147,6 +1145,38 @@ $(document).ready(function () {
 
     converTime()
 
+    // socket io
+    const socket = io()
+
+    // Hiện toast
+    socket.on("message", notify => {
+        renderToast(notify)
+        $(".toast").toast("show")
+
+        function renderToast(notify) {
+            if (location.pathname.includes("add-notify"))
+                return
+
+            const strong = document.createElement("strong")
+            strong.classList.add("user-faculty")
+            strong.innerHTML = notify.faculty.toString()
+            const toastTitle = document.querySelector("#toast-title")
+            toastTitle.innerHTML = ""
+            toastTitle.appendChild(strong)
+            toastTitle.innerHTML += ` vừa đăng một thông báo mới`
+
+            const link = document.createElement("a")
+            link.classList.add("noti-title")
+            link.innerHTML = notify.title
+            link.setAttribute("href", `/notification/${notify.faculty}/${notify._id}`)
+            document.querySelector("#toast-body").innerHTML = ""
+            document.querySelector("#toast-body").appendChild(link)
+
+            convertFaculty()
+        }
+    })
+
+
     // Editor
     if (location.pathname.includes("add-notify")) {
         const editor = new EditorJS({
@@ -1236,6 +1266,7 @@ $(document).ready(function () {
                     contentType: "application/json; charset=utf-8",
                     success: function (res) {
                         if (res.code === 0) {
+                            socket.emit("newNotification", res.notification)
                             swal("Good Job!", "Thêm thông báo thành công!!", "success")
                                 .then(() => {
                                     window.location.href = "/notification/all"
@@ -1309,7 +1340,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'GET',
-            url: `/notification/get-notification/${faculty}`,
+            url: `/notification/get-notification/${faculty}/${location.search}`,
             success: function (res) {
                 if (res.code === 0) {
                     paging(res.notifications)
@@ -1330,8 +1361,10 @@ $(document).ready(function () {
             notificationList.innerHTML = ""
 
             if (datas.length === 0) {
-                notificationList.innerHTML = `<div class="notification-item"><h5>Không tìm thấy thông báo phù hợp</h5></div>`
+                notificationList.innerHTML = `<div class="notification-item none-border"><h5>Không tìm thấy thông báo phù hợp</h5></div>`
+                return
             }
+
             datas.map((data, index) => {
                 if (start <= index && index <= end) {
                     div = document.createElement("div")

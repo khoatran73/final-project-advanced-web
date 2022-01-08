@@ -83,7 +83,7 @@ class NotificationController {
 
         notification.save()
 
-        return res.json({ code: 0, message: "success" })
+        return res.json({ code: 0, message: "success", notification: notification })
     }
 
     async editNotification(req, res) {

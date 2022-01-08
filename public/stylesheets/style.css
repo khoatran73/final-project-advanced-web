@@ -859,7 +859,7 @@ a:hover {
     font-size: 13px;
     user-select: none;
     color: var(--secondary-color);
-    margin-right: 30px;
+    /* margin-right: 30px; */
 }
 
 .comment-list .comment .content .description div {
@@ -1104,6 +1104,14 @@ a:hover {
 
 .notification-pagination .pagination {
     margin-bottom: 0;
+}
+
+.none-border {
+    border-bottom: none;
+}
+
+.none-border:hover {
+    background-color: #fff;
 }
 
 .new-tag {
@@ -1446,6 +1454,28 @@ table img {
         width: calc(100% - 10px);
         height: 240px;
     }
+
+    .form {
+        margin: 0 10px;
+        padding: 12px 18px;
+    }
+
+    .form .form-title {
+        font-size: 18px;
+    }
+
+    .form .form-content label, .form .form-content input {
+        font-size: 15px;
+    }
+    
+    .error-text {
+        font-size: 14px;
+    }
+
+    .form .form-content button {
+        font-size: 16px;
+        padding: 12px 12px;
+    }
 }
 
 #user-faculty {
@@ -1468,4 +1498,23 @@ table img {
     width: 120px;
     height: 120px;
     object-fit: cover;
+}
+
+.toast.show {
+    z-index: 99999;
+    max-width: 800px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: #89dd9c;
+}
+
+.mr-auto {
+    margin-right: 10px !important;
+}
+
+.noti-title {
+    font-size: 16px;
+    color: var(--blue-active);
+    font-weight: 600;
 }
