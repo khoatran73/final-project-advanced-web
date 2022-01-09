@@ -157,8 +157,7 @@ $(document).ready(function () {
             data: { limit: limitpost, start: start },
             cache: false,
             success: function (res) {
-                if (res.code == 0) {
-
+                if (res.code === 0) {
                     postaction = 'inactive'
                     showPost(res.posts)
                 } else {
@@ -1110,7 +1109,6 @@ $(document).ready(function () {
                 url: "/admin/get-all-users",
                 success: function (res) {
                     if (res.code === 0) {
-                        console.log(res.users)
                         updateEditRoleModal(res.users)
                     }
                 }
@@ -1349,7 +1347,7 @@ $(document).ready(function () {
                 })
                 .catch((reason) => {
                     console.log(`Editor.js initialization failed because of ${reason}`)
-                });
+                })
         }
 
         const editorjs = document.querySelector("#editorjs")
