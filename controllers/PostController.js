@@ -10,11 +10,11 @@ class PostController {
         let _id = req.query._id;
         let limit = req.query.limit;
         let start = req.query.start;
-        
+
         if (_id != null) {
-            await User.findById({ _id: _id })
-                .then(user => {
-                    Post.find({ user_email: user.email }).sort({ _id: -1 })
+            await User.findOne({ _id: _id })
+                .then(async user => {
+                    await Post.find({ user_email: user.email }).sort({ _id: -1 })
                         .then(posts => {
                             if (posts.length) {
                                 return res.json({ code: 0, message: "success", posts: posts })
@@ -30,9 +30,9 @@ class PostController {
                 return res.json({ code: 1, message: "End post" })
             }
             else {
-                await Post.find().skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
+                await Post.find({}).skip(parseInt(start)).limit(parseInt(limit)).sort({ _id: -1 })
                     .then(posts => {
-                        if (posts.length) {
+                        if (posts.length > 0) {
                             return res.json({ code: 0, message: "success", posts: posts })
                         } else {
                             return res.json({ code: 1, message: "no post yet" })
@@ -45,12 +45,11 @@ class PostController {
     }
 
     async getUserOfPost(req, res) {
-
         let email = req.query.email;
-        let email1 = req.session.passport?.user.email || req.session.user.email
-        User.findOne({ email: email }).
-            then(user => {
-                User.findOne({ email: email1 })
+        let email1 = req.session.passport?.user?.email || req.session.user?.email
+        await User.findOne({ email: email })
+            .then(async user => {
+                await User.findOne({ email: email1 })
                     .then(user1 => {
                         return res.json({ code: 0, message: "success", user: user, user1: user1 });
                     })
@@ -60,20 +59,24 @@ class PostController {
     }
     async getlikeOfPost(req, res) {
         let id = req.params.id;
-        Post.findOne({ _id: id }).
+        await Post.findOne({ _id: id }).
             then(post => {
                 return res.json({ code: 0, message: "success", like: post.like })
             })
             .catch(err => res.json({ code: 1, message: "invalid" }))
     }
 
-    async getPost(req, res) {
-        const email = req.query.email;
+    async getUserPost(req, res) {
 
-        await Post.find({ user_email: email })
-            .then(posts => {
-                if (posts.length) {
-                    return res.json({ code: 0, message: "success", posts: posts })
+    }
+
+    async getPost(req, res) {
+        const _id = req.params._id
+
+        await Post.findOne({ _id: _id })
+            .then(post => {
+                if (post) {
+                    return res.json({ code: 0, message: "success", post: post })
                 } else {
                     return res.json({ code: 1, message: "no post yet" })
                 }
@@ -186,7 +189,7 @@ class PostController {
     async deletePostImage(req, res) {
         const _id = req.params._id
 
-        Post.findOne({ _id: _id })
+        await Post.findOne({ _id: _id })
             .then(async post => {
                 if (post) {
                     const email = req.session.passport?.user?.email || req.session.user?.email
@@ -196,7 +199,7 @@ class PostController {
                         if (post.cloudinary_id) {
                             await cloudinary.destroys(post.cloudinary_id)
 
-                            Post.updateOne({ _id: _id }, { cloudinary_id: null, image: null })
+                            await Post.updateOne({ _id: _id }, { cloudinary_id: null, image: null })
                                 .then(() => res.json({ code: 0, message: "delete post image successfully" }))
                                 .catch(err => res.json({ code: 2, message: err.message }))
                         } else {
@@ -212,8 +215,8 @@ class PostController {
 
     async deletePostVideo(req, res) {
         const _id = req.params._id
-        Post.findOne({ _id: _id })
-            .then(post => {
+        await Post.findOne({ _id: _id })
+            .then(async post => {
                 if (post) {
                     const email = req.session.passport?.user?.email || req.session.user?.email
                     console.log(email)
@@ -221,7 +224,7 @@ class PostController {
                         return res.json({ code: 1, message: "not your post" })
                     } else {
                         if (post.video) {
-                            Post.updateOne({ _id: _id }, { video: null })
+                            await Post.updateOne({ _id: _id }, { video: null })
                                 .then(() => res.json({ code: 0, message: "delete post video successfully" }))
                                 .catch(err => res.json({ code: 2, message: err.message }))
                         } else {
@@ -238,7 +241,7 @@ class PostController {
     async deletePost(req, res) {
         const _id = req.params._id
 
-        Post.findOne({ _id: _id })
+        await Post.findOne({ _id: _id })
             .then(async post => {
                 if (post) {
                     const email = req.session.passport?.user?.email || req.session.user?.email

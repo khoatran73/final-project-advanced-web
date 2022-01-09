@@ -73,30 +73,30 @@
                                             <%= profile.name %>
                                         </h4>
                                     </div>
-                                    <% if (profile.role ==1 ) { %>
+                                    <% if (profile.role==1 ) { %>
                                         <div class="profile-form-info">
                                             <i class="fas fa-hammer"></i>
                                             <span>Mình là Admin nên mình hong có khoa :(</span>
                                         </div>
                                         <%}%>
-                                    <% if (profile.role !=1 ) { %>
-                                        <div class="profile-form-info">
-                                            <i class="fas fa-graduation-cap"></i>
-                                            <% if (profile.faculty) { %>
-                                                <span class="user-faculty">
-                                                    <%= profile.faculty %>
-                                                </span>
-                                                <%} else {%>Khoa __ <%}%>
-                                        </div>
-                                        <%}%>
-                                            <% if (profile.role==3) { %>
+                                            <% if (profile.role !=1 ) { %>
                                                 <div class="profile-form-info">
-                                                    <i class="fas fa-chalkboard-teacher"></i>
-                                                    Lớp <% if (profile.class) { %>
-                                                        <%= profile.class %>
-                                                            <%} else {%> __ <%}%>
+                                                    <i class="fas fa-graduation-cap"></i>
+                                                    <% if (profile.faculty) { %>
+                                                        <span class="user-faculty">
+                                                            <%= profile.faculty %>
+                                                        </span>
+                                                        <%} else {%>Khoa __ <%}%>
                                                 </div>
                                                 <%}%>
+                                                    <% if (profile.role==3) { %>
+                                                        <div class="profile-form-info">
+                                                            <i class="fas fa-chalkboard-teacher"></i>
+                                                            Lớp <% if (profile.class) { %>
+                                                                <%= profile.class %>
+                                                                    <%} else {%> __ <%}%>
+                                                        </div>
+                                                        <%}%>
                                 </div>
                             </div>
                             <% if (user.email==profile.email) { %>
@@ -187,6 +187,70 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="update-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <img src="<%= user.avatar %>" alt="" class="image-40">
+                                    <b>
+                                        <%= user.name %>
+                                    </b>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" enctype="multipart/form-data" id="update-form">
+                                        <div class="form-group">
+                                            <textarea class="form-control" rows="4" name="description"
+                                                id="update-description" placeholder="Bạn đang nghĩ gì vậy">
+                                            </textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="image-update-checked" class="media-label">Đăng ảnh hoặc video
+                                            </label>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="media-update-checked"
+                                                    value="media-update-image" id="image-update-checked">
+                                                <label class="form-check-label" for="image-update-checked">
+                                                    Ảnh
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="media-update-checked"
+                                                    value="media-update-video" id="video-update-checked">
+                                                <label class="form-check-label" for="video-update-checked">
+                                                    Video
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group media-update-image">
+                                            <label for="image-update">Up ảnh</label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="image-update"
+                                                    name="image">
+                                                <label class="custom-file-label" for="image-update">Chọn ảnh...</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group media-update-video">
+                                            <label for="video-update">Video youtube</label>
+                                            <input type="text" class="form-control" id="video-update" name="video"
+                                                placeholder="Link video youtube">
+                                        </div>
+                                        <div class="alert alert-danger error-text" role="alert">
+                                            Error Message
+                                        </div>
+                                        <div class="form-group" id="update-media">
+
+                                        </div>
+                                        <div class="text-right">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-success">Lưu</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

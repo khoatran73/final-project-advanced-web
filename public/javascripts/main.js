@@ -116,7 +116,7 @@ $(document).ready(function () {
     $('#add-form').submit((e) => {
         e.preventDefault();
         const data = new FormData($('#add-form')[0])
-        $('#video').val('');
+
         $.ajax({
             type: "POST",
             url: "/post/add-post",
@@ -126,9 +126,11 @@ $(document).ready(function () {
             cache: false,
             success: function (res) {
                 if (res.code == 0) {
-                    $('#post-list').html("");
                     loadIndex10Post(0, 10);
                     $('#add-modal').modal('hide');
+                    $('#video').val('');
+                    $('#description').val('');
+                    $('#image').val('');
                 } else {
                     $(".error-text").css("visibility", "visible")
                     $(".error-text").html(res.message)
@@ -146,6 +148,7 @@ $(document).ready(function () {
         } else if (check.image != null) {
             media += `<img class="image-up" src="${check.image}" width="100%" ><br><br>`
         } else { media = `` }
+
         return media;
     }
     //Load post-------------------------------------------------------------------------------------------
@@ -158,6 +161,7 @@ $(document).ready(function () {
             cache: false,
             success: function (res) {
                 if (res.code === 0) {
+                    $('#post-list').html("");
                     postaction = 'inactive'
                     showPost(res.posts)
                 } else {
@@ -182,6 +186,7 @@ $(document).ready(function () {
             posts.forEach(function (post) {
                 let html = ``;
                 $.ajax({
+                    async: false,
                     type: 'GET',
                     url: '/post/get-user-post/?email=' + post.user_email,
                     cache: false,
@@ -206,7 +211,6 @@ $(document).ready(function () {
                                         ${post.description}
                                     </div>
                                     ${checkMedia(post)}
-                                    
                                 </div>
                                 <div class="info">
                                     <div class="like" id="like${post._id}">
@@ -260,10 +264,7 @@ $(document).ready(function () {
                         `;
                             $('#post-list').append(html);
                             checkHandlePost(post, res.user)
-
                         }
-
-
 
                         displayCommentBox(post._id)
                         showLikeList(post._id)
@@ -274,13 +275,9 @@ $(document).ready(function () {
                         checkLike(post._id)
                         getCountLike(post._id)
                         showUserLike(post)
-
-
-
                     }
                 });
             })
-
         }
 
     }
@@ -310,8 +307,6 @@ $(document).ready(function () {
                         handleDropdown(post._id)
                         handlePost(post, user)
                     }
-
-
                 }
             }
 
@@ -328,6 +323,7 @@ $(document).ready(function () {
                 postLike.users_like.forEach(email => {
                     $.ajax({
                         type: 'GET',
+                        async: false,
                         url: '/post/get-user-post/?email=' + email,
                         cache: false,
                         success: function (res) {
@@ -360,6 +356,7 @@ $(document).ready(function () {
                 postLike.users_like.forEach(email => {
                     $.ajax({
                         type: 'GET',
+                        async: false,
                         url: '/post/get-user-post/?email=' + email,
                         cache: false,
                         success: function (res) {
@@ -455,66 +452,23 @@ $(document).ready(function () {
                 })
         })
         $("#updatePost" + post._id).click(function () {
-            let html = `
-                <div class="modal fade" id="update-modal${post._id}" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <img src="${user.avatar}" alt="" class="image-40">
-                                <b>${user.name}</b>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" enctype="multipart/form-data" id="update-form">
-                                    <div class="form-group">
-                                        <textarea  class="form-control" id="description" rows="4" name="description"
-                                            id="description" placeholder="Bạn đang nghĩ gì vậy">${post.description}</textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="image-checked" class="media-label">Đăng ảnh hoặc video </label>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="media-update-checked"
-                                                value="media-update-image" id="image-update-checked">
-                                            <label class="form-check-label" for="image-update-checked">
-                                                Ảnh
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input"  type="radio" name="media-update-checked"
-                                                value="media-update-video" id="video-update-checked">
-                                            <label class="form-check-label" for="video-update-checked">
-                                                Video
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group media-update-image">
-                                        <label for="image-update">Up ảnh</label>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="image-update" name="image">
-                                            <label class="custom-file-label" for="image-update">Chọn ảnh...</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group media-update-video">
-                                        <label for="video-update">Video youtube</label>
-                                        <input type="text" class="form-control" id="video-update" name="video"
-                                            placeholder="Link video youtube">
-                                    </div>
-                                    <div class="alert alert-danger error-text" role="alert">
-                                        Error Message
-                                    </div>
-                                    <div class="form-group">
-                                    ${checkMedia(post)}
-                                    </div>
-                                    <div class="text-right">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Đóng</button>
-                                        <button type="submit" class="btn btn-success">Lưu</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `
+            let html
+            
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: `/post/get-post/${post._id}`,
+                success: function (res) {
+                    if (res.code === 0) {
+                        $("#update-modal").modal("show")
+                        $("#update-description").val(res.post.description)
+                        checkMediaUpdate(res.post)
+                    }
+                }
+            })
+
+            // console.log($("#update-media").html())
+
             if (window.location.pathname.includes("profile")) {
                 $("#wrapper-profile").append(html)
             } else {
@@ -533,6 +487,7 @@ $(document).ready(function () {
                 e.preventDefault()
                 const data = new FormData($('#update-form')[0])
                 $('#video-update').val('');
+                $('#image-update').val('');
                 $.ajax({
                     type: "PUT",
                     url: `/post/edit-post/${post._id}`,
@@ -541,15 +496,13 @@ $(document).ready(function () {
                     contentType: false,
                     cache: false,
                     success: function (res) {
-                        if (res.code == 0) {
+                        if (res.code === 0) {
                             if (window.location.pathname.includes("profile")) {
-                                $('#user-post-list').html('');
+                                $("#update-modal").modal("hide")
                                 loadProfilePost(window.location.pathname.split('/')[2])
-                                $('#update-modal' + post._id).modal('hide');
                             } else {
-                                $('#post-list').html("");
+                                $("#update-modal").modal("hide")
                                 loadIndex10Post(0, 10);
-                                $('#update-modal' + post._id).modal('hide');
                             }
                         } else {
                             $(".error-text").css("visibility", "visible")
@@ -560,6 +513,22 @@ $(document).ready(function () {
             })
 
         })
+
+        function checkMediaUpdate(post) {
+            media = ``;
+            
+            if (post.video != null) {
+                media += `<iframe src="https://www.youtube.com/embed/${post.video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+            } else if (post.image != null) {
+                media += `<img class="image-up" src="${post.image}" width="100%" ><br><br>`
+            } else { media = `` }
+
+            $("#update-media").html("")
+            $("#update-media").append(media)
+
+            console.log(media)
+        }
+
     }
 
     function handleDropdown(postID) {
@@ -625,6 +594,7 @@ $(document).ready(function () {
         comments.forEach(function (data) {
             $.ajax({
                 type: 'GET',
+                async: false,
                 url: `/comment/get-user-comment/${data.user_email}`,
                 cache: false,
                 success: function (res) {
@@ -826,6 +796,7 @@ $(document).ready(function () {
             cache: false,
             data: { _id: id },
             success: function (res) {
+                $('#user-post-list').html('');
                 showprofilePost(res.posts)
             }
         });
@@ -836,6 +807,7 @@ $(document).ready(function () {
                 let html = ``;
                 $.ajax({
                     type: 'GET',
+                    async: false,
                     url: '/post/get-user-post/?email=' + post.user_email,
                     cache: false,
                     success: function (res) {
@@ -1013,6 +985,13 @@ $(document).ready(function () {
         function displayMedia() {
             const mediaChecked = $("input[name=media-checked]:checked").val()
             const mediaUnChecked = $("input[name=media-checked]:not(:checked)").val()
+
+            if (mediaChecked === "media-image") {
+                $("#video").val("")
+            } else if (mediaChecked === "media-video") {
+                $("#image").val("")
+            }
+
             $(`.${mediaChecked}`).css("display", "block")
             $(`.${mediaUnChecked}`).css("display", "none")
         }

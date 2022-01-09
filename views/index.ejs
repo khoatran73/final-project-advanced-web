@@ -70,12 +70,14 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <img src="<%=user.avatar%>" alt="" class="image-40">
-                                    <b><%=user.name%></b>
+                                    <b>
+                                        <%=user.name%>
+                                    </b>
                                 </div>
                                 <div class="modal-body">
                                     <form action="" enctype="multipart/form-data" id="add-form">
                                         <div class="form-group">
-                                            <textarea class="form-control" id="description" rows="4" name="description"
+                                            <textarea class="form-control" rows="4" name="description"
                                                 id="description" placeholder="Bạn đang nghĩ gì vậy"></textarea>
                                         </div>
                                         <div class="form-group">
@@ -142,6 +144,70 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" id="update-modal" tabindex="-1" role="dialog"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <img src="<%= user.avatar %>" alt="" class="image-40">
+                                    <b><%= user.name %></b>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" enctype="multipart/form-data" id="update-form">
+                                        <div class="form-group">
+                                            <textarea class="form-control" rows="4" name="description"
+                                                id="update-description"
+                                                placeholder="Bạn đang nghĩ gì vậy">
+                                            </textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="image-update-checked" class="media-label">Đăng ảnh hoặc video </label>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="media-update-checked"
+                                                    value="media-update-image" id="image-update-checked">
+                                                <label class="form-check-label" for="image-update-checked">
+                                                    Ảnh
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="media-update-checked"
+                                                    value="media-update-video" id="video-update-checked">
+                                                <label class="form-check-label" for="video-update-checked">
+                                                    Video
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group media-update-image">
+                                            <label for="image-update">Up ảnh</label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="image-update"
+                                                    name="image">
+                                                <label class="custom-file-label" for="image-update">Chọn ảnh...</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group media-update-video">
+                                            <label for="video-update">Video youtube</label>
+                                            <input type="text" class="form-control" id="video-update" name="video"
+                                                placeholder="Link video youtube">
+                                        </div>
+                                        <div class="alert alert-danger error-text" role="alert">
+                                            Error Message
+                                        </div>
+                                        <div class="form-group" id="update-media">
+                                            
+                                        </div>
+                                        <div class="text-right">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-success">Lưu</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
         </div>
         <div id="loading">
             <img src="/image/loading.svg" />
