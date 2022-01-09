@@ -45,9 +45,11 @@
                         </div>
                     </div>
                     <div class="main-center main-faculty-center">
-                        <div class="main-center-item">
+                        <div class="main-center-item admin-btn">
                             <button type="button" class="btn btn-success" data-target="#add-user-modal"
                                 data-toggle="modal">Thêm Đơn Vị</button>
+                                <button type="button" id="edit-role-btn" class="btn btn-primary" data-target="#edit-role-modal"
+                                data-toggle="modal">Chỉ định một đơn vị mới</button>
                         </div>
                         <div class="main-center-item table-responsive">
                             <table class="table table-bordered">
@@ -90,6 +92,61 @@
                         </div>
                     </div>
                 </section>
+
+                <div class="modal fade" id="edit-role-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Chọn một người dùng quản lí đơn vị</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="edit-role-form" method="POST" enctype="multipart/form">
+                                    <div class="form-group">
+                                        <label for="user-select-list">Danh sách người dùng</label>
+                                        <select class="form-control" id="user-select-list" name="email">
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-faculty">Đơn vị</label>
+                                        <select class="form-control" id="edit-faculty" name="faculty">
+                                            <option value="1">Phòng Công tác học sinh sinh viên</option>
+                                            <option value="2">Phòng Đại Học</option>
+                                            <option value="3">Phòng Sau đại học</option>
+                                            <option value="4">Phòng điện toán và máy tính</option>
+                                            <option value="5">Phòng khảo thí và kiểm định chất lượng</option>
+                                            <option value="6">Phòng tài chính</option>
+                                            <option value="7">Trung tâm tin học</option>
+                                            <option value="8">Trung tâm đào tạo phát triển xã hội</option>
+                                            <option value="9">Trung tâm phát triển Khoa học quản lý và Ứng dụng công
+                                                nghệ</option>
+                                            <option value="10">Trung tâm hợp tác doanh nghiệp và cựu sinh viên</option>
+                                            <option value="11">Khoa Luật</option>
+                                            <option value="12">Trung tâm ngoại ngữ - tin học - bồi dưỡng văn hóa
+                                            </option>
+                                            <option value="13">Viện chính sách kinh tế và kinh doanh</option>
+                                            <option value="14">Khoa Mỹ thuật công nghiệp</option>
+                                            <option value="15">Khoa Điện - Điện tử</option>
+                                            <option value="16">Khoa Công nghệ thông tin</option>
+                                            <option value="17">Khoa Quản trị kinh doanh</option>
+                                            <option value="18">Khoa Môi trường và bảo hộ lao động</option>
+                                            <option value="19">Khoa Lao động công đoàn</option>
+                                            <option value="20">Khoa Tài chính ngân hàng</option>
+                                            <option value="21">Khoa giáo dục quốc tế</option>
+                                        </select>
+                                    </div>                                   
+                                    <div class="alert alert-danger error-text" role="alert">
+                                        Eror Message
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-success">Lưu</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="modal fade" id="add-user-modal" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" role="document">

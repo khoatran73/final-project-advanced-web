@@ -1088,9 +1088,64 @@ $(document).ready(function () {
                 contentType: false,
                 success: function (res) {
                     if (res.code === 0) {
-                        swal("Good Job!", "Thêm Phòng - Khoa thành công!!", "success")
+                        swal("Good Job!", "Thêm Đơn vị thành công!!", "success")
                             .then(() => {
                                 $('#add-user-modal').modal('hide')
+                                location.reload()
+                            })
+                    } else {
+                        $(".error-text").css("visibility", "visible")
+                        $(".error-text").html(res.message)
+                    }
+                }
+            })
+        })
+    }
+
+    // edit user role 
+    {
+        $("#edit-role-btn").click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/admin/get-all-users",
+                success: function (res) {
+                    if (res.code === 0) {
+                        console.log(res.users)
+                        updateEditRoleModal(res.users)
+                    }
+                }
+            })
+        })
+
+        function updateEditRoleModal(users) {
+            const userSelect = document.querySelector("#user-select-list")
+            users.forEach(user => {
+                const opt = document.createElement("option")
+                opt.value = user.email
+                opt.innerHTML = user.email
+                userSelect.appendChild(opt)
+            })
+        }
+
+        $("#edit-role-form").submit(e => {
+            e.preventDefault()
+
+            const data = JSON.stringify({
+                email: $("#user-select-list").val(),
+                faculty: $("#edit-faculty").val()
+            })
+
+            $.ajax({
+                type: "PUT",
+                url: "/admin/edit-user-role",
+                data: data,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 0) {
+                        swal("Good Job!", "Thêm Đơn vị thành công!!", "success")
+                            .then(() => {
+                                $('#edit-role-modal').modal('hide')
                                 location.reload()
                             })
                     } else {
@@ -1547,7 +1602,7 @@ $(document).ready(function () {
                 if (start <= index && index <= end) {
                     let newTag = `<div class="new-tag">New</div>`
                     let seen = false
-                    
+
                     if (data.user_read.includes(userEmail)) {
                         seen = true
                         newTag = ``

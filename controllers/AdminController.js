@@ -13,6 +13,12 @@ class AdminController {
             })
     }
 
+    async getAllUsers(req, res) {
+        await User.find({ role: 3 })
+            .then(users => res.json({ code: 0, users: users }))
+            .catch(err => res.json({ code: 2, message: err.message }))
+    }
+
     async addNewUser(req, res) {
         const { email, name, password, faculty } = req.body
 
@@ -48,6 +54,22 @@ class AdminController {
                     }
                 })
         }
+    }
+
+    async editUserRole(req, res) {
+        const { email, faculty } = req.body
+
+        if (!email || !faculty) {
+            return res.json({ code: 1, message: "Please enter enough information" })
+        }
+
+        await User.updateOne({ email: email }, {
+            role: 2,
+            faculty: faculty,
+            user_created: req.session.user.email
+        })
+            .then(() => res.json({ code: 0, message: "success"}))
+            .catch(err => res.json({ code: 2, message: err.message}))
     }
 }
 
