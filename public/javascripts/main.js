@@ -1541,12 +1541,13 @@ $(document).ready(function () {
                 return
             }
 
-            const userEmail = $("#user-email").html()
+            const userEmail = $("#user-email").html().trim()
 
             datas.map((data, index) => {
                 if (start <= index && index <= end) {
                     let newTag = `<div class="new-tag">New</div>`
                     let seen = false
+                    
                     if (data.user_read.includes(userEmail)) {
                         seen = true
                         newTag = ``
