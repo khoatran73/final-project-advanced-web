@@ -126,6 +126,7 @@ $(document).ready(function () {
             cache: false,
             success: function (res) {
                 if (res.code == 0) {
+                    $('#post-list').html("");
                     loadIndex10Post(0, 10);
                     $('#add-modal').modal('hide');
                     $('#video').val('');
@@ -161,7 +162,6 @@ $(document).ready(function () {
             cache: false,
             success: function (res) {
                 if (res.code === 0) {
-                    $('#post-list').html("");
                     postaction = 'inactive'
                     showPost(res.posts)
                 } else {
@@ -460,6 +460,7 @@ $(document).ready(function () {
                 url: `/post/get-post/${post._id}`,
                 success: function (res) {
                     if (res.code === 0) {
+                        
                         $("#update-modal").modal("show")
                         $("#update-description").val(res.post.description)
                         checkMediaUpdate(res.post)
@@ -499,9 +500,11 @@ $(document).ready(function () {
                         if (res.code === 0) {
                             if (window.location.pathname.includes("profile")) {
                                 $("#update-modal").modal("hide")
+                                $('#post-list').html("");
                                 loadProfilePost(window.location.pathname.split('/')[2])
                             } else {
                                 $("#update-modal").modal("hide")
+                                $('#post-list').html("");
                                 loadIndex10Post(0, 10);
                             }
                         } else {
